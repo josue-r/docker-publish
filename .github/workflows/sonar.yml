@@ -41,6 +41,7 @@ jobs:
       - name: Build and analyze
         shell: powershell
         run: |
+          cd web-app/aspnetcoreapp
           .\.sonar\scanner\dotnet-sonarscanner begin /k:"demo_S6" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
           dotnet build
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
