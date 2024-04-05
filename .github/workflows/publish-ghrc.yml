@@ -36,11 +36,11 @@ jobs:
           restore-keys: |
             self-hosted-${{ runner.os }}-node-
 
-      # - name: Download dependencies
-      #   run: npm ci
+      - name: Download dependencies
+        run: npm ci
 
-      # - name: Run tests
-      #   run: npm run affected:test -- --ci --runInBand --base=$BEFORE_SHA --reporters=jest-junit --reporters=default --code-coverage
+      - name: Run tests
+        run: npm run affected:test -- --ci --runInBand --base=$BEFORE_SHA --reporters=jest-junit --reporters=default --code-coverage
 
 
       # - uses: actions/checkout@v3
