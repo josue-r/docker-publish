@@ -1,0 +1,69 @@
+<div class="search-line" [formGroup]="searchLineForm">
+    <vioc-angular-filtered-input
+        [options]="searchableColumns"
+        [valueControl]="searchLineForm.get('column')"
+        [placeHolder]="'Field'"
+        [editable]="true"
+        [displayFn]="columnToName"
+        [floatLabel]="'never'"
+        [flexed]="false"
+        class="field"
+    >
+    </vioc-angular-filtered-input>
+    <vioc-angular-filtered-input
+        [options]="comparators"
+        [valueControl]="searchLineForm.get('comparator')"
+        [placeHolder]="'Comparator'"
+        [editable]="true"
+        [displayFn]="comparatorToDisplayValue"
+        [floatLabel]="'never'"
+        [flexed]="false"
+        class="comparator"
+    >
+    </vioc-angular-filtered-input>
+
+    <ng-container *ngIf="requiresData" [ngSwitch]="inputType">
+        <ng-container *ngSwitchCase="'date'">
+            <mat-form-field *ngIf="!isDateRange; else dateRange" class="value" floatLabel="never">
+                <input
+                    matInput
+                    class="date-input"
+                    [matDatepicker]="searchDatePicker"
+                    placeholder="Date"
+                    formControlName="value"
+                />
+                <mat-datepicker-toggle matSuffix [for]="searchDatePicker"></mat-datepicker-toggle>
+                <mat-datepicker #searchDatePicker></mat-datepicker>
+            </mat-form-field>
+            <ng-template #dateRange>
+                <vioc-angular-date-range-input
+                    [styleClass]="'value'"
+                    formControlName="value"
+                ></vioc-angular-date-range-input>
+            </ng-template>
+        </ng-container>
+        <mat-form-field *ngSwitchCase="'number'" class="value" floatLabel="never">
+            <input class="number-input" type="number" matInput placeholder="Value" formControlName="value" />
+        </mat-form-field>
+        <ng-container *ngSwitchCase="'select-dropdown'" class="value" floatLabel="never">
+            <ng-container *ngTemplateOutlet="dropdown"></ng-container>
+        </ng-container>
+        <mat-form-field *ngSwitchDefault class="value" floatLabel="never">
+            <input class="text-input" type="text" matInput placeholder="Value" formControlName="value" />
+        </mat-form-field>
+
+        <ng-template #dropdown>
+            <mat-form-field class="value" [ngClass]="isMultiValue ? 'multi-select' : ''" floatLabel="never">
+                <vioc-angular-dropdown-column
+                    #dropdownColumn
+                    formControlName="value"
+                    [multiple]="isMultiValue"
+                    [column]="selectedColumnAsDropdown"
+                    [placeholder]="selectedColumnAsDropdown.hint"
+                    [noSelectionOption]="true"
+                >
+                </vioc-angular-dropdown-column>
+            </mat-form-field>
+        </ng-template>
+    </ng-container>
+</div>

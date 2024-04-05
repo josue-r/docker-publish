@@ -1,0 +1,96 @@
+vioc-angular-stepper-navigation {
+    ::ng-deep mat-horizontal-stepper {
+        display: table;
+    }
+}
+
+input[type='checkbox'] {
+    display: none;
+}
+
+/** Input and Label details for Services **/
+
+// Formatting service read more label
+#service-label {
+    display: flex;
+    border: 2px solid grey;
+    padding: 2px;
+    cursor: pointer;
+}
+
+// Changes label to 'Read More'
+#service-label:after {
+    content: 'More';
+}
+
+// Changes label to 'Read Less'
+#service-read-more:checked ~ #service-label:after {
+    content: 'Less';
+}
+
+// Allows all services to be visible when read more is selected
+#service-read-more:checked + #service-list {
+    max-height: 100%;
+}
+
+// Format service message
+#service-message {
+    display: flex;
+    width: 100%;
+    padding-bottom: 7px;
+    white-space: pre-line;
+}
+
+// Limits the number of services visible without clicking read more
+#service-list {
+    display: flexbox;
+    padding-bottom: 3px;
+    max-height: 95px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    width: 700px;
+}
+
+/** Input and Label details for Stores **/
+
+// Formatting store read more label
+#store-label {
+    display: flexbox;
+    border: 2px solid grey;
+    padding: 2px;
+    cursor: pointer;
+}
+
+// Changes label to 'Read More'
+#store-label:after {
+    content: 'More';
+}
+
+// Changes label to 'Read Less'
+#store-read-more:checked ~ #store-label:after {
+    content: 'Less';
+}
+
+// Allows all stores to be visible when read more is selected
+#store-read-more:checked + #store-list {
+    max-height: 100%;
+}
+
+// Format store message
+#store-message {
+    display: flex;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 7px;
+    white-space: pre-line;
+}
+
+// Limits the number of stores visible without clicking read more
+#store-list {
+    display: flexbox;
+    padding-bottom: 3px;
+    max-height: 95px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    width: 700px;
+}

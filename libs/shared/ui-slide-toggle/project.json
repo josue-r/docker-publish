@@ -1,0 +1,16 @@
+{
+    "name": "shared-ui-slide-toggle",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/shared/ui-slide-toggle/src",
+    "projectType": "library",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/shared/ui-slide-toggle"],
+            "options": {
+                "jestConfig": "libs/shared/ui-slide-toggle/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    }
+}

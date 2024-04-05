@@ -1,0 +1,17 @@
+{
+    "name": "central-ui-customer-feature-invoice",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/central-ui/customer/feature-invoice/src",
+    "projectType": "library",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/central-ui/customer/feature-invoice"],
+            "options": {
+                "jestConfig": "libs/central-ui/customer/feature-invoice/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": ["scope:central-ui", "type:feature"]
+}

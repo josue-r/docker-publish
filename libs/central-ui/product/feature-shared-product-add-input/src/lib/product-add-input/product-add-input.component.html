@@ -1,0 +1,62 @@
+<div class="add-section">
+    <button
+        id="product-search"
+        mat-icon-button
+        color="primary"
+        matTooltip="Search for product(s) to add"
+        [disabled]="addDisabled"
+        (click)="openSearchDialog()"
+    >
+        <mat-icon>search</mat-icon>
+    </button>
+    <mat-form-field id="product-add-form-field">
+        <mat-label>Product Code</mat-label>
+        <input
+            id="product-code-input"
+            matInput
+            [formControl]="productCodeControl"
+            placeholder="Product Code"
+            (keydown.enter)="!productCodeControl.value ? '' : addRequestedProduct()"
+            [errorStateMatcher]="addProductErrorMatcher(productErrors)"
+        />
+        <mat-error id="product-error">{{ productErrors }}</mat-error>
+    </mat-form-field>
+    <button
+        id="product-go"
+        mat-icon-button
+        color="primary"
+        matTooltip="Add the entered product"
+        [disabled]="addDisabled || !productCodeControl.value"
+        (click)="addRequestedProduct()"
+    >
+        <mat-icon>arrow_forward</mat-icon>
+    </button>
+</div>
+
+<vioc-angular-dialog
+    #searchDialog
+    id="search-add-product"
+    [name]="'Search Product'"
+    [content]="content"
+    [actions]="actions"
+></vioc-angular-dialog>
+<ng-template #content>
+    <vioc-angular-store-product-selection
+        id="product-selection"
+        [control]="productSelectionControl"
+        [searchFn]="searchFn"
+        [excludedColumns]="excludedProductSearchColumns"
+        [singleSelection]="singleSelection"
+    ></vioc-angular-store-product-selection>
+</ng-template>
+<ng-template #actions>
+    <button id="cancel-search-button" mat-stroked-button (click)="closeSearchDialog()">CANCEL</button>
+    <button
+        id="add-products-button"
+        mat-raised-button
+        color="primary"
+        [disabled]="!isSelected()"
+        (click)="addProducts()"
+        >ADD</button
+    >
+</ng-template>

@@ -1,0 +1,61 @@
+$fixed-width-year: 105px;
+$fixed-width-make: 140px;
+$fixed-width-model: 210px;
+$fixed-width-engine: 500px;
+
+.add-remove-vehicle {
+    display: inline-block;
+}
+
+.vehicle-filter .make-filter {
+    margin-left: 20px;
+    display: inline-block;
+}
+
+.fixed-width-container {
+    white-space: normal;
+
+    .vehicle-year,
+    .vehicle-make,
+    .vehicle-model,
+    .vehicle-engine {
+        &:not(:last-child) {
+            padding-right: 10px;
+        }
+    }
+
+    .vehicle-year ::ng-deep {
+        width: $fixed-width-year;
+        .mat-mdc-form-field,
+        input {
+            width: $fixed-width-year;
+        }
+    }
+
+    .vehicle-make ::ng-deep {
+        display: inline-block;
+        width: $fixed-width-make;
+        .mat-mdc-form-field,
+        input {
+            width: $fixed-width-make;
+        }
+    }
+
+    .vehicle-model ::ng-deep {
+        display: inline-block;
+        width: $fixed-width-model;
+        .mat-mdc-form-field,
+        input {
+            width: $fixed-width-model;
+        }
+    }
+
+    .vehicle-engine ::ng-deep {
+        display: inline-block;
+        width: $fixed-width-engine;
+        .mat-mdc-form-field,
+        input {
+            width: $fixed-width-engine;
+        }
+    }
+}

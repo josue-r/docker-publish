@@ -1,0 +1,66 @@
+@import 'variables';
+
+.error-minimizer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px;
+    cursor: pointer;
+    /* &.minimized { */
+    background-color: #262626;
+    /* } */
+    &:hover {
+        /* color: #979797; */
+        background-color: #212121;
+        /* background-color: rgba(0, 0, 0, .12); */
+    }
+    .mat-icon {
+        user-select: none;
+    }
+}
+
+.snackbar-wrapper {
+    padding: 0 24px 14px;
+}
+
+.snackbar-message {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    .message-icon {
+        padding-right: 10px;
+        .error-icon {
+            color: $error;
+            background: white;
+            border-radius: 50%;
+        }
+        .info-icon {
+            color: $info;
+            /* background: white;
+            border-radius: 50%; */
+        }
+        .warn-icon {
+            color: $warn;
+        }
+        .success-icon {
+            color: $success;
+        }
+    }
+    .dismiss-icon:hover {
+        /* color: #979797; */
+    }
+}
+
+/* Change the size of icon buttons */
+
+.small-icon-button {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    .mat-icon {
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+        line-height: 18px;
+    }
+}

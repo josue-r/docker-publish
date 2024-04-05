@@ -1,0 +1,14 @@
+import { Audited } from '@vioc-angular/shared/common-functionality';
+
+export type <%= classify(domain) %>Id = number;
+
+export class <%= classify(domain) %> implements Audited {
+    id: <%= classify(domain) %>Id;
+    // TODO: add additional fields that are present in the api contract
+    //  The <%= classify(domain) %>Id property may need to change if the id is not a number.  if it is a composite ID,
+    //  you'll need to update it to follow a pattern like this instead of a type:
+    //  `export interface <%= classify(domain) %>Id { storeId: number; fooId: number; }`
+    version?: number = null;
+    updatedOn?: string = null;
+    updatedBy?: string = null;
+}

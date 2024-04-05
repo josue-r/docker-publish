@@ -1,0 +1,26 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'DefectiveProduct'"
+    [searchPageFacade]="defectiveProductFacade"
+    [columns]="columns"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="toPathVariables"
+    [dataSyncable]="false"
+    [gridModeEnabled]="false"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <ng-container *viocAngularFeatureFlag="'defectiveProduct.search.add'">
+            <button
+                mat-button
+                color="primary"
+                id="add-button"
+                *ngIf="searchPage.hasAddAccess"
+                class="action-button"
+                [routerLink]="['../add']"
+                >ADD DEFECT
+            </button>
+        </ng-container>
+    </ng-template>
+    >
+</vioc-angular-search-page>

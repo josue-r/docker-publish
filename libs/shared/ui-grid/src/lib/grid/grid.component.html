@@ -1,0 +1,68 @@
+<form [formGroup]="form" class="overflow-container">
+    <mat-table
+        #table
+        [dataSource]="dataFormArray.controls"
+        matSort
+        [matSortActive]="sort.column.name"
+        class="grid content-fit-table"
+        [matSortDirection]="sort.direction"
+        (matSortChange)="sortData($event)"
+        formArrayName="data"
+        aria-describedby="edit grid"
+    >
+        <ng-container matColumnDef="Select">
+            <th mat-header-cell *matHeaderCellDef id="row-select-header">
+                <mat-checkbox
+                    id="master-select"
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [disabled]="dataFormArray.length === 0 || form.invalid"
+                >
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row; let i = index" (click)="$event.stopPropagation()">
+                <mat-checkbox
+                    id="row-select-{{ i }}"
+                    (change)="$event ? selection.toggle(i) : null"
+                    [checked]="selection.isSelected(i)"
+                    [disabled]="row.invalid"
+                >
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <ng-container *ngFor="let column of columns; let columnIndex = index" [matColumnDef]="column.name">
+            <th
+                mat-header-cell
+                *matHeaderCellDef
+                id="column-{{ columnIndex }}"
+                [mat-sort-header]="column.name"
+                class="grid-cell"
+            >
+                {{ column.name }}</th
+            >
+            <td
+                mat-cell
+                *matCellDef="let row; let rowIndex = index"
+                [formGroupName]="rowIndex"
+                class="grid-cell"
+                [ngClass]="{ 'grid-edit-cell': column.gridUpdatable, invalid: cell.invalid }"
+            >
+                <vioc-angular-grid-cell
+                    #cell
+                    [row]="row"
+                    [rowIndex]="rowIndex"
+                    [column]="column"
+                    [columnIndex]="columnIndex"
+                    (arrowPressed)="arrowPressed($event)"
+                    (updateValidity)="detectChanges()"
+                >
+                </vioc-angular-grid-cell>
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsWithSelect"></tr>
+        <tr mat-row id="vui-table-row" *matRowDef="let row; columns: displayedColumnsWithSelect"></tr>
+    </mat-table>
+</form>

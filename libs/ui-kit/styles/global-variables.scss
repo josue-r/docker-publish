@@ -1,0 +1,52 @@
+// Primary Brand Colors
+$primary-white: #fbfbfb; // white
+$primary-blue: #00316d; // ocean
+$primary-red: #e51c24; // apple
+
+// Blues scale
+$blue-1: #def5ff; // sky
+$blue-2: #3e89c2; // pond
+$blue-3: #3070a2; // lake
+$blue-4: $primary-blue; // ocean
+$blue-5: #212832; // ocean deep
+$blue-6: #0e0e2c; // Indigo
+
+// White to black
+$white-to-black-1: $primary-white; // White
+$white-to-black-2: #f5f6f7; // Linen
+$white-to-black-3: #e7e7e7; // Aluminum
+$white-to-black-4: #b0b6be; // Silver
+$white-to-black-5: #7b8084; // Steel
+$white-to-black-6: #474f58; // Diesel
+$white-to-black-7: #242424; // Dark Grey
+$white-to-black-8: #000; // Black
+
+// variables with names according to figma
+$white: $primary-white;
+$ocean: $primary-blue;
+$apple: $primary-red;
+$sky: $blue-1;
+$pond: $blue-2;
+$lake: $blue-3;
+$ocean-deep: $blue-5;
+$linem: $white-to-black-2;
+$aluminum: $white-to-black-3;
+$silver: $white-to-black-4;
+$steel: $white-to-black-5;
+$diesel: $white-to-black-6;
+$dark-grey: $white-to-black-7;
+$black: $white-to-black-8;
+$indigo: $blue-6;
+
+// Alerts
+$error: #aa2020;
+$error-light: #ffedea;
+$success: #2e7d32;
+$success-light: #e0fff4;
+$warning: #ffecba;
+$warning-mid: #ffd28e;
+$warning-light: #563f03;
+$neutral: #e6f3fa;
+$neutral-mid: #bae2ff;
+$neutral-light: #040356;
+$gray: #949494;

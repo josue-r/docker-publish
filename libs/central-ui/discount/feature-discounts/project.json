@@ -1,0 +1,17 @@
+{
+    "name": "central-ui-discount-feature-discounts",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/central-ui/discount/feature-discounts/src",
+    "projectType": "library",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/central-ui/discount/feature-discounts"],
+            "options": {
+                "jestConfig": "libs/central-ui/discount/feature-discounts/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": ["scope:central-ui", "type:feature"]
+}

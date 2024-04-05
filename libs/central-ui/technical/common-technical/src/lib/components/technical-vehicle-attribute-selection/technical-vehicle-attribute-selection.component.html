@@ -1,0 +1,87 @@
+<ng-container *ngIf="vehicleAttributes?.controls.length > 0; else emptyAttributes">
+    <div class="flex-container" *ngFor="let attribute of vehicleAttributes?.controls; let i = index">
+        <vioc-angular-add-remove-button
+            id="attribute-add-remove-{{ i }}"
+            [removeButtonDisplayed]="editable"
+            [addButtonDisplayed]="isAttributeAddDisplayed(i)"
+            [addButtonDisabled]="false"
+            (removeItem)="removeAttribute(i)"
+            (addItem)="addAttribute()"
+        >
+        </vioc-angular-add-remove-button>
+        <vioc-angular-filtered-input
+            id="attribute-type-{{ i }}"
+            class="flex-item attribute-type-input"
+            [options]="acesAttributeTypes$ | async"
+            [valueControl]="attribute.getControl('type')"
+            [displayFn]="descriptionMapper"
+            [editable]="editable"
+            [nullable]="true"
+            placeHolder="Attribute"
+            [compareWith]="idEquals"
+        ></vioc-angular-filtered-input>
+        <ng-container *ngIf="attribute.getControlValue('type')" [ngSwitch]="attribute.getControlValue('type').code">
+            <ng-container *ngSwitchCase="'ENGINE_DESIGNATION'">
+                <vioc-angular-filtered-input
+                    id="{{ attribute.getControlValue('type').code }}-{{ i }}"
+                    class="flex-item attribute-value-input"
+                    [options]="engineDesignations$ | async"
+                    [valueControl]="attribute.getControl('key')"
+                    [displayFn]="descriptionMapper"
+                    [valueFn]="idMapper"
+                    [editable]="editable"
+                    [nullable]="true"
+                    placeHolder="Value"
+                ></vioc-angular-filtered-input>
+                <vioc-angular-info-button
+                    *ngIf="isEngineDesignationHintDisplayed"
+                    id="engine-designation-info-{{ i }}"
+                    info="Make is required to view Engine Designations"
+                >
+                </vioc-angular-info-button>
+            </ng-container>
+            <ng-container *ngSwitchCase="'SUB_MODEL'">
+                <vioc-angular-filtered-input
+                    id="{{ attribute.getControlValue('type').code }}-{{ i }}"
+                    class="flex-item attribute-value-input"
+                    [options]="subModels$ | async"
+                    [valueControl]="attribute.getControl('key')"
+                    [displayFn]="descriptionMapper"
+                    [valueFn]="idMapper"
+                    [editable]="editable"
+                    [nullable]="true"
+                    placeHolder="Value"
+                ></vioc-angular-filtered-input>
+                <vioc-angular-info-button
+                    *ngIf="isSubModelHintDisplayed"
+                    id="sub-model-info-{{ i }}"
+                    info="Make and Model are required to view Sub Models"
+                >
+                </vioc-angular-info-button>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                <vioc-angular-filtered-input
+                    id="{{ attribute.getControlValue('type').code }}-{{ i }}"
+                    class="flex-item attribute-value-input"
+                    [options]="loadAttributeDropdown(i) | async"
+                    [valueControl]="attribute.getControl('key')"
+                    [displayFn]="descriptionMapper"
+                    [valueFn]="idMapper"
+                    [editable]="editable"
+                    [nullable]="true"
+                    placeHolder="Value"
+                ></vioc-angular-filtered-input>
+            </ng-container>
+        </ng-container>
+    </div>
+</ng-container>
+<ng-template #emptyAttributes>
+    <div class="flex-container">
+        <vioc-angular-add-remove-button
+            id="empty-attribute-add-remove"
+            [addButtonDisplayed]="editable"
+            (addItem)="addAttribute()"
+        ></vioc-angular-add-remove-button>
+        <div class="spacer"></div>
+    </div>
+</ng-template>

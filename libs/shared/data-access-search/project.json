@@ -1,0 +1,21 @@
+{
+    "name": "shared-data-access-search",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/shared/data-access-search/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/shared/data-access-search/jest.config.ts"
+            }
+        }
+    },
+    "generators": {
+        "@nx/angular:component": {
+            "styleext": "scss"
+        }
+    },
+    "tags": ["scope:shared", "type:data-access"]
+}

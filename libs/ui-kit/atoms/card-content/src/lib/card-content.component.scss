@@ -1,0 +1,48 @@
+@import '../../../../styles/styles.scss';
+
+.ui-kit-card-content {
+    display: flex;
+    text-align: center;
+    padding: 16px 32px;
+    font-family: 'Roboto', sans-serif;
+    align-items: center;
+    gap: 12px;
+    flex-direction: column;
+
+    &--primary {
+        color: $lake;
+    }
+    &--secondary {
+        color: $black;
+    }
+
+    &--title {
+        margin: 0;
+
+        &--small {
+            @extend .subtitle-2;
+        }
+        &--medium {
+            @extend .header-2;
+        }
+        &--large {
+            @extend .header-1;
+        }
+    }
+
+    &--description {
+        color: $diesel;
+        margin: 0;
+        font-style: italic;
+
+        &--small {
+            @extend .body-3;
+        }
+        &--medium {
+            @extend .body-2;
+        }
+        &--large {
+            @extend .body;
+        }
+    }
+}

@@ -1,0 +1,103 @@
+<div class="page">
+    <vioc-angular-stepper-navigation [stepper]="stepper">
+        <mat-horizontal-stepper #stepper [linear]="true">
+            <mat-step [stepControl]="companyFormControl">
+                <ng-template matStepLabel>Select company</ng-template>
+                <div class="flex-container" *viocAngularLoading="accessibleCompanies; class: 'section'">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Company</mat-label>
+                        <mat-select
+                            id="company-select"
+                            [formControl]="companyFormControl"
+                            placeholder="Company"
+                            required
+                            [compareWith]="describedEquals"
+                            (selectionChange)="companySelected()"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let comp of accessibleCompanies" [value]="comp"
+                                >{{ comp.code }} - {{ comp.description }}</mat-option
+                            >
+                        </mat-select>
+                        <mat-error *viocAngularFormError="companyFormControl.errors; let error">{{ error }}</mat-error>
+                    </mat-form-field>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="storesFormControl">
+                <ng-template matStepLabel>Select stores</ng-template>
+                <vioc-angular-store-selection
+                    #storeSelectionComponent
+                    [control]="storesFormControl"
+                    [searchFn]="storeSearch"
+                    [accessRoles]="accessRoles"
+                ></vioc-angular-store-selection>
+            </mat-step>
+            <mat-step [stepControl]="servicesFormControl">
+                <ng-template matStepLabel>Select services</ng-template>
+                <vioc-angular-service-selection
+                    #serviceSelectionComponent
+                    [control]="servicesFormControl"
+                    [searchFn]="serviceSearch"
+                ></vioc-angular-service-selection>
+            </mat-step>
+            <mat-step [stepControl]="storeServiceFormControl">
+                <ng-template matStepLabel>Enter service information</ng-template>
+                <vioc-angular-mass-update
+                    #massUpdateComponent
+                    id="storeServiceMassUpdate"
+                    [updatableFieldForm]="storeServiceFormControl"
+                    [columns]="columns"
+                >
+                </vioc-angular-mass-update>
+            </mat-step>
+            <mat-step>
+                <ng-template matStepLabel>Preview</ng-template>
+                <vioc-angular-loading-overlay [loading]="isLoading">
+                    <div class="actions">
+                        <button
+                            id="update-action"
+                            mat-raised-button
+                            color="primary"
+                            disableButtonClick
+                            (disableClick)="update()"
+                        >
+                            Update
+                        </button>
+                    </div>
+                    <div id="preview">
+                        <strong id="service-message">These services will be updated: </strong>
+                        <!-- Input used to determine if read more or read less option shows for service list -->
+                        <input type="checkbox" id="service-read-more" />
+                        <div id="service-list">
+                            <span id="services" *ngFor="let service of servicesFormControl.value; last as isLast">
+                                {{ service.code }}<span *ngIf="!isLast">,</span>
+                            </span>
+                        </div>
+                        <!-- Only display read more option if there are more than 25 services to display, controlled by the service-read-more input  -->
+                        <label
+                            id="service-label"
+                            *ngIf="servicesFormControl.value?.length > maxPreviewableServices"
+                            for="service-read-more"
+                            >Read
+                        </label>
+                        <strong id="store-message">At the following applicable stores:</strong>
+                        <!-- Input used to determine if read more or read less option shows for store list -->
+                        <input type="checkbox" id="store-read-more" />
+                        <div id="store-list">
+                            <span id="stores" *ngFor="let store of storesFormControl.value; last as isLast">
+                                {{ store.code }}<span *ngIf="!isLast">,</span>
+                            </span>
+                        </div>
+                        <!-- Only display read more option if there are more than 55 stores to display, controlled by the store-read-more input  -->
+                        <label
+                            id="store-label"
+                            *ngIf="storesFormControl.value?.length > maxPreviewableStores"
+                            for="store-read-more"
+                            >Read
+                        </label>
+                    </div>
+                </vioc-angular-loading-overlay>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </vioc-angular-stepper-navigation>
+</div>

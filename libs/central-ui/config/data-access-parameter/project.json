@@ -1,0 +1,22 @@
+{
+    "name": "central-ui-config-data-access-parameter",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/central-ui/config/data-access-parameter/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/central-ui/config/data-access-parameter/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "generators": {
+        "@schematics/angular:component": {
+            "style": "sass"
+        }
+    },
+    "tags": ["scope:central-ui", "type:data-access"]
+}

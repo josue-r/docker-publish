@@ -1,0 +1,80 @@
+<div class="page" [formGroup]="form">
+    <vioc-angular-stepper-navigation [stepper]="stepper">
+        <mat-horizontal-stepper #stepper [linear]="true">
+            <mat-step [stepControl]="storesControl">
+                <ng-template matStepLabel>Select Stores</ng-template>
+                <vioc-angular-store-selection
+                    #storeSelectionComponent
+                    [control]="storesControl"
+                    [accessRoles]="accessRoles"
+                    [searchFn]="searchStores"
+                ></vioc-angular-store-selection>
+            </mat-step>
+
+            <mat-step [stepControl]="productsControl">
+                <ng-template matStepLabel>Select Products</ng-template>
+                <vioc-angular-product-selection
+                    #productSelectionComponent
+                    [control]="productsControl"
+                    [searchFn]="searchProducts"
+                ></vioc-angular-product-selection>
+            </mat-step>
+
+            <mat-step [stepControl]="storeProductControl">
+                <ng-template matStepLabel>Enter Product Information</ng-template>
+                <ng-container *ngIf="storesControl.valid && productsControl.valid">
+                    <vioc-angular-store-product [massAddForm]="form"></vioc-angular-store-product>
+                </ng-container>
+            </mat-step>
+
+            <mat-step>
+                <ng-template matStepLabel>Preview</ng-template>
+                <div class="page">
+                    <vioc-angular-loading-overlay [loading]="loadingPreview">
+                        <ng-container *ngIf="preview.data.length > 0; else noResults">
+                            <div class="actions">
+                                <button
+                                    id="addProduct"
+                                    mat-raised-button
+                                    color="primary"
+                                    [disabled]="form.invalid"
+                                    disableButtonClick
+                                    (disableClick)="addStoreProducts()"
+                                >
+                                    Add Products
+                                </button>
+                            </div>
+                            <p id="preview-desc">The following stores will have the following products assigned:</p>
+                            <table id="preview-table" mat-table [dataSource]="preview" aria-describedby="preview-desc">
+                                <ng-container matColumnDef="storeNumber">
+                                    <th id="preview-store-header" mat-header-cell *matHeaderCellDef>Store</th>
+                                    <td mat-cell *matCellDef="let element">{{ element.storeNumber }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="productCodes">
+                                    <th id="preview-product-header" mat-header-cell *matHeaderCellDef>Products</th>
+                                    <td mat-cell *matCellDef="let element">{{ element.prodCodes.join(', ') }}</td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="['storeNumber', 'productCodes']"></tr>
+                                <tr mat-row *matRowDef="let row; columns: ['storeNumber', 'productCodes']"></tr>
+                            </table>
+                        </ng-container>
+                        <ng-template #noResults>
+                            <p id="no-preview"
+                                >No store products will be added with the current store and product selections.</p
+                            >
+                        </ng-template>
+                    </vioc-angular-loading-overlay>
+                    <!-- Hiding paginator with a class to allow @ViewChild to always work -->
+                    <mat-paginator
+                        #previewPaginator
+                        [length]="preview.data.length"
+                        [ngClass]="preview.data.length === 0 ? 'hidden' : ''"
+                        [pageSizeOptions]="pageSizeOptions"
+                        [pageSize]="initialPageSize"
+                        showFirstLastButtons
+                    ></mat-paginator>
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </vioc-angular-stepper-navigation>
+</div>

@@ -1,0 +1,57 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'StoreService'"
+    [searchPageFacade]="storeServiceFacade"
+    [columns]="columns"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="mapToPathVariables"
+    [actionsTemplate]="actions"
+    [selectionActionsTemplate]="selectionActions"
+>
+    <ng-template #actions>
+        <ng-container *viocAngularFeatureFlag="'storeService.search.add'">
+            <button
+                mat-button
+                color="primary"
+                id="add-button"
+                *ngIf="searchPage.hasAddAccess"
+                class="action-button"
+                [routerLink]="['../add']"
+                >Add Store Service
+            </button>
+        </ng-container>
+        <ng-container *viocAngularFeatureFlag="'storeService.search.massUpdate'">
+            <button
+                id="mass-update-button"
+                mat-button
+                *ngIf="searchPage.hasEditAccess"
+                color="primary"
+                class="link-button"
+                [routerLink]="['../mass-update']"
+                >Mass Update
+            </button>
+        </ng-container>
+    </ng-template>
+    <ng-template #selectionActions>
+        <button
+            mat-button
+            id="activate-button"
+            color="primary"
+            *ngIf="searchPage.hasEditAccess"
+            class="action-button"
+            disableButtonClick
+            (disableClick)="activate()"
+            >Activate</button
+        >
+        <button
+            mat-button
+            id="deactivate-button"
+            color="primary"
+            *ngIf="searchPage.hasEditAccess"
+            class="action-button"
+            disableButtonClick
+            (disableClick)="deactivate()"
+            >Deactivate</button
+        >
+    </ng-template>
+</vioc-angular-search-page>

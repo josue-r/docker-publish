@@ -1,0 +1,18 @@
+{
+    "name": "central-ui-inventory-data-access-receipt-of-material",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/central-ui/inventory/data-access-receipt-of-material/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/central-ui/inventory/data-access-receipt-of-material/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "generators": {},
+    "tags": ["scope:central-ui", "type:data-access"]
+}

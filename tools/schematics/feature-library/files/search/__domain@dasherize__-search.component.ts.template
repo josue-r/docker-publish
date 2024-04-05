@@ -1,0 +1,54 @@
+import { Component, ViewChild } from '@angular/core';
+import { SearchPageComponent } from '@vioc-angular/central-ui/feature-search-page';
+import { <%=classify(domain)%>, <%=classify(domain)%>Facade } from '@vioc-angular/central-ui/<%=dasherize(group)%>/data-access-<%=dasherize(domain)%>';
+import { AssignmentCount } from '@vioc-angular/shared/common-api-models';
+import { MessageFacade } from '@vioc-angular/shared/data-access-message';
+import { SEARCHABLE_TOKEN } from '@vioc-angular/shared/data-access-search';
+import { Columns } from '@vioc-angular/shared/util-column';
+import { DataModifyingComponent } from '@vioc-angular/shared/util-data-modifying';
+import { FormFactoryOptions } from '@vioc-angular/shared/util-form';
+
+@Component({
+    selector: 'vioc-angular-<%=dasherize(domain)%>-search',
+    templateUrl: './<%=dasherize(domain)%>-search.component.html',
+    providers: [<%=classify(domain)%>Facade, { provide: SEARCHABLE_TOKEN, useValue: <%=classify(domain)%>Facade }]
+})
+export class <%=classify(domain)%>SearchComponent extends DataModifyingComponent {
+    @ViewChild('searchPage', { static: true }) readonly searchPage: SearchPageComponent;
+
+    readonly columns: Columns = {
+        // TODO: Implement
+    };
+
+    constructor(
+        public readonly <%=camelize(domain)%>Facade: <%=classify(domain)%>Facade,
+        private readonly messageFacade: MessageFacade
+    ) {
+        super();
+    }
+
+    get gridFormOptions(): FormFactoryOptions {
+        // provide facade to form for optional async validation
+        return { <%=camelize(domain)%>Facade: this.<%=camelize(domain)%>Facade };
+    }
+
+    /**
+     * Returns the array of url path variables that uniquely identify the entity in the route.  
+     */
+    viewEditRoutePathVariables(<%=camelize(domain)%>: <%=classify(domain)%>): string[] {
+        // TODO: Implement this method.
+        //  This should match what is defined at the route config.
+        //  For example, if the route config is set up like 
+        //    `path: ':accessMode/:type/:code,`
+        //  this should be implemented with something like:
+        //    `return [ <%=classify(domain)%>.type, <%=classify(domain)%>.code ];`
+        throw new Error('Method not implemented');
+    }
+
+    /**
+     * @see DataModifyingComponent
+     */
+    get unsavedChanges(): boolean {
+        return this.searchPage.unsavedChanges;
+    }
+}

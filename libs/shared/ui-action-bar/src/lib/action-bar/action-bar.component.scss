@@ -1,0 +1,15 @@
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    padding: 8px 0;
+    background: linear-gradient(to bottom, white 44px, transparent 52px);
+    position: sticky;
+    top: 0;
+    z-index: 1;
+
+    button {
+        margin-left: 8px;
+        text-transform: uppercase;
+    }
+}

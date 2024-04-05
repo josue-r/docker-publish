@@ -1,0 +1,14 @@
+{
+    "name": "styles-shared-theme",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/styles/shared-theme/src",
+    "prefix": "vioc-angular",
+    "targets": {},
+    "generators": {
+        "@nx/angular:component": {
+            "styleext": "scss"
+        }
+    },
+    "tags": ["scope:shared", "type:styles"]
+}

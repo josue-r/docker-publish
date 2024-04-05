@@ -1,0 +1,13 @@
+#finalize-continue-button,
+#cancel-continue-button,
+#split-dialog-finalize-button,
+#split-dialog-split-button {
+    margin-left: 10px;
+}
+
+@media screen and (max-width: 1180px) {
+    #products-table {
+        max-width: 100%;
+        overflow: hidden;
+    }
+}

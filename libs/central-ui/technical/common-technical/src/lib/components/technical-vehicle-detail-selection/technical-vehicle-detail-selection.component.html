@@ -1,0 +1,137 @@
+<ng-container *ngIf="vehicleDetails.length === 0; else vehicleDetailInputs">
+    <div class="flex-container">
+        <vioc-angular-add-remove-button
+            id="vehicle-details-add-remove-initial"
+            [removeButtonDisplayed]="false"
+            [addButtonDisplayed]="true"
+            [addButtonDisabled]="false"
+            (addItem)="addVehicleDetail()"
+        >
+        </vioc-angular-add-remove-button>
+    </div>
+</ng-container>
+<ng-template #vehicleDetailInputs>
+    <ng-container *viocAngularLoading="vehicleMakes$ | async; let vehicleMakes">
+        <div class="vehicle-filter flex-container" *ngIf="filter">
+            <mat-icon color="primary">filter_list</mat-icon>
+            <vioc-angular-filtered-input
+                id="make-filter"
+                class="make-filter flex-item"
+                [options]="getMakeSelections(vehicleMakes)"
+                [valueControl]="makeFilter"
+                [displayFn]="descriptionMapper"
+                [valueFn]="idMapper"
+                [editable]="true"
+                [nullable]="false"
+                placeHolder="Make"
+            ></vioc-angular-filtered-input>
+            <vioc-angular-filtered-input
+                id="model-filter"
+                class="model-filter flex-item"
+                [options]="getModelSelections()"
+                [valueControl]="modelFilter"
+                [displayFn]="descriptionMapper"
+                [valueFn]="idMapper"
+                [editable]="modelFilterEditable"
+                [nullable]="true"
+                placeHolder="Model"
+            ></vioc-angular-filtered-input>
+        </div>
+
+        <ng-container *ngFor="let i of filteredIndexes" [formGroup]="vehicleDetails.at(i)">
+            <div class="fixed-width-container">
+                <div class="add-remove-vehicle">
+                    <vioc-angular-add-remove-button
+                        id="vehicle-details-add-remove-{{ i }}"
+                        [removeButtonDisplayed]="editable"
+                        [addButtonDisplayed]="isVehicleDetailAddDisplayed(i)"
+                        [addButtonDisabled]="false"
+                        (removeItem)="removeVehicleDetail(i)"
+                        (addItem)="addVehicleDetail()"
+                    >
+                    </vioc-angular-add-remove-button>
+                </div>
+                <mat-form-field class="vehicle-year">
+                    <mat-label>Year Start</mat-label>
+                    <input
+                        id="year-start-{{ i }}"
+                        matInput
+                        formControlName="yearStart"
+                        placeholder="Year Start"
+                        type="number"
+                    />
+                    <mat-error
+                        *viocAngularFormError="
+                            vehicleDetails.at(i).getControl('yearStart').errors;
+                            customErrorMapping: customErrorMapping;
+                            let error
+                        "
+                        >{{ error }}</mat-error
+                    >
+                </mat-form-field>
+                <mat-form-field class="vehicle-year">
+                    <mat-label>Year End</mat-label>
+                    <input
+                        id="year-end-{{ i }}"
+                        matInput
+                        formControlName="yearEnd"
+                        placeholder="Year End"
+                        type="number"
+                    />
+                    <mat-error
+                        *viocAngularFormError="
+                            vehicleDetails.at(i).getControl('yearEnd').errors;
+                            customErrorMapping: customErrorMapping;
+                            let error
+                        "
+                        >{{ error }}</mat-error
+                    >
+                </mat-form-field>
+                <vioc-angular-filtered-input
+                    id="vehicle-make-{{ i }}"
+                    class="vehicle-make"
+                    [options]="vehicleMakes"
+                    [valueControl]="vehicleDetails.at(i).get('makeId')"
+                    [displayFn]="descriptionMapper"
+                    [valueFn]="idMapper"
+                    [editable]="editable"
+                    [nullable]="true"
+                    placeHolder="Make"
+                    [tooltipEnabled]="true"
+                    [flexed]="false"
+                ></vioc-angular-filtered-input>
+                <vioc-angular-filtered-input
+                    id="vehicle-model-{{ i }}"
+                    class="vehicle-model"
+                    [options]="vehicleModelMap[i]"
+                    [valueControl]="vehicleDetails.at(i).get('modelId')"
+                    [editable]="isVehicleModelEditable(i)"
+                    [displayFn]="descriptionMapper"
+                    [valueFn]="idMapper"
+                    [nullable]="true"
+                    placeHolder="Model"
+                    [tooltipEnabled]="true"
+                    [flexed]="false"
+                ></vioc-angular-filtered-input>
+                <vioc-angular-filtered-input
+                    id="vehicle-engine-config-{{ i }}"
+                    class="vehicle-engine"
+                    [options]="vehicleEngineConfigMap[i]"
+                    [valueControl]="vehicleDetails.at(i).get('engineConfigId')"
+                    [editable]="isVehicleEngineEditable(i)"
+                    [displayFn]="descriptionMapper"
+                    [valueFn]="idMapper"
+                    [nullable]="true"
+                    placeHolder="Engine"
+                    [tooltipEnabled]="true"
+                    [flexed]="false"
+                ></vioc-angular-filtered-input>
+            </div>
+            <vioc-angular-technical-vehicle-attribute-selection
+                id="vehicle-attributes-{{ i }}"
+                [vehicleDetail]="vehicleDetails.at(i)"
+                [editable]="editable"
+            ></vioc-angular-technical-vehicle-attribute-selection>
+        </ng-container>
+    </ng-container>
+</ng-template>

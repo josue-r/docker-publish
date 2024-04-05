@@ -1,0 +1,27 @@
+@import 'variables';
+
+#table-container {
+    max-height: 750px;
+    overflow-y: scroll;
+}
+
+.table-header {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    height: 64px;
+    padding-left: 24px;
+    padding-right: 14px;
+    display: flex;
+    align-items: center;
+
+    .right-align {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+    }
+
+    &.selected {
+        background-color: $blue-background;
+    }
+}

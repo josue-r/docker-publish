@@ -1,0 +1,21 @@
+{
+    "name": "security-feature-logout-when-idle",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/security/feature-logout-when-idle/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/security/feature-logout-when-idle/jest.config.ts"
+            }
+        }
+    },
+    "generators": {
+        "@nx/angular:component": {
+            "styleext": "scss"
+        }
+    },
+    "tags": ["scope:shared", "type:feature"]
+}

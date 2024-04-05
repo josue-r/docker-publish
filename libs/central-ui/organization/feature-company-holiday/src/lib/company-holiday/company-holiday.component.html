@@ -1,0 +1,201 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <!--When user clicks enter on the page, browser will try to perform the first submit action it gets(e.g. If first
+        button on that page is cancel and user performs enter, it'll try to perform the action for cancel). To stop
+        this behavior, use preventDefault and enabled it on the product code input by using keydown.enter event
+        if product code is focused. -->
+    <form *viocAngularLoading="form" (keydown.enter)="$event.preventDefault()" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="form.invalid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-stroked-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="form.invalid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <span class="header">Holiday Information</span>
+            </div>
+            <div class="section">
+                <div class="flex-container">
+                    <!-- Read Only Fields -->
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Company</mat-label>
+                        <input
+                            id="company-input"
+                            matInput
+                            required
+                            placeholder="Company"
+                            type="text"
+                            [value]="companyCodeAndDescription"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Holiday</mat-label>
+                        <input
+                            id="holiday-input"
+                            matInput
+                            [value]="holidayCodeAndDescription"
+                            placeholder="Holiday"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Holiday Date</mat-label>
+                        <input
+                            id="holidayDate-input"
+                            matInput
+                            required
+                            [value]="holidayDate"
+                            placeholder="Holiday Date"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Store Closed</mat-label>
+                        <input
+                            id="storeClosed-input"
+                            matInput
+                            required
+                            [value]="storeClosed"
+                            placeholder="Store Closed"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+
+                <span class="header">Stores Information</span>
+                <div class="flex-container">
+                    <vioc-angular-filtered-input
+                        id="region-select"
+                        class="flex-item"
+                        [options]="regions$ | async"
+                        [valueControl]="regionControl"
+                        [editable]="true"
+                        placeHolder="Region"
+                        [nullable]="true"
+                        [compareWith]="describedEquals"
+                        [displayFn]="codeAndDescriptionDisplayFn"
+                    >
+                    </vioc-angular-filtered-input>
+                    <vioc-angular-filtered-input
+                        id="market-select"
+                        class="flex-item"
+                        [options]="markets$ | async"
+                        [valueControl]="marketControl"
+                        [editable]="regionControl.value"
+                        placeHolder="Market"
+                        [nullable]="true"
+                        [compareWith]="describedEquals"
+                        [displayFn]="codeAndDescriptionDisplayFn"
+                    >
+                    </vioc-angular-filtered-input>
+                </div>
+                <div [ngClass]="valueSelected() ? 'table-header selected' : 'hidden'">
+                    <div *ngIf="valueSelected()" id="items-selected-text"
+                        >{{ selection.selected.length }} store(s) selected</div
+                    >
+                    <div class="right-align" *ngIf="valueSelected()">
+                        <button mat-button color="primary" id="close-action-yes" (click)="setSelectedToClosed(true)">
+                            SET TO YES
+                        </button>
+                        <button mat-button color="primary" id="close-action-no" (click)="setSelectedToClosed(false)">
+                            SET TO NO
+                        </button>
+                    </div>
+                </div>
+                <ng-container
+                    *ngIf="
+                        storeHolidayDataSource.data.length > 0 && (accessMode.isEdit || accessMode.isView);
+                        else noResults
+                    "
+                >
+                    <div class="overflow-container">
+                        <table
+                            mat-table
+                            matSort
+                            id="store-holiday-table"
+                            [dataSource]="storeHolidayDataSource"
+                            class="content-fit-table"
+                            aria-describedby="Store Holiday table"
+                        >
+                            <ng-container matColumnDef="select">
+                                <th id="vui-table-toggle" mat-header-cell class="not-printable" *matHeaderCellDef>
+                                    <mat-checkbox
+                                        id="master-checkbox-holiday"
+                                        (change)="$event ? masterToggle(storeHolidayDataSource) : null"
+                                        [checked]="selection.hasValue() && isAllSelected(storeHolidayDataSource)"
+                                        [indeterminate]="selection.hasValue() && !isAllSelected(storeHolidayDataSource)"
+                                        *ngIf="renderSelection"
+                                    >
+                                    </mat-checkbox>
+                                </th>
+                                <td
+                                    mat-cell
+                                    class="not-printable"
+                                    *matCellDef="let row; let i = index"
+                                    (click)="$event.stopPropagation()"
+                                >
+                                    <mat-checkbox
+                                        id="checkbox-{{ i }}"
+                                        (change)="selection.toggle(row)"
+                                        [checked]="selection.isSelected(row)"
+                                        *ngIf="renderSelection"
+                                    >
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="store.code">
+                                <th mat-header-cell id="storeDataCodeHeader" *matHeaderCellDef mat-sort-header>
+                                    Store Number
+                                </th>
+                                <td mat-cell id="storeDataCode-{{ i }}" *matCellDef="let row; let i = index">{{
+                                    row.getControlValue('store').code
+                                }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="store.description">
+                                <th mat-header-cell id="storeDataDescHeader" *matHeaderCellDef mat-sort-header>
+                                    Store Name
+                                </th>
+                                <td mat-cell id="storeDataDesc-{{ i }}" *matCellDef="let row; let i = index">{{
+                                    row.getControlValue('store').description
+                                }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="closed">
+                                <th mat-header-cell id="closed-header" *matHeaderCellDef mat-sort-header
+                                    >Store Closed</th
+                                >
+                                <td mat-cell id="storeDataClosed-{{ i }}" *matCellDef="let row; let i = index">
+                                    <p *ngIf="row.getControlValue('closed') === false">NO</p>
+                                    <p *ngIf="row.getControlValue('closed') === true">YES</p>
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                        </table>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </form>
+</vioc-angular-loading-overlay>

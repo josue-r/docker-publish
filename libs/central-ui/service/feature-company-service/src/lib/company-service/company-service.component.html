@@ -1,0 +1,146 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar *ngIf="!accessMode.isAdd">
+                <!-- TODO: 6/4/2020 implement with #5583 -->
+                <!-- <button
+                    mat-stroked-button
+                    id="clone-action"
+                    *ngIf="showClone"
+                    [disabled]="form.dirty || form.invalid"
+                    color="primary"
+                    (click)="clone()"
+                    >ADD LIKE</button
+                > -->
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <span class="header">Company Service Information</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Company</mat-label>
+                        <input
+                            *ngIf="!cloning"
+                            id="company"
+                            matInput
+                            placeholder="Company"
+                            type="text"
+                            [value]="companyDescription"
+                            [disabled]="true"
+                        />
+                        <mat-select
+                            *ngIf="cloning"
+                            id="companySelect"
+                            matInput
+                            placeholder="Company"
+                            [compareWith]="describedEquals"
+                            formControlName="company"
+                            (selectionChange)="selectCompany()"
+                            required
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let comp of accessibleCompanies" [value]="comp"
+                                >{{ comp.code }} -
+                                {{ comp.description }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item" *ngIf="!accessMode.isAdd">
+                        <mat-label>Service</mat-label>
+                        <textarea
+                            id="services"
+                            matInput
+                            cdkTextareaAutosize
+                            placeholder="Service"
+                            [value]="serviceDescription"
+                            [disabled]="true"
+                        ></textarea>
+                    </mat-form-field>
+                    <mat-checkbox class="flex-item small" matInput id="active" formControlName="active"
+                        >Active
+                    </mat-checkbox>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Pricing Strategy</mat-label>
+                        <mat-select
+                            matInput
+                            id="pricingStrategy"
+                            formControlName="pricingStrategy"
+                            placeholder="Pricing Strategy"
+                            required
+                        >
+                            <mat-option *ngFor="let strategy of pricingStrategies" [value]="strategy"
+                                >{{ strategy }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *viocAngularFormError="form.get('pricingStrategy').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <div class="spacer"></div>
+                </div>
+                <ng-container *viocAngularLoading="account$ | async; class: 'section'; let accounts">
+                    <div class="flex-container" *ngIf="accounts.costAccounts.length && accounts.salesAccounts.length">
+                        <mat-form-field class="flex-item">
+                            <mat-label>Cost Account</mat-label>
+                            <mat-select
+                                matInput
+                                id="costAccount"
+                                formControlName="costAccount"
+                                placeholder="Cost Account"
+                                [compareWith]="describedEquals"
+                            >
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let account of accounts.costAccounts" [value]="account"
+                                    >{{ account.code }} - {{ account.description }}</mat-option
+                                >
+                            </mat-select>
+                            <mat-error *viocAngularFormError="form.get('costAccount').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Sales Account</mat-label>
+                            <mat-select
+                                matInput
+                                id="salesAccount"
+                                formControlName="salesAccount"
+                                placeholder="Sales Account"
+                                [compareWith]="describedEquals"
+                            >
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let account of accounts.salesAccounts" [value]="account"
+                                    >{{ account.code }} - {{ account.description }}</mat-option
+                                >
+                            </mat-select>
+                            <mat-error *viocAngularFormError="form.get('salesAccount').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>

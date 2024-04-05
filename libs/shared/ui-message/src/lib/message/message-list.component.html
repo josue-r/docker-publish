@@ -1,0 +1,29 @@
+<div id="vui-error-minimizer" class="error-minimizer" (click)="toggleMinimized()" [ngClass]="minimizedState">
+    <mat-icon [@flipMinimizeButton]="minimizedState">keyboard_arrow_down</mat-icon>
+</div>
+<div class="snackbar-wrapper" [@minimizeContent]="minimizedState">
+    <div *ngFor="let message of messages | async" class="snackbar-message" @itemRemoval @itemAddition>
+        <div [ngSwitch]="message.severity" class="message-icon">
+            <mat-icon *ngSwitchCase="'error'" class="error-icon">error</mat-icon>
+            <mat-icon *ngSwitchCase="'info'" class="info-icon">info</mat-icon>
+            <mat-icon *ngSwitchCase="'warn'" class="warn-icon">warning</mat-icon>
+            <mat-icon *ngSwitchCase="'success'" class="success-icon">check_circle</mat-icon>
+        </div>
+        <p>
+            {{ message.message }}
+        </p>
+        <span class="fill-remaining-space"></span>
+        <button
+            id="vui-dismiss-button"
+            class="dismiss-button"
+            mat-button
+            (click)="dismiss(message)"
+            *ngIf="message.action"
+        >
+            {{ message.action }}
+        </button>
+        <button id="vui-dismiss-icon-button" class="dismiss-icon" mat-icon-button (click)="dismiss(message)">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+</div>

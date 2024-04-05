@@ -1,0 +1,76 @@
+import { QueryPage, QuerySearch, QuerySort, SearchLine } from '@vioc-angular/shared/common-api-models';
+import { EntityPatch } from '@vioc-angular/shared/util-api';
+import { Column, Comparators } from '@vioc-angular/shared/util-column';
+import { <%= classify(domain) %>Api } from '../api/<%= dasherize(domain) %>.api';
+import { <%= classify(domain) %>, <%= classify(domain) %>Id } from '../model/<%= dasherize(domain) %>.model';
+import { <%= classify(domain) %>Facade } from '../facade/<%= dasherize(domain) %>.facade';
+
+describe('<%= classify(domain) %>Facade', () => {
+    let api: <%= classify(domain) %>Api;
+    let facade: <%= classify(domain) %>Facade;
+
+    beforeEach(() => {
+        facade = new <%= classify(domain) %>Facade(null, null<%= createState ? ', null ': '' %>);
+        api = facade['api'];
+    });
+
+    describe('search', () => {
+        it('should just delegate to API', () => {
+            jest.spyOn(api, 'query').mockImplementation();
+
+            const column = Column.of({
+                name: 'Test',
+                type: 'string',
+                apiFieldPath: 'test'
+            });
+            const querySearch: QuerySearch = {
+                queryRestrictions: [new SearchLine(column, Comparators.notBlank).toQueryRestriction()],
+                sort: new QuerySort(column),
+                page: new QueryPage(0, 20)
+            };
+
+            facade.search(querySearch);
+
+            // verify that it delegated to api;
+            expect(api.query).toBeCalledWith(querySearch);
+        });
+    });
+
+    describe('entityPatch', () => {
+        it('should just delegate to API', () => {
+            jest.spyOn(api, 'entityPatch').mockImplementation();
+
+            const patch: EntityPatch<<%= classify(domain) %>Id> = { id: null, fields: ['foo'], updateValues: ['bar'] };
+
+            facade.entityPatch([patch]);
+
+            // verify that it delegated to api;
+            expect(api.entityPatch).toBeCalledWith(patch);
+        });
+    });
+
+    describe('dataSync', () => {
+        it('should just delegate to API', () => {
+            jest.spyOn(api, 'dataSync').mockImplementation();
+
+            const ids : <%= classify(domain) %>Id[] = [1, 2];
+
+            facade.dataSync(ids);
+
+            // verify that it delegated to api;
+            expect(api.dataSync).toBeCalledWith(ids);
+        });
+    });
+
+    describe('save', () => {
+        it('should just delegate to API', () => {
+            jest.spyOn(api, 'update').mockImplementation();
+            const toSave: <%= classify(domain) %>= {... new <%= classify(domain) %>(), id: 1};
+
+            facade.save(toSave);
+
+            // verify that it delegated to api;
+            expect(api.save).toBeCalledWith(toSave);
+        });
+    });
+});

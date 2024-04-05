@@ -1,0 +1,21 @@
+{
+    "name": "ui-audit",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/shared/ui-audit/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/shared/ui-audit/jest.config.ts"
+            }
+        }
+    },
+    "generators": {
+        "@nx/angular:component": {
+            "styleext": "scss"
+        }
+    },
+    "tags": ["scope:shared", "type:ui"]
+}

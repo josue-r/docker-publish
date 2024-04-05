@@ -1,0 +1,247 @@
+<!--When user clicks enter on the page, browser will try to perform the first submit action it gets(e.g. If first
+    button on that page is cancel and user performs enter, it'll try to perform the action for cancel).To stop 
+    this behavior, use preventDefault and enabled it on the product code input by using keydown.enter event 
+    if product code is focused. -->
+<form *viocAngularLoading="form" (keydown.enter)="$event.preventDefault()" [formGroup]="form">
+    <div class="page">
+        <vioc-angular-loading-overlay [loading]="isLoading">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="form.invalid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-stroked-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="form.invalid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+                <button
+                    mat-stroked-button
+                    id="cancel-transfer-action"
+                    *ngIf="isCancelTransferButtonShown()"
+                    color="warn"
+                    (click)="openCancelTransferDialog()"
+                    >CANCEL TRANSFER
+                </button>
+                <button
+                    mat-raised-button
+                    id="finalize-action"
+                    *ngIf="accessMode.isEdit || accessMode.isAdd"
+                    [disabled]="form.invalid"
+                    color="primary"
+                    (click)="openFinalizeTransferDialog()"
+                    >FINALIZE TRANSFER</button
+                >
+            </vioc-angular-action-bar>
+
+            <div class="section" *ngIf="!accessMode.isAdd">
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Transfer Number</mat-label>
+                        <input
+                            id="transfer-number-input"
+                            matInput
+                            [value]="form.getControlValue('id').transferId"
+                            placeholder="Transfer Number"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>From Store</mat-label>
+                        <input
+                            id="from-store-input"
+                            matInput
+                            [value]="form.getControlValue('fromStore').code"
+                            placeholder="From Store"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>To Store</mat-label>
+                        <input
+                            id="to-store-input"
+                            matInput
+                            [value]="form.getControlValue('toStore').code"
+                            placeholder="To Store"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Status</mat-label>
+                        <input
+                            id="status-input"
+                            matInput
+                            [value]="form.getControlValue('status').description"
+                            placeholder="Status"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="section" *ngIf="accessMode.isAdd">
+                <vioc-angular-inventory-transfer-store-selection
+                    [fromStore]="form.getControl('fromStore')"
+                    [toStore]="form.getControl('toStore')"
+                    [fromStores]="(fromStores$ | async)?.resources"
+                    [toStores]="toStores$ | async"
+                ></vioc-angular-inventory-transfer-store-selection>
+            </div>
+
+            <div class="section" *ngIf="!accessMode.isAdd">
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Created On</mat-label>
+                        <input
+                            id="created-date-input"
+                            matInput
+                            [value]="form.getControlValue('createdOn') | moment"
+                            placeholder="Created On"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Created By</mat-label>
+                        <input
+                            id="created-by-input"
+                            matInput
+                            [value]="form.getControlValue('createdByEmployee').name"
+                            placeholder="Created By"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                </div>
+                <div class="flex-container" *ngIf="transferIsFinalized">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Finalized On</mat-label>
+                        <input
+                            id="finalized-on-input"
+                            matInput
+                            [value]="form.getControlValue('finalizedOn') | moment"
+                            placeholder="Finalized On"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Finalized by</mat-label>
+                        <input
+                            id="finalized-by-input"
+                            matInput
+                            [value]="form.getControlValue('finalizedByEmployee').name"
+                            placeholder="Finalized By"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Carrier</mat-label>
+                        <input
+                            id="carrier-input"
+                            matInput
+                            formControlName="carrier"
+                            placeholder="Carrier"
+                            type="text"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('carrier').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="spacer"></div>
+                </div>
+            </div>
+
+            <vioc-angular-inventory-transfer-products
+                [form]="form.getArray('inventoryTransferProducts')"
+                [disableSelection]="accessMode.isView"
+                [status]="form.getControlValue('status')?.code"
+                (removeProducts)="onRemoveProducts($event)"
+            ></vioc-angular-inventory-transfer-products>
+            <vioc-angular-product-add-input
+                *ngIf="!accessMode.isView"
+                id="product-add-input"
+                [addDisabled]="isLoading || !storesSelected"
+                [existingProductCodes]="existingProductCodes"
+                [searchFn]="searchProductsFn"
+                (products)="addRequestedProducts($event)"
+            >
+            </vioc-angular-product-add-input>
+        </vioc-angular-loading-overlay>
+    </div>
+</form>
+<vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+
+<vioc-angular-dialog
+    #cancelTransferDialog
+    id="cancel-transfer-dialog"
+    [name]="'Cancel Transfer'"
+    [content]="cancelContent"
+    [actions]="cancelActions"
+></vioc-angular-dialog>
+<ng-template #cancelContent>
+    <div>Are you sure you want to cancel transfer number {{ transferId }} </div>
+</ng-template>
+<ng-template #cancelActions>
+    <button mat-stroked-button id="cancel-button" (click)="closeCancelTransferDialog()">GO BACK</button>
+    <button
+        mat-stroked-button
+        id="continue-button"
+        color="warn"
+        class="continue-button"
+        disableButtonClick
+        (disableClick)="cancelInventoryTransfer()"
+        >CANCEL TRANSFER</button
+    >
+</ng-template>
+
+<vioc-angular-dialog
+    #finalizeTransferDialog
+    id="finalize-transfer-dialog"
+    [name]="'Finalize Transfer'"
+    [content]="accessMode.isAdd ? finalizeAddContent : finalizeContent"
+    [actions]="finalizeActions"
+></vioc-angular-dialog>
+<ng-template #finalizeContent>
+    <div id="finalize-confirmation">Are you sure you want to finalize transfer number {{ transferNumber }}? </div>
+</ng-template>
+<ng-template #finalizeAddContent>
+    <div id="finalize-confirmation">Are you sure you want to finalize the transfer?</div>
+</ng-template>
+<ng-template #finalizeActions>
+    <button mat-stroked-button id="finalize-cancel-button" (click)="closeFinalizeTransferDialog()">GO BACK</button>
+    <button
+        mat-raised-button
+        id="finalize-continue-button"
+        color="primary"
+        class="continue-button"
+        disableButtonClick
+        (disableClick)="finalize()"
+        >FINALIZE TRANSFER</button
+    >
+</ng-template>

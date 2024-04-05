@@ -1,0 +1,7 @@
+<vioc-angular-dialog [name]="'About'" [content]="content" [actions]="actions"></vioc-angular-dialog>
+<ng-template #content>
+    <vioc-angular-about></vioc-angular-about>
+</ng-template>
+<ng-template #actions>
+    <button mat-button id="close-button" (click)="close()">Close</button>
+</ng-template>

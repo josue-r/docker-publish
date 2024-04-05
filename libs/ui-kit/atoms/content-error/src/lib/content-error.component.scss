@@ -1,0 +1,68 @@
+@import '../../../../styles/styles.scss';
+
+.ui-kit-content-error {
+    display: flex;
+    text-align: center;
+    padding: 16px 32px;
+    font-family: 'Roboto', sans-serif;
+    align-items: center;
+    gap: 12px;
+    flex-direction: column;
+
+    &--vertical {
+        justify-content: center;
+
+        &--icon {
+            width: 20%;
+            height: auto;
+        }
+    }
+
+    &--horizontal {
+        padding: 0;
+        font-size: 22px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        letter-spacing: -0.64px;
+        vertical-align: middle;
+        display: inline;
+        &--icon {
+            margin-right: 20px;
+            vertical-align: middle;
+        }
+    }
+
+    &--description {
+        color: $diesel;
+        margin: 0;
+        font-style: italic;
+
+        &--small {
+            @extend .body-3;
+        }
+        &--medium {
+            @extend .body-2;
+        }
+        &--large {
+            @extend .body;
+        }
+    }
+
+    &--error {
+        color: $error;
+        margin: 0;
+        font-style: italic;
+        vertical-align: middle;
+
+        &--small {
+            @extend .body-3;
+        }
+        &--medium {
+            @extend .body-2;
+        }
+        &--large {
+            @extend .body;
+        }
+    }
+}

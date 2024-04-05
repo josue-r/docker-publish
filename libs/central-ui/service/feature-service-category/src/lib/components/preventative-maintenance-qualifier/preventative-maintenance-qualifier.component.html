@@ -1,0 +1,48 @@
+<div class="section">
+    <div *ngIf="pmQualifierFormArray && pmQualifierFormArray.length > 0; else emptyQualifierList">
+        <div
+            class="flex-container pmQualifierItems"
+            *ngFor="let items of pmQualifierFormArray.controls; let i = index"
+            [formGroup]="items"
+        >
+            <vioc-angular-add-remove-button
+                *ngIf="!isViewMode || isPreventativeMaintenanceQualifierAddable(i)"
+                [removeButtonDisplayed]="!isViewMode"
+                [addButtonDisplayed]="isPreventativeMaintenanceQualifierAddable(i)"
+                (removeItem)="removePreventativeMaintenanceQualifier(i)"
+                (addItem)="addPreventativeMaintenanceQualifier()"
+            >
+            </vioc-angular-add-remove-button>
+            <mat-form-field class="flex-item">
+                <mat-select
+                    id="transmission-type"
+                    matInput
+                    formControlName="transmissionType"
+                    placeholder="Transmission Type"
+                    [compareWith]="describedEquals"
+                >
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let type of transmissionType$ | async" [value]="type">{{
+                        type.description
+                    }}</mat-option>
+                </mat-select>
+                <mat-error *viocAngularFormError="items.get('transmissionType').errors; let error">
+                    {{ error }}
+                </mat-error>
+            </mat-form-field>
+            <mat-form-field class="flex-item">
+                <input id="qualifier" matInput formControlName="qualifier" placeholder="Qualifier" type="text" />
+                <mat-error *viocAngularFormError="items.get('qualifier').errors; let error"> {{ error }} </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <ng-template #emptyQualifierList>
+        <div class="flex-container" *ngIf="!isViewMode">
+            <vioc-angular-add-remove-button
+                [addButtonDisplayed]="true"
+                (addItem)="addPreventativeMaintenanceQualifier()"
+            ></vioc-angular-add-remove-button>
+            <div class="spacer"></div>
+        </div>
+    </ng-template>
+</div>

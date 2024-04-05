@@ -1,0 +1,9 @@
+@use '@angular/material' as mat;
+@import '../../../../styles/styles.scss';
+
+.card {
+    overflow: hidden;
+    margin: 10px;
+    background-color: $white;
+    @include mat.elevation(5);
+}

@@ -1,0 +1,35 @@
+<div class="section">
+    <div *ngIf="motorInfoFormArray && motorInfoFormArray.length > 0; else emptyMotorInfoList">
+        <div
+            class="flex-container serviceCategoryMotorItems"
+            *ngFor="let items of motorInfoFormArray.controls; let i = index"
+            [formGroup]="items"
+        >
+            <vioc-angular-add-remove-button
+                *ngIf="!isViewMode || isMotorInfoAddable(i)"
+                [removeButtonDisplayed]="!isViewMode"
+                [addButtonDisplayed]="isMotorInfoAddable(i)"
+                (removeItem)="removeMotorInfo(i)"
+                (addItem)="addMotorInfo()"
+            >
+            </vioc-angular-add-remove-button>
+            <mat-form-field class="flex-item small">
+                <input id="motor-item" matInput formControlName="item" placeholder="MOTOR Item" type="text" />
+                <mat-error *viocAngularFormError="items.get('item').errors; let error"> {{ error }} </mat-error>
+            </mat-form-field>
+            <mat-form-field class="flex-item small">
+                <input id="motor-action" matInput formControlName="action" placeholder="MOTOR Action" type="text" />
+                <mat-error *viocAngularFormError="items.get('action').errors; let error"> {{ error }} </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <ng-template #emptyMotorInfoList>
+        <div class="flex-container" *ngIf="!isViewMode">
+            <vioc-angular-add-remove-button
+                [addButtonDisplayed]="true"
+                (addItem)="addMotorInfo()"
+            ></vioc-angular-add-remove-button>
+            <div class="spacer"></div>
+        </div>
+    </ng-template>
+</div>

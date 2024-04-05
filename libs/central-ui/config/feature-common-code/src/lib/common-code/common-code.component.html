@@ -1,0 +1,102 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form && (accessMode.isAdd || (commonCodeType$ | async)); let ccType" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <div class="flex-container">
+                    <vioc-angular-filtered-input
+                        class="flex-item"
+                        *ngIf="accessMode.isAdd; else typeInput"
+                        [options]="types$ | async"
+                        [valueControl]="commonCodeTypeControl"
+                        [editable]="true"
+                        placeHolder="Common Code Type"
+                    ></vioc-angular-filtered-input>
+                    <ng-template #typeInput>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Common Code Type</mat-label>
+                            <input
+                                matInput
+                                required
+                                formControlName="type"
+                                placeholder="Common Code Type"
+                                type="text"
+                            />
+                        </mat-form-field>
+                    </ng-template>
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Type Description</mat-label>
+                        <input
+                            matInput
+                            required
+                            [value]="ccType.description ? ccType.description : commonCodeTypeControl.value?.description"
+                            placeholder="Type Description"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Common Code</mat-label>
+                        <input matInput required formControlName="code" placeholder="Common Code" type="text" />
+                        <mat-error
+                            *viocAngularFormError="
+                                form.get('code').errors;
+                                customErrorMapping: commonCodeErrorMapping;
+                                let error
+                            "
+                        >
+                            {{ error }}</mat-error
+                        >
+                    </mat-form-field>
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Report Order</mat-label>
+                        <input
+                            matInput
+                            required
+                            formControlName="reportOrder"
+                            placeholder="Report Order"
+                            type="number"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('reportOrder').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-checkbox class="flex-item small" matInput formControlName="active">Active</mat-checkbox>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Description</mat-label>
+                        <input matInput required formControlName="description" placeholder="Description" type="text" />
+                        <mat-error *viocAngularFormError="form.getControl('description').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </form>
+    <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+</vioc-angular-loading-overlay>

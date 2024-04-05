@@ -1,0 +1,128 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div id="discount-offer-content" class="section">
+                <span class="header">Discount Offer Content</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Name</mat-label>
+                        <input id="name" matInput formControlName="name" placeholder="Name" type="text" required />
+                        <mat-error *viocAngularFormError="form.getControl('name').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-checkbox class="flex-item" matInput formControlName="active">Active</mat-checkbox>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Short Text</mat-label>
+                        <input
+                            id="shortText"
+                            matInput
+                            formControlName="shortText"
+                            placeholder="Short Text"
+                            type="text"
+                            required
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('shortText').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Long Text</mat-label>
+                        <textarea
+                            id="longText"
+                            matInput
+                            formControlName="longText"
+                            placeholder="Long Text"
+                            type="text"
+                            rows="2"
+                        ></textarea>
+                        <mat-error *viocAngularFormError="form.getControl('longText').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="section">
+                <span class="header">Disclaimers</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Short Text</mat-label>
+                        <textarea
+                            id="disclaimerShortText"
+                            matInput
+                            formControlName="disclaimerShortText"
+                            placeholder="Short Text"
+                            type="text"
+                            rows="2"
+                        ></textarea>
+                        <mat-error *viocAngularFormError="form.getControl('disclaimerShortText').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Long Text</mat-label>
+                        <textarea
+                            id="disclaimerLongText"
+                            matInput
+                            formControlName="disclaimerLongText"
+                            placeholder="Long Text"
+                            type="text"
+                            rows="2"
+                        ></textarea>
+                        <mat-error *viocAngularFormError="form.getControl('disclaimerLongText').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="section">
+                <span class="header">Conditions</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Conditions</mat-label>
+                        <textarea
+                            id="conditions"
+                            matInput
+                            formControlName="conditions"
+                            placeholder="Conditions"
+                            type="text"
+                            rows="2"
+                        ></textarea>
+                        <mat-error *viocAngularFormError="form.getControl('conditions').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+    </form>
+    <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+</vioc-angular-loading-overlay>

@@ -1,0 +1,22 @@
+{
+    "name": "central-ui-service-data-access-car-fax-mapping",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/central-ui/service/data-access-car-fax-mapping/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/central-ui/service/data-access-car-fax-mapping/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "generators": {
+        "@nx/angular:component": {
+            "style": "sass"
+        }
+    },
+    "tags": ["scope:central-ui", "type:data-access"]
+}

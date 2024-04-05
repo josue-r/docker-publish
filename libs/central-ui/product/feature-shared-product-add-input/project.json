@@ -1,0 +1,22 @@
+{
+    "name": "central-ui-product-feature-shared-product-add-input",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/central-ui/product/feature-shared-product-add-input/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/central-ui/product/feature-shared-product-add-input/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "generators": {
+        "@schematics/angular:component": {
+            "style": "sass"
+        }
+    },
+    "tags": ["scope:central-ui", "type:feature-shared"]
+}

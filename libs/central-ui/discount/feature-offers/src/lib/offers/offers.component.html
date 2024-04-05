@@ -1,0 +1,322 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" (keydown.enter)="$event.preventDefault()" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid || pendingDiscountGeneration"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-stroked-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid || pendingDiscountGeneration"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <span class="header">Offer Information</span>
+                <div class="flex-container" *ngIf="this.accessMode.isAdd">
+                    <vioc-angular-filtered-input
+                        id="company-input"
+                        class="flex-item"
+                        [options]="companies$ | async"
+                        [valueControl]="form.getControl('company')"
+                        [editable]="this.accessMode.isAdd && pendingDiscountGeneration"
+                        placeHolder="Company"
+                        [nullable]="false"
+                        [compareWith]="describedEquals"
+                        [displayFn]="codeAndDescriptionDisplayFn"
+                        [required]="true"
+                    >
+                    </vioc-angular-filtered-input>
+                    <button
+                        id="discount-search"
+                        mat-icon-button
+                        color="primary"
+                        matTooltip="Search for discount(s) to add"
+                        [disabled]="!isDiscountSelectable || !pendingDiscountGeneration"
+                        (click)="openSearchDialog()"
+                    >
+                        <mat-icon>search</mat-icon>
+                    </button>
+                    <mat-form-field id="discount-add-form-field">
+                        <input
+                            id="discount-code-input"
+                            matInput
+                            type="text"
+                            [formControl]="discountCodeControl"
+                            placeholder="Discount Code"
+                            (keydown.enter)="!discountCodeControl.value ? '' : addDiscountFromInput()"
+                            required
+                        />
+                    </mat-form-field>
+                    <button
+                        id="discount-go"
+                        mat-icon-button
+                        color="primary"
+                        matTooltip="Add the entered discount"
+                        [disabled]="!discountCodeControl.value || !pendingDiscountGeneration || !isDiscountSelectable"
+                        (click)="addDiscountFromInput()"
+                    >
+                        <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                </div>
+                <div class="flex-container" *ngIf="!accessMode.isAdd">
+                    <!-- Read Only Fields -->
+                    <mat-form-field class="flex-item">
+                        <mat-label>Company</mat-label>
+                        <input
+                            id="company"
+                            matInput
+                            required
+                            placeholder="Company"
+                            type="text"
+                            [value]="companyCodeAndDescription"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Discount Code</mat-label>
+                        <input
+                            id="discountCode"
+                            matInput
+                            [value]="discountCode"
+                            placeholder="Discount Code"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+                <ng-container *ngIf="!pendingDiscountGeneration">
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item small">
+                            <mat-label>Discount Description</mat-label>
+                            <textarea
+                                id="discountDescription"
+                                matInput
+                                required
+                                cdkTextareaAutosize
+                                [value]="discountDescription"
+                                placeholder="Discount Description"
+                                type="text"
+                                [disabled]="true"
+                            ></textarea>
+                        </mat-form-field>
+                        <mat-form-field class="flex-item small">
+                            <mat-label>Discount Type</mat-label>
+                            <input
+                                id="type"
+                                matInput
+                                required
+                                [value]="discountType"
+                                placeholder="Discount Type"
+                                type="text"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item">
+                            <mat-label>Start Date</mat-label>
+                            <input
+                                id="startDate"
+                                matInput
+                                required
+                                [value]="startDate | date"
+                                placeholder="Start Date"
+                                type="text"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+                        <mat-form-field class="flex-item">
+                            <mat-label>End Date</mat-label>
+                            <input
+                                id="endDate"
+                                matInput
+                                required
+                                [value]="endDate | date"
+                                placeholder="End Date"
+                                type="text"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+
+                        <!-- Editable Fields -->
+                        <div class="flex-container">
+                            <mat-checkbox class="flex-item small" id="active" matInput formControlName="active"
+                                >Active</mat-checkbox
+                            >
+                        </div>
+                    </div>
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item large">
+                            <mat-label>Offer Content Type</mat-label>
+                            <mat-select
+                                id="offerContentType"
+                                matInput
+                                required
+                                formControlName="offerContent"
+                                placeholder="Offer Content Type"
+                                [compareWith]="describedEquals"
+                            >
+                                <mat-option></mat-option>
+                                <mat-option
+                                    *ngFor="let offerContentType of offerContentType$ | async"
+                                    [value]="offerContentType"
+                                >
+                                    {{ offerContentType.name }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *viocAngularFormError="form.getControl('offerContent').errors; let error">
+                                {{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <!-- Fields only displayed on add screen -->
+                    <div class="flex-container" *ngIf="!pendingOfferContentTypeSelection && this.accessMode.isAdd">
+                        <mat-form-field class="flex-item small">
+                            <textarea
+                                id="offerContentConditions"
+                                matInput
+                                required
+                                cdkTextareaAutosize
+                                [value]="offerContentConditions"
+                                placeholder="Offer Content Conditions"
+                                type="text"
+                                [disabled]="true"
+                            ></textarea>
+                        </mat-form-field>
+                        <mat-form-field class="flex-item small">
+                            <textarea
+                                id="offerContentDisclaimerShortText"
+                                matInput
+                                cdkTextareaAutosize
+                                required
+                                [value]="offerContentDisclaimerShortText"
+                                placeholder="Offer Content Disclaimer"
+                                type="text"
+                                [disabled]="true"
+                            ></textarea>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item small">
+                            <mat-label>Amount</mat-label>
+                            <input
+                                id="amount"
+                                matInput
+                                required
+                                formControlName="amount"
+                                placeholder="Amount"
+                                type="text"
+                            />
+                            <mat-error *viocAngularFormError="form.getControl('amount').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="flex-item large">
+                            <mat-label>Amount Format</mat-label>
+                            <mat-select
+                                id="amountFormat"
+                                matInput
+                                required
+                                formControlName="amountFormat"
+                                placeholder="Amount Format"
+                                [compareWith]="describedEquals"
+                            >
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let amountFormat of amountFormat$ | async" [value]="amountFormat">
+                                    {{ amountFormat.description }} - {{ amountFormat.code }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *viocAngularFormError="form.getControl('amountFormat').errors; let error">
+                                {{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item small">
+                            <mat-label>Expiration Days</mat-label>
+                            <input
+                                id="daysToExpire"
+                                matInput
+                                formControlName="daysToExpire"
+                                placeholder="Expiration Days"
+                                type="text"
+                            />
+                            <mat-error *viocAngularFormError="form.getControl('daysToExpire').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="flex-item small">
+                            <mat-label>Expiration Date</mat-label>
+                            <input
+                                id="expirationDays"
+                                matInput
+                                formControlName="expirationDate"
+                                placeholder="Expiration Date"
+                                [matDatepicker]="expirationDateDatePicker"
+                            />
+                            <mat-datepicker-toggle matSuffix [for]="expirationDateDatePicker"></mat-datepicker-toggle>
+                            <mat-datepicker #expirationDateDatePicker></mat-datepicker>
+                            <mat-error *viocAngularFormError="form.get('expirationDate').errors; let error"
+                                >{{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <span class="header" *ngIf="!this.accessMode.isAdd">Stores</span>
+                    <!-- Store Selection Component -->
+                    <vioc-angular-offer-stores
+                        #stores
+                        id="store-table"
+                        [form]="form"
+                        [accessMode]="accessMode"
+                        [initiateRegionSearch]="initiateRegionSearch"
+                        [initiateMarketSearch]="initiateMarketSearch"
+                        *ngIf="!this.accessMode.isAdd"
+                    >
+                    </vioc-angular-offer-stores>
+                </ng-container>
+            </div>
+        </div>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>
+
+<vioc-angular-dialog
+    #searchDialog
+    id="search-add-discount"
+    [name]="'Search Discount'"
+    [content]="content"
+    [actions]="actions"
+></vioc-angular-dialog>
+<ng-template #content>
+    <vioc-angular-discount-selection
+        id="discount-selection"
+        [control]="discountSelectionControl"
+        [searchFn]="searchDiscountFn"
+        [singleSelection]="true"
+    ></vioc-angular-discount-selection>
+</ng-template>
+<ng-template #actions>
+    <button id="cancel-search-button" mat-stroked-button (click)="closeSearchDialog()">CANCEL</button>
+    <button
+        id="add-discount-button"
+        mat-raised-button
+        color="primary"
+        [disabled]="!isSelected()"
+        (click)="addDiscountFromSearch()"
+        >ADD</button
+    >
+</ng-template>

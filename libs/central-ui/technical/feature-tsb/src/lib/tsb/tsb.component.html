@@ -1,0 +1,76 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <div class="flex-container">
+                    <mat-form-field class="flex-item large">
+                        <mat-label>TSB Name</mat-label>
+                        <input matInput required formControlName="name" placeholder="TSB Name" />
+                        <mat-error *viocAngularFormError="form.getControl('name').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <vioc-angular-filtered-input
+                        class="flex-item"
+                        [options]="serviceCategories$ | async"
+                        [valueControl]="serviceCategoryControl"
+                        [editable]="true"
+                        [nullable]="true"
+                        placeHolder="Service Category"
+                        [customErrorMapping]="tsbErrorMapping"
+                        [compareWith]="idEquals"
+                    ></vioc-angular-filtered-input>
+                    <mat-checkbox matInput formControlName="active">Active</mat-checkbox>
+                </div>
+            </div>
+            <vioc-angular-document-selection
+                [documentFile]="model.documentFile"
+                [externalLink]="model.externalLink"
+                [editable]="!accessMode.isView"
+                info="A TSB requires either a document or an external link."
+                (documentFileChange)="onDocumentFileChange($event)"
+                (externalLinkChange)="onExternalLinkChange($event)"
+            ></vioc-angular-document-selection>
+            <div class="section vehicle-details" *ngIf="!accessMode.isView || vehiclesControlArray.length">
+                <div class="header">
+                    Vehicle Details
+                    <vioc-angular-info-button
+                        id="vehicle-detail-filter-info"
+                        *ngIf="filterVehicleDetails"
+                        info="There are {{
+                            vehiclesControlArray.length
+                        }} vehicle mappings. A filter is being applied to reduce page load."
+                    ></vioc-angular-info-button>
+                </div>
+                <vioc-angular-technical-vehicle-detail-selection
+                    [vehicleDetails]="vehiclesControlArray"
+                    [editable]="!accessMode.isView"
+                    [filter]="filterVehicleDetails"
+                ></vioc-angular-technical-vehicle-detail-selection>
+            </div>
+        </div>
+    </form>
+    <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+</vioc-angular-loading-overlay>

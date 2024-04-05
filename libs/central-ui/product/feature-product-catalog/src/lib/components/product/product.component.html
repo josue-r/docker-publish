@@ -1,0 +1,327 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="add-like-action"
+                    *ngIf="showAddLike"
+                    [disabled]="form.dirty || form.invalid"
+                    color="primary"
+                    (click)="addLike()"
+                    >ADD LIKE</button
+                >
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <span class="header">Product Information</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Product Code</mat-label>
+                        <input matInput required formControlName="code" placeholder="Product Code" type="text" />
+                        <mat-error *viocAngularFormError="form.getControl('code').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item large">
+                        <mat-label>Category</mat-label>
+                        <mat-select
+                            matInput
+                            required
+                            formControlName="productCategory"
+                            placeholder="Category"
+                            [compareWith]="describedEquals"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option class="removed" *ngIf="showInvalidCategory" [value]="model.productCategory">
+                                {{ model.productCategory.code }} - {{ model.productCategory.description }}
+                            </mat-option>
+                            <mat-option *ngFor="let category of productCategorie$ | async" [value]="category">
+                                {{ category.code }} - {{ category.description }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error
+                            *viocAngularFormError="
+                                form.getControl('productCategory').errors;
+                                customErrorMapping: categoryErrorMapping;
+                                let error
+                            "
+                        >
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-checkbox class="flex-item small" matInput formControlName="active"> Active </mat-checkbox>
+                    <mat-checkbox
+                        class="flex-item small"
+                        id="supportsECommerce"
+                        matInput
+                        formControlName="supportsECommerce"
+                        >eCommerce Supported</mat-checkbox
+                    >
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Invoice Description</mat-label>
+                        <input
+                            matInput
+                            required
+                            formControlName="description"
+                            placeholder="Invoice Description"
+                            type="text"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('description').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="flex-item small flex-container">
+                        <mat-form-field class="fill-remaining-space">
+                            <mat-label>Default UOM</mat-label>
+                            <mat-select
+                                matInput
+                                required
+                                formControlName="defaultUom"
+                                placeholder="Default UOM"
+                                [compareWith]="describedEquals"
+                            >
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let uom of unitOfMeasure$ | async" [value]="uom">
+                                    {{ uom.description }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *viocAngularFormError="form.getControl('defaultUom').errors; let error">
+                                {{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                        <vioc-angular-info-button
+                            info="When adding this product to a company, this is the UOM that will be set by default"
+                        >
+                        </vioc-angular-info-button>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <span class="header">Inventory Information</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Inventory Description</mat-label>
+                        <input
+                            matInput
+                            required
+                            formControlName="inventoryDescription"
+                            placeholder="Inventory Description"
+                            type="text"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('inventoryDescription').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <div class="flex-item flex-container">
+                        <mat-form-field class="fill-remaining-space">
+                            <mat-label>SAP Product Number</mat-label>
+                            <input matInput formControlName="sapNumber" placeholder="SAP Product Number" type="text" />
+                            <mat-error *viocAngularFormError="form.getControl('sapNumber').errors; let error">
+                                {{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                        <vioc-angular-info-button
+                            info="The code that will show up on the orders & RMs"
+                        ></vioc-angular-info-button>
+                    </div>
+                    <mat-form-field class="flex-item">
+                        <mat-label>UPC</mat-label>
+                        <input matInput formControlName="upc" placeholder="UPC" type="text" />
+                        <mat-error *viocAngularFormError="form.getControl('upc').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Related Product Code</mat-label>
+                        <input
+                            matInput
+                            required
+                            formControlName="relatedProductCode"
+                            placeholder="Related Product Code"
+                            type="text"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('relatedProductCode').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="flex-item">
+                        <mat-checkbox matInput formControlName="obsolete"> Obsolete </mat-checkbox>
+                        <vioc-angular-info-button
+                            info="Use the related product for ordering"
+                        ></vioc-angular-info-button>
+                    </div>
+                </div>
+                <div class="flex-container">
+                    <div class="flex-item">
+                        <mat-checkbox matInput formControlName="bulk"> Bulk Product </mat-checkbox>
+                        <vioc-angular-info-button
+                            info="Display with the bulk vendor type when ordering"
+                        ></vioc-angular-info-button>
+                    </div>
+                    <div class="flex-item">
+                        <mat-checkbox matInput formControlName="tankStorage"> Uses Tank </mat-checkbox>
+                        <vioc-angular-info-button
+                            info="Can be assigned to a tank in the store tank setup"
+                        ></vioc-angular-info-button>
+                    </div>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Product Type</mat-label>
+                        <mat-select
+                            matInput
+                            required
+                            formControlName="type"
+                            placeholder="Product Type"
+                            [compareWith]="describedEquals"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let productType of productType$ | async" [value]="productType">
+                                {{ productType.description }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *viocAngularFormError="form.getControl('type').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="flex-item flex-container">
+                        <mat-form-field class="fill-remaining-space">
+                            <mat-label>Vendor Type</mat-label>
+                            <mat-select
+                                matInput
+                                required
+                                formControlName="vendorType"
+                                placeholder="Vendor Type"
+                                [compareWith]="describedEquals"
+                            >
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let vendorType of vendorType$ | async" [value]="vendorType">
+                                    {{ vendorType.description }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *viocAngularFormError="form.getControl('vendorType').errors; let error">
+                                {{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                        <vioc-angular-info-button
+                            info="Used to select vendor when setting up at store level"
+                        ></vioc-angular-info-button>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <span class="header">Reporting</span>
+                <div class="flex-container">
+                    <div class="flex-item flex-container">
+                        <mat-form-field class="fill-remaining-space">
+                            <mat-label>Report Order</mat-label>
+                            <input
+                                matInput
+                                required
+                                formControlName="reportOrder"
+                                placeholder="Report Order"
+                                type="text"
+                            />
+                            <mat-error *viocAngularFormError="form.getControl('reportOrder').errors; let error">
+                                {{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                        <vioc-angular-info-button
+                            info="Order in which product appears on appropriate reports"
+                        ></vioc-angular-info-button>
+                    </div>
+                    <div class="flex-item flex-container">
+                        <mat-form-field class="fill-remaining-space">
+                            <mat-label>Fluid Group</mat-label>
+                            <mat-select
+                                matInput
+                                formControlName="fluidGroup"
+                                placeholder="Fluid Group"
+                                [compareWith]="describedEquals"
+                            >
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let fluidGroup of fluidGroup$ | async" [value]="fluidGroup">
+                                    {{ fluidGroup.code }}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <vioc-angular-info-button info="Viscosity for fluid products. Does not apply to other products">
+                        </vioc-angular-info-button>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <span class="header hinted">Motor Product Keys</span>
+                <vioc-angular-info-button
+                    info="Values entered are found in the Motor Database and map the product to the Motor Database"
+                >
+                </vioc-angular-info-button>
+                <div
+                    formArrayName="productMotorMapping"
+                    *ngIf="this.form.getArray('productMotorMapping').length > 0; else emptyMotorProductMap"
+                >
+                    <div
+                        class="flex-container productMotorMappingInfo"
+                        *ngFor="let productMotorMapping of form.getArray('productMotorMapping').controls; let i = index"
+                        [formGroupName]="i"
+                    >
+                        <vioc-angular-add-remove-button
+                            [removeButtonDisplayed]="!accessMode.isView"
+                            [addButtonDisplayed]="isAddProductMotorMappingDisplayed(i)"
+                            [addButtonDisabled]="accessMode.isView"
+                            (removeItem)="removeProductMotorMapping(i)"
+                            (addItem)="addProductMotorMapping()"
+                        >
+                        </vioc-angular-add-remove-button>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Motor Link Value</mat-label>
+                            <input matInput formControlName="motorKey" placeholder="Motor Link Value" type="text" />
+                            <mat-error *viocAngularFormError="productMotorMapping.get('motorKey').errors; let error">
+                                {{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <ng-template #emptyMotorProductMap>
+                    <div class="flex-container">
+                        <vioc-angular-add-remove-button
+                            [addButtonDisplayed]="true"
+                            [addButtonDisabled]="accessMode.isView"
+                            (addItem)="addProductMotorMapping()"
+                        >
+                        </vioc-angular-add-remove-button>
+                    </div>
+                </ng-template>
+            </div>
+        </div>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>

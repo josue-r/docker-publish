@@ -1,0 +1,31 @@
+{
+    "name": "ui-kit-atoms-divider",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/ui-kit/atoms/divider/src",
+    "prefix": "vioc-angular",
+    "tags": ["scope:shared", "type:ui"],
+    "projectType": "library",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "libs/ui-kit/atoms/divider/jest.config.ts",
+                "passWithNoTests": true
+            },
+            "configurations": {
+                "ci": {
+                    "ci": true,
+                    "codeCoverage": true
+                }
+            }
+        },
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["libs/ui-kit/atoms/divider/**/*.ts", "libs/ui-kit/atoms/divider/**/*.html"]
+            }
+        }
+    }
+}

@@ -1,0 +1,60 @@
+@import 'variables';
+@import 'global-variables.scss';
+
+:host {
+    display: block;
+}
+
+.bay-container-details {
+    display: inline-block;
+    width: 100%;
+    height: 90vh;
+    &-centered {
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+    }
+    &-initial-cards {
+        padding-top: 20vh;
+    }
+}
+
+.oil-filter-container {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.oil-filter-card {
+    width: 70%;
+}
+
+.air-filters-container {
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+}
+
+.air-filter-card {
+    width: 35%;
+}
+
+.cabin-air-filter-card {
+    width: 35%;
+}
+
+.gray-text {
+    color: $white-to-black-4;
+}
+
+.wrench-icon {
+    width: 10%;
+    height: auto;
+}

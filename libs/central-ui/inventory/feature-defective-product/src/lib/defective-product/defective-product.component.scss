@@ -1,0 +1,26 @@
+#receiptProductsTable {
+    margin-top: 10px;
+}
+
+#finalize-continue-button,
+#cancel-continue-button,
+#split-dialog-finalize-button,
+#split-dialog-split-button {
+    margin-left: 10px;
+}
+.flex-container {
+    min-height: 5.5em;
+}
+
+.quantity-spacer .mat-mdc-form-field-error-wrapper {
+    padding: 0 15px;
+}
+
+.mat-mdc-form-field.quantity-spacer {
+    min-width: 55px;
+    flex: 0.5;
+}
+
+::ng-deep .quantity-spacer .mat-mdc-text-field-wrapper .mat-mdc-form-field-flex .mat-mdc-form-field-infix {
+    min-width: 55px;
+}

@@ -1,0 +1,14 @@
+<ng-template #dialog>
+    <div class="modal-dialog">
+        <div class="header">
+            <h3>{{ name }}</h3>
+        </div>
+        <div class="content">
+            <ng-container *ngTemplateOutlet="content"></ng-container>
+        </div>
+        <div class="actions">
+            <span class="fill-remaining-space"></span>
+            <ng-container *ngTemplateOutlet="actions"></ng-container>
+        </div>
+    </div>
+</ng-template>

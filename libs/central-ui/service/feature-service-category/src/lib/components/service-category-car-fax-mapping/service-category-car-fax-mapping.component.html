@@ -1,0 +1,44 @@
+<div class="section">
+    <div *ngIf="carFaxMappingFormArray && carFaxMappingFormArray.length > 0; else emptyCarFaxList">
+        <div
+            class="flex-container serviceCategoryCarFaxMappings"
+            *ngFor="let items of carFaxMappingFormArray.controls; let i = index"
+            [formGroup]="items"
+        >
+            <vioc-angular-add-remove-button
+                *ngIf="!isViewMode || isCarFaxMappingAddable(i)"
+                [removeButtonDisplayed]="!isViewMode"
+                [addButtonDisplayed]="isCarFaxMappingAddable(i)"
+                (removeItem)="removeCarFaxMapping(i)"
+                (addItem)="addCarFaxMapping()"
+            >
+            </vioc-angular-add-remove-button>
+            <mat-form-field class="flex-item">
+                <mat-select
+                    id="car-fax-service-{{ i }}"
+                    matInput
+                    formControlName="carFaxServiceName"
+                    placeholder="CarFax Service Mappings"
+                    type="text"
+                >
+                    <mat-option *ngFor="let serviceName of carFaxServiceNames" [value]="serviceName">{{
+                        serviceName
+                    }}</mat-option>
+                </mat-select>
+                <mat-error *viocAngularFormError="items.get('carFaxServiceName').errors; let error">
+                    {{ error }}</mat-error
+                >
+            </mat-form-field>
+            <div class="spacer"></div>
+        </div>
+    </div>
+    <ng-template #emptyCarFaxList>
+        <div class="flex-container" *ngIf="!isViewMode">
+            <vioc-angular-add-remove-button
+                [addButtonDisplayed]="true"
+                (addItem)="addCarFaxMapping()"
+            ></vioc-angular-add-remove-button>
+            <div class="spacer"></div>
+        </div>
+    </ng-template>
+</div>

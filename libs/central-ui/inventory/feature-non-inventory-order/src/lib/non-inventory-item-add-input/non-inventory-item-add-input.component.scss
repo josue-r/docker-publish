@@ -1,0 +1,22 @@
+.add-section {
+    margin-top: 5px;
+}
+
+#add-items-button {
+    margin-left: 8px;
+}
+
+#item-selection ::ng-deep vioc-angular-table > div.overflow-container {
+    max-height: 40vh;
+}
+
+@media screen and (max-width: 1180px) {
+    ::ng-deep .cdk-column-quantity {
+        .mat-form-field-wrapper,
+        .mat-select,
+        .mat-form-field-label-wrapper {
+            width: 100px;
+            min-width: 80px;
+        }
+    }
+}

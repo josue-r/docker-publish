@@ -1,0 +1,566 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar *ngIf="!accessMode.isAdd">
+                <button
+                    mat-stroked-button
+                    id="add-like-action"
+                    *ngIf="!accessMode.isAddLike && hasAddAccess"
+                    [disabled]="form.dirty || form.invalid"
+                    color="primary"
+                    (click)="addLike()"
+                    >ADD LIKE</button
+                >
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+
+            <div class="section">
+                <span class="header">Product Information</span>
+            </div>
+
+            <div class="section">
+                <div class="flex-container">
+                    <vioc-angular-filtered-input
+                        class="flex-item"
+                        *ngIf="!accessMode.isAdd"
+                        [options]="availableStores | async"
+                        [valueControl]="storeControl"
+                        [editable]="accessMode.isAddLike"
+                        placeHolder="Store"
+                    ></vioc-angular-filtered-input>
+                    <mat-form-field class="flex-item" *ngIf="!accessMode.isAdd">
+                        <mat-label>Product</mat-label>
+                        <input
+                            id="product"
+                            matInput
+                            placeholder="Product"
+                            type="text"
+                            [value]="productDescription"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item" *ngIf="!accessMode.isAdd">
+                        <mat-label>Product Category</mat-label>
+                        <input
+                            id="productCategory"
+                            matInput
+                            placeholder="Product Category"
+                            type="text"
+                            [value]="productCategoryDescription"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-checkbox class="flex-item" formControlName="active">Active</mat-checkbox>
+                </div>
+            </div>
+
+            <div class="section" *ngIf="!accessMode.isAdd">
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Invoice Description</mat-label>
+                        <input
+                            id="invoiceDescription"
+                            matInput
+                            placeholder="Invoice Description"
+                            type="text"
+                            [value]="productInvoiceDescription"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <!-- TODO: Not showing currently, but this could be updated to show in add-like mode via a company product query whenever a store is selected -->
+                    <mat-form-field class="flex-item small" *ngIf="!accessMode.isAddLike">
+                        <mat-label>UOM</mat-label>
+                        <input id="uom" matInput placeholder="UOM" type="text" [value]="uom" [disabled]="true" />
+                    </mat-form-field>
+                    <!-- Not showing in add mode because there is no average daily usage yet. -->
+                    <mat-form-field *ngIf="!accessMode.isAddLike" class="flex-item small">
+                        <mat-label>Average Daily Usage</mat-label>
+                        <input
+                            id="average-daily-usage"
+                            matInput
+                            type="text"
+                            placeholder="Average Daily Usage"
+                            formControlName="averageDailyUsage"
+                        />
+                    </mat-form-field>
+                    <!-- Not showing in add mode because quantity on hand will be added with 0 in the API. -->
+                    <mat-form-field *ngIf="!accessMode.isAddLike" class="flex-item small">
+                        <mat-label>Qty on Hand</mat-label>
+                        <input
+                            id="qoh"
+                            matInput
+                            type="text"
+                            placeholder="Qty on Hand"
+                            formControlName="quantityOnHand"
+                        />
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="section">
+                <span class="header">Pricing</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Retail Price Per {{ uom }}</mat-label>
+                        <input
+                            matInput
+                            viocAngularDecimalPlaces
+                            required
+                            placeholder="Retail Price Per {{ uom }}"
+                            formControlName="retailPrice"
+                        />
+                        <mat-error *viocAngularFormError="form.get('retailPrice').errors; let error">{{
+                            error
+                        }}</mat-error>
+                        <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Wholesale Price Per {{ uom }}</mat-label>
+                        <input
+                            matInput
+                            viocAngularDecimalPlaces
+                            decimalPlaces="3"
+                            required
+                            placeholder="Wholesale Price Per {{ uom }}"
+                            formControlName="wholesalePrice"
+                        />
+                        <mat-error *viocAngularFormError="form.get('wholesalePrice').errors; let error">{{
+                            error
+                        }}</mat-error>
+                        <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                    </mat-form-field>
+                    <mat-checkbox class="flex-item small" formControlName="taxable">Taxable</mat-checkbox>
+                    <div class="spacer"></div>
+                </div>
+                <div class="flex-container">
+                    <mat-checkbox class="flex-item" formControlName="overridable">Overridable</mat-checkbox>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Minimum Price</mat-label>
+                        <input
+                            matInput
+                            viocAngularDecimalPlaces
+                            placeholder="Minimum Price"
+                            formControlName="minOverridePrice"
+                        />
+                        <mat-error *viocAngularFormError="form.get('minOverridePrice').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                        <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Maximum Price</mat-label>
+                        <input
+                            matInput
+                            viocAngularDecimalPlaces
+                            placeholder="Maximum Price"
+                            formControlName="maxOverridePrice"
+                        />
+                        <mat-error *viocAngularFormError="form.get('maxOverridePrice').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                        <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                    </mat-form-field>
+                    <mat-checkbox class="flex-item" formControlName="minMaxOverridable"
+                        >Min/Max Overridable
+                    </mat-checkbox>
+                </div>
+            </div>
+            <div class="section">
+                <span class="header">Extra Charge</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Amount</mat-label>
+                        <input
+                            matInput
+                            viocAngularDecimalPlaces
+                            placeholder="Amount"
+                            formControlName="extraChargeAmount"
+                        />
+                        <mat-error *viocAngularFormError="form.get('extraChargeAmount').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                        <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                    </mat-form-field>
+                    <ng-container
+                        *ngIf="form.isRequiredFieldGroupDisplayed('extraCharge') | async; else extraChargeSpace"
+                    >
+                        <mat-form-field class="flex-item large">
+                            <mat-label>Description</mat-label>
+                            <input matInput placeholder="Description" formControlName="extraChargeDescription" />
+                            <mat-error *viocAngularFormError="form.get('extraChargeDescription').errors; let error"
+                                >{{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-checkbox
+                            class="flex-item small"
+                            [indeterminate]="form.get('extraChargeTaxable').value === null"
+                            formControlName="extraChargeTaxable"
+                            >Taxable</mat-checkbox
+                        >
+                    </ng-container>
+                    <ng-template #extraChargeSpace>
+                        <div class="spacer large"></div>
+                        <div class="spacer small"></div>
+                    </ng-template>
+                </div>
+            </div>
+            <ng-container *viocAngularLoading="vendorList | async; class: 'section'; let vendors">
+                <div class="ordering section">
+                    <span class="header">Ordering</span>
+                    <div class="flex-container">
+                        <div class="flex-item flex-container">
+                            <mat-form-field class="fill-remaining-space">
+                                <mat-label>Vendor</mat-label>
+                                <mat-select
+                                    matInput
+                                    formControlName="vendor"
+                                    placeholder="Vendor"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let vendor of vendors" [value]="vendor"
+                                        >{{ vendor.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="form.get('vendor').errors; let error">
+                                    {{ error }}</mat-error
+                                >
+                                <mat-hint *ngIf="accessMode.isAdd">
+                                    <mat-checkbox
+                                        id="default-vendor-checkbox"
+                                        [disableRipple]="true"
+                                        [ngClass]="{ 'hint-error': form.get('vendor').invalid }"
+                                        [formControl]="massAddForm.get('useDefaultVendor')"
+                                    >
+                                        Use store's primary vendor
+                                    </mat-checkbox>
+                                </mat-hint>
+                            </mat-form-field>
+                            <vioc-angular-info-button
+                                *ngIf="accessMode.isAdd || accessMode.isAddLike"
+                                info="Available vendors depend on the selected store(s)"
+                            >
+                            </vioc-angular-info-button>
+                        </div>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Quantity Per Pack</mat-label>
+                            <input
+                                matInput
+                                type="number"
+                                required
+                                placeholder="Quantity Per Pack"
+                                formControlName="quantityPerPack"
+                            />
+                            <mat-error *viocAngularFormError="form.get('quantityPerPack').errors; let error"
+                                >{{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Minimum Order Quantity</mat-label>
+                            <input
+                                matInput
+                                type="number"
+                                required
+                                placeholder="Minimum Order Quantity"
+                                formControlName="minOrderQuantity"
+                            />
+                            <mat-error
+                                *viocAngularFormError="
+                                    form.get('minOrderQuantity').errors;
+                                    customErrorMapping: minOrderQuantityErrorMapping;
+                                    let error
+                                "
+                            >
+                                {{ error }}</mat-error
+                            >
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item">
+                            <mat-label>Min Stock Amount</mat-label>
+                            <input
+                                matInput
+                                type="number"
+                                placeholder="Min Stock Amount"
+                                formControlName="minStockLimit"
+                            />
+                            <mat-error *viocAngularFormError="form.get('minStockLimit').errors; let error"
+                                >{{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="flex-item flex-container">
+                            <mat-form-field class="fill-remaining-space">
+                                <mat-label>Min stock End Date</mat-label>
+                                <input
+                                    matInput
+                                    [matDatepicker]="minStockLimitEndDatePicker"
+                                    placeholder="Min Stock End Date"
+                                    formControlName="minStockLimitEndDate"
+                                />
+                                <mat-datepicker-toggle
+                                    matSuffix
+                                    [for]="minStockLimitEndDatePicker"
+                                ></mat-datepicker-toggle>
+                                <mat-datepicker #minStockLimitEndDatePicker></mat-datepicker>
+                                <mat-error *viocAngularFormError="form.get('minStockLimitEndDate').errors; let error"
+                                    >{{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                            <vioc-angular-info-button info="Min stock amount will no longer apply after this date">
+                            </vioc-angular-info-button>
+                        </div>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Max Stock Amount</mat-label>
+                            <input
+                                matInput
+                                type="number"
+                                placeholder="Max Stock Amount"
+                                formControlName="maxStockLimit"
+                            />
+                            <mat-error *viocAngularFormError="form.get('maxStockLimit').errors; let error"
+                                >{{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-container">
+                        <div class="flex-item flex-container">
+                            <mat-form-field class="fill-remaining-space">
+                                <mat-label>Safety Factor Override</mat-label>
+                                <input
+                                    matInput
+                                    type="number"
+                                    placeholder="Safety Factor Override"
+                                    formControlName="safetyFactorOverride"
+                                />
+                                <mat-error *viocAngularFormError="form.get('safetyFactorOverride').errors; let error"
+                                    >{{ error }}
+                                </mat-error>
+                                <span matSuffix>%</span>
+                                <mat-hint
+                                    id="safetyFactorOverrideWarning"
+                                    class="warning"
+                                    *ngIf="showSafetyFactorWarning"
+                                    >{{ safetyFactorWarningMessage }}</mat-hint
+                                >
+                            </mat-form-field>
+                            <vioc-angular-info-button
+                                info="Overrides calculated Safety Factor to increase suggested order quantity by this percentage"
+                            >
+                            </vioc-angular-info-button>
+                        </div>
+                        <div class="spacer large"></div>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-container *viocAngularLoading="frequencyList | async; class: 'section'; let frequencies">
+                <div class="section">
+                    <span class="header">Inventory</span>
+                    <div class="flex-container">
+                        <mat-checkbox class="flex-item" formControlName="includeInCount">Include in Count</mat-checkbox>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Count Frequency</mat-label>
+                            <mat-select
+                                matInput
+                                formControlName="countFrequency"
+                                required
+                                placeholder="Count Frequency"
+                                [compareWith]="describedEquals"
+                            >
+                                <mat-option></mat-option>
+                                <mat-option *ngFor="let frequency of frequencies" [value]="frequency">
+                                    {{ frequency.description }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *viocAngularFormError="form.get('countFrequency').errors; let error"
+                                >{{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="flex-item flex-container">
+                            <mat-form-field class="fill-remaining-space">
+                                <mat-label>Inventory Reporting Order</mat-label>
+                                <input matInput placeholder="Inventory Reporting Order" formControlName="reportOrder" />
+                                <mat-error *viocAngularFormError="form.get('reportOrder').errors; let error"
+                                    >{{ error }}
+                                </mat-error>
+                                <mat-hint *ngIf="accessMode.isAdd">
+                                    <mat-checkbox
+                                        id="default-report-order-checkbox"
+                                        [disableRipple]="true"
+                                        [ngClass]="{ 'hint-error': form.get('reportOrder').invalid }"
+                                        [formControl]="massAddForm.get('useDefaultReportOrder')"
+                                    >
+                                        Use company product's report order
+                                    </mat-checkbox>
+                                </mat-hint>
+                            </mat-form-field>
+                            <vioc-angular-info-button info="The order in which the products will appear when counted">
+                            </vioc-angular-info-button>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+            <div class="section">
+                <span class="header">Scheduled Price Changes</span>
+                <div class="flex-container">
+                    <span class="flex-item small">Retail</span>
+                    <mat-form-field class="mat-form-field-datepicker flex-item small">
+                        <mat-label>Change Date</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="retailPriceChangeDatePicker"
+                            placeholder="Change Date"
+                            formControlName="schedulePriceDate"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="retailPriceChangeDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #retailPriceChangeDatePicker></mat-datepicker>
+                        <mat-error *viocAngularFormError="form.get('schedulePriceDate').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <ng-container
+                        *ngIf="
+                            form.isRequiredFieldGroupDisplayed('retailPriceChange') | async;
+                            else scheduledPriceSpace
+                        "
+                    >
+                        <mat-form-field class="flex-item small">
+                            <mat-label>New Price</mat-label>
+                            <input
+                                matInput
+                                viocAngularDecimalPlaces
+                                placeholder="New Price"
+                                formControlName="schedulePriceChange"
+                            />
+                            <mat-error *viocAngularFormError="form.get('schedulePriceChange').errors; let error"
+                                >{{ error }}
+                            </mat-error>
+                            <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                        </mat-form-field>
+                    </ng-container>
+                    <ng-template #scheduledPriceSpace>
+                        <div class="spacer"></div>
+                    </ng-template>
+                    <div class="spacer"></div>
+                </div>
+                <div class="flex-container">
+                    <span class="flex-item small">Wholesale</span>
+                    <mat-form-field class="mat-form-field-datepicker flex-item small">
+                        <mat-label>Change Date</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="wholesalePriceChangeDatePicker"
+                            placeholder="Change Date"
+                            formControlName="wholesalePriceChangeDate"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="wholesalePriceChangeDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #wholesalePriceChangeDatePicker></mat-datepicker>
+                        <mat-error *viocAngularFormError="form.get('wholesalePriceChangeDate').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <ng-container
+                        *ngIf="
+                            form.isRequiredFieldGroupDisplayed('wholesalePriceChange') | async;
+                            else wholesalePriceSpace
+                        "
+                    >
+                        <mat-form-field class="flex-item small">
+                            <mat-label>New Price</mat-label>
+                            <input
+                                matInput
+                                viocAngularDecimalPlaces
+                                decimalPlaces="4"
+                                placeholder="New Price"
+                                formControlName="wholesalePriceChange"
+                            />
+                            <mat-error *viocAngularFormError="form.get('wholesalePriceChange').errors; let error"
+                                >{{ error }}
+                            </mat-error>
+                            <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                        </mat-form-field>
+                    </ng-container>
+                    <ng-template #wholesalePriceSpace>
+                        <div class="spacer"></div>
+                    </ng-template>
+                    <div class="spacer"></div>
+                </div>
+                <div class="flex-container">
+                    <span class="flex-item small">Promotion</span>
+                    <mat-form-field class="mat-form-field-datepicker flex-item small">
+                        <mat-label>Start Date</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="promotionPriceStartDatePicker"
+                            placeholder="Start Date"
+                            formControlName="promotionPriceStartDate"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="promotionPriceStartDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #promotionPriceStartDatePicker></mat-datepicker>
+                        <mat-error *viocAngularFormError="form.get('promotionPriceStartDate').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <ng-container
+                        *ngIf="form.isRequiredFieldGroupDisplayed('promotion') | async; else promotionPriceSpace"
+                    >
+                        <mat-form-field class="flex-item small">
+                            <mat-label>New Price</mat-label>
+                            <input
+                                matInput
+                                viocAngularDecimalPlaces
+                                placeholder="New Price"
+                                formControlName="promotionPrice"
+                            />
+                            <mat-error *viocAngularFormError="form.get('promotionPrice').errors; let error"
+                                >{{ error }}
+                            </mat-error>
+                            <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                        </mat-form-field>
+                        <mat-form-field class="mat-form-field-datepicker flex-item small">
+                            <mat-label>End Date</mat-label>
+                            <input
+                                matInput
+                                [matDatepicker]="promotionPriceEndDatePicker"
+                                placeholder="End Date"
+                                formControlName="promotionPriceEndDate"
+                            />
+                            <mat-datepicker-toggle
+                                matSuffix
+                                [for]="promotionPriceEndDatePicker"
+                            ></mat-datepicker-toggle>
+                            <mat-datepicker #promotionPriceEndDatePicker></mat-datepicker>
+                            <mat-error *viocAngularFormError="form.get('promotionPriceEndDate').errors; let error"
+                                >{{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                        <div class="spacer"></div>
+                    </ng-container>
+                    <ng-template #promotionPriceSpace>
+                        <div class="spacer small"></div>
+                        <div class="spacer small"></div>
+                        <div class="spacer"></div>
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>

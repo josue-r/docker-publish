@@ -1,0 +1,13 @@
+<div id="select-and-go-wrapper" class="flex-container" #selectAndGoWrapper>
+    <ng-content></ng-content>
+    <button
+        id="go-button"
+        mat-icon-button
+        *ngIf="goButtonDisplayed"
+        [disabled]="goButtonDisabled"
+        color="primary"
+        (click)="go.emit()"
+    >
+        <mat-icon>arrow_forward</mat-icon>
+    </button>
+</div>

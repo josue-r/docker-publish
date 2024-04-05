@@ -1,0 +1,24 @@
+<div class="flex-container">
+    <vioc-angular-filtered-input
+        id="from-store-input"
+        class="flex-item"
+        [options]="fromStores"
+        [valueControl]="fromStore"
+        [editable]="true"
+        placeHolder="From Store"
+        [compareWith]="describedEquals"
+        [required]="true"
+    >
+    </vioc-angular-filtered-input>
+    <vioc-angular-filtered-input
+        id="to-store-input"
+        class="flex-item"
+        [options]="filteredToStores"
+        [valueControl]="toStore"
+        [editable]="isToStoreEditable"
+        placeHolder="To Store"
+        [compareWith]="describedEquals"
+        [required]="true"
+    >
+    </vioc-angular-filtered-input>
+</div>

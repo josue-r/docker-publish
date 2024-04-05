@@ -1,0 +1,154 @@
+{
+    "name": "central-ui",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "generators": {
+        "@nx/angular:component": {
+            "style": "scss"
+        }
+    },
+    "sourceRoot": "apps/central-ui/src",
+    "prefix": "vioc-angular",
+    "i18n": {
+        "sourceLocale": "en-US"
+    },
+    "targets": {
+        "build": {
+            "executor": "@angular-devkit/build-angular:browser",
+            "options": {
+                "outputPath": "dist/apps/central-ui",
+                "index": "apps/central-ui/src/index.html",
+                "main": "apps/central-ui/src/main.ts",
+                "polyfills": "apps/central-ui/src/polyfills.ts",
+                "tsConfig": "apps/central-ui/tsconfig.app.json",
+                "aot": false,
+                "assets": ["apps/central-ui/src/favicon.ico", "apps/central-ui/src/assets"],
+                "styles": ["apps/central-ui/src/styles.scss"],
+                "stylePreprocessorOptions": {
+                    "includePaths": ["libs/styles/shared-theme/src/lib"]
+                }
+            },
+            "configurations": {
+                "deploy": {
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/central-ui/src/environments/environment.ts",
+                            "with": "apps/central-ui/src/environments/environment.deploy.ts"
+                        }
+                    ],
+                    "optimization": true,
+                    "outputHashing": "all",
+                    "sourceMap": false,
+                    "namedChunks": false,
+                    "aot": true,
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "buildOptimizer": true,
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "2mb",
+                            "maximumError": "5mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "6kb",
+                            "maximumError": "10kb"
+                        }
+                    ],
+                    "deployUrl": "<%=deployUrl%>",
+                    "baseHref": "<%=baseHref%>",
+                    "index": "apps/central-ui/src/index.ejs"
+                },
+                "local": {
+                    "budgets": [
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "6kb"
+                        }
+                    ],
+                    "optimization": false,
+                    "outputHashing": "all",
+                    "sourceMap": true,
+                    "namedChunks": false,
+                    "aot": true,
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "buildOptimizer": true,
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/central-ui/src/environments/environment.ts",
+                            "with": "apps/central-ui/src/environments/environment.local.ts"
+                        }
+                    ],
+                    "index": "apps/central-ui/.immutable/index.html"
+                },
+                "es5": {
+                    "budgets": [
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "6kb"
+                        }
+                    ],
+                    "tsConfig": "apps/central-ui/tsconfig-es5.app.json",
+                    "optimization": false,
+                    "outputHashing": "all",
+                    "sourceMap": true,
+                    "namedChunks": false,
+                    "aot": true,
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "buildOptimizer": true,
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/central-ui/src/environments/environment.ts",
+                            "with": "apps/central-ui/src/environments/environment.local.ts"
+                        }
+                    ],
+                    "index": "apps/central-ui/.immutable/index.html"
+                }
+            }
+        },
+        "serve": {
+            "executor": "@angular-devkit/build-angular:dev-server",
+            "options": {
+                "browserTarget": "central-ui:build"
+            },
+            "configurations": {
+                "production": {
+                    "browserTarget": "central-ui:build:production"
+                },
+                "local": {
+                    "browserTarget": "central-ui:build:local",
+                    "port": 4202,
+                    "ssl": true
+                },
+                "es5": {
+                    "browserTarget": "central-ui:build:es5",
+                    "port": 4202,
+                    "ssl": true
+                }
+            }
+        },
+        "extract-i18n": {
+            "executor": "@angular-devkit/build-angular:extract-i18n",
+            "options": {
+                "browserTarget": "central-ui:build"
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "apps/central-ui/jest.config.ts"
+            }
+        },
+        "lint": {
+            "executor": "@angular-eslint/builder:lint",
+            "options": {
+                "lintFilePatterns": ["apps/central-ui/**/*.ts", "apps/central-ui/**/*.html"]
+            }
+        }
+    },
+    "tags": ["scope:central-ui", "type:app"],
+    "implicitDependencies": ["styles-shared-theme"]
+}

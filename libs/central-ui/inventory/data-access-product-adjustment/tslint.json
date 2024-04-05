@@ -1,0 +1,10 @@
+{
+    "extends": "../../../../tslint.json",
+    "linterOptions": {
+        "exclude": ["!**/*"]
+    },
+    "rules": {
+        "directive-selector": [true, "attribute", "viocAngular", "camelCase"],
+        "component-selector": [true, "element", "vioc-angular", "kebab-case"]
+    }
+}

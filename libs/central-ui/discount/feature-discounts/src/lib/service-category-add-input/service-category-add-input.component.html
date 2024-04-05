@@ -1,0 +1,61 @@
+<div class="add-section">
+    <button
+        id="service-search"
+        mat-icon-button
+        color="primary"
+        matTooltip="Search for service(s) to add"
+        [disabled]="addDisabled"
+        (click)="openSearchDialog()"
+    >
+        <mat-icon>search</mat-icon>
+    </button>
+    <mat-form-field id="service-add-form-field">
+        <mat-label>Service Category Code</mat-label>
+        <input
+            id="service-code-input"
+            matInput
+            [formControl]="categoryCodeControl"
+            placeholder="Service Category Code"
+            (keydown.enter)="!categoryCodeControl.value ? '' : addRequestedServiceCategory()"
+            [errorStateMatcher]="addServiceErrorMatcher(serviceErrors)"
+        />
+        <mat-error id="service-error">{{ serviceErrors }}</mat-error>
+    </mat-form-field>
+    <button
+        id="service-go"
+        mat-icon-button
+        color="primary"
+        matTooltip="Add the entered service"
+        [disabled]="addDisabled || !categoryCodeControl.value"
+        (click)="addRequestedServiceCategory()"
+    >
+        <mat-icon>arrow_forward</mat-icon>
+    </button>
+</div>
+
+<vioc-angular-dialog
+    #searchDialog
+    id="search-add-service"
+    [name]="'Search Service'"
+    [content]="content"
+    [actions]="actions"
+></vioc-angular-dialog>
+<ng-template #content>
+    <vioc-angular-service-category-selection
+        id="service-selection"
+        [control]="serviceCategorySelectionControl"
+        [searchFn]="searchFn"
+        [singleSelection]="singleSelection"
+    ></vioc-angular-service-category-selection>
+</ng-template>
+<ng-template #actions>
+    <button id="cancel-search-button" mat-stroked-button (click)="closeSearchDialog()">CANCEL</button>
+    <button
+        id="add-services-button"
+        mat-raised-button
+        color="primary"
+        [disabled]="!isSelected()"
+        (click)="addServiceCategories()"
+        >ADD</button
+    >
+</ng-template>

@@ -1,0 +1,158 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { <%=classify(domain)%>, <%=classify(domain)%>Facade } from '@vioc-angular/central-ui/<%=dasherize(group)%>/data-access-<%=dasherize(domain)%>';
+import { SaveFacade } from '@vioc-angular/central-ui/util-component';
+import { RouterService } from '@vioc-angular/central-ui/util-router';
+import { RoleFacade } from '@vioc-angular/security/data-access-security';
+import { AccessMode } from '@vioc-angular/security/util-authorization';
+import { MessageFacade } from '@vioc-angular/shared/data-access-message';
+import { DataModifyingComponent } from '@vioc-angular/shared/util-data-modifying';
+import { FormFactory, TypedFormGroup } from '@vioc-angular/shared/util-form';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+
+/**
+ * Component used to add, edit, or update `<%=classify(domain)%>`s.
+ */
+@Component({
+    selector: 'vioc-angular-<%=dasherize(domain)%>',
+    templateUrl: './<%=dasherize(domain)%>.component.html',
+    providers: [<%=classify(domain)%>Facade]
+})
+export class <%=classify(domain)%>Component extends DataModifyingComponent implements OnInit, OnDestroy {
+    /**
+     * Mode that determines the editable state of the page.
+     */
+    accessMode: AccessMode;
+
+    /** Model that holds the values of the <%=camelize(domain)%> being viewed. */
+    model: <%=classify(domain)%>;
+
+    /** Form for validating and updating <%=camelize(domain)%> field values. */
+    form: TypedFormGroup<<%=classify(domain)%>>;
+
+    saveFacade: SaveFacade<<%=classify(domain)%>>;
+
+    isLoading = false;
+
+    private readonly _destroyed = new ReplaySubject(1);
+
+    constructor(
+        private readonly route: ActivatedRoute,
+        private readonly router: Router,
+        private readonly formFactory: FormFactory,
+        private readonly routerService: RouterService,
+        private readonly roleFacade: RoleFacade,
+        messageFacade: MessageFacade,
+        public readonly <%=camelize(domain)%>Facade: <%=classify(domain)%>Facade
+    ) {
+        super();
+        this.saveFacade = new SaveFacade(
+            this.routerService,
+            messageFacade,
+            model => this.<%=camelize(domain)%>Facade.save(model),
+            p => `<%=startCase(domain)%> saved successfully`,
+            (isLoading: boolean) => (this.isLoading = isLoading),
+            (form: TypedFormGroup<<%=classify(domain)%>>, model: <%=classify(domain)%>): <%=classify(domain)%> => {
+                return Object.assign({ ...model }, form.value);
+            }
+        );
+        // This will trigger a reload of the component when the route parameters change i.e. switching from add to edit etc
+        this.route.params.pipe(takeUntil(this._destroyed)).subscribe(() => {
+            // Checking if accessMode is set to see if the component is already initialized, otherwise when
+            // the component is first created ngOnInit will run twice
+            if (this.accessMode) {
+                this.ngOnInit();
+            }
+        });
+    }
+
+    ngOnInit(): void {
+        // Parse the parameters from the URL
+        const params = this.getRouteParams(this.route);
+        this.accessMode = params.accessMode;
+        if (
+            this.accessMode === AccessMode.VIEW ||
+            this.accessMode === AccessMode.EDIT
+        ) {
+            // TODO: Implement logic to fetch the model from the facade and load the form
+            // Load existing data into the form
+            // this.<%=camelize(domain)%>Facade.findBy(/** TODO */).subscribe(<%=camelize(domain)%> => {
+            //     this.model = <%=camelize(domain)%>;
+            //     this.createForm(this.model);
+            // });
+        } else if (this.accessMode === AccessMode.ADD) {
+            // Create a new form, default all the boolean values as they are required
+            this.model = { ...new <%=classify(domain)%>() /** TODO: Set defaults here */ };
+            this.createForm(this.model);
+        }
+    }
+
+    private getRouteParams(
+        route: ActivatedRoute
+    ): { accessMode: AccessMode /** TODO: add model key(s) from route here */ } {
+        const params = route.snapshot.paramMap;
+        return {
+            accessMode: AccessMode.of(params.get('accessMode'))
+            // TODO: Set model key(s) from route here
+        };
+    }
+
+    private createForm(<%=camelize(domain)%>: <%=classify(domain)%>): void {
+        // Build the form
+        this.form = this.formFactory.group('<%=classify(domain)%>', <%=camelize(domain)%>, this._destroyed, {
+            // provide facade to form for optional async validation
+            <%=camelize(domain)%>Facade: this.<%=camelize(domain)%>Facade
+        });
+        // Configure based on accessibility
+        if (this.accessMode === AccessMode.VIEW) {
+            // TODO: Set any dropdown observables to singleton array values here
+            this.form.disable();
+        } else if (this.accessMode === AccessMode.EDIT) {
+            this.loadDropdownValues();
+            this.form.markAllAsTouched(); // Displays errors for components that are loaded with invalid data
+        } else if (this.accessMode === AccessMode.ADD) {
+            this.loadDropdownValues();
+        }
+    }
+
+    /** Load dropdown options externally */
+    private loadDropdownValues(): void {
+        // TODO: Load any dropdown observables here
+    }
+
+    /** Save changes and reload the entity from the API. */
+    apply(): void {
+        const reload = () => {
+            this.form = undefined;
+            if (this.accessMode === AccessMode.ADD) {
+                // TODO: Update to navigate to the edit page.  (Sample below)
+                // const code = this.form.getControlValue('code').toUpperCase();
+                // this.router.navigate([`/<%=dasherize(group)%>/<%=dasherize(domain)%>/edit/${code}`], {
+                //     relativeTo: this.route.parent
+                // });
+            } else {
+                this.ngOnInit();
+            }
+        };
+        this.saveFacade.apply(this.form, this.model, reload).subscribe();
+    }
+
+    /** Save and navigate back to previous page. */
+    save(): void {
+        this.saveFacade.save(this.form, this.model).subscribe();
+    }
+
+    cancel(): void {
+        this.router.navigate(['search'], { relativeTo: this.route.parent });
+    }
+
+    /** @see DataModifyingComponent */
+    get unsavedChanges(): boolean {
+        return this.form && this.form.dirty;
+    }
+
+    ngOnDestroy(): void {
+        this._destroyed.next();
+    }
+}

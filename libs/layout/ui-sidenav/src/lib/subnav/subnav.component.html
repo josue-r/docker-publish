@@ -1,0 +1,52 @@
+<!--
+    This currently only supports 3 levels of menu (Ex: Maintenance -> Product -> Store Product). If a menu needs more
+    levels, this file will need updated.
+
+    This is currently limited because the recursive approach using nested components or template refs caused behavior issues.
+    (https://github.com/angular/components/issues/9011)
+-->
+<ng-container *ngIf="menuItem | hasChildren; else rootLeaf">
+    <mat-list-item
+        mat-icon-button
+        class="sub-nav-toggler"
+        [ngClass]="active ? 'active' : ''"
+        [matMenuTriggerFor]="submenu1"
+        (menuOpened)="toggleActive(); positionMenu()"
+        (menuClosed)="toggleActive()"
+    >
+        <ng-container *ngTemplateOutlet="navItem"></ng-container>
+    </mat-list-item>
+    <mat-menu #submenu1="matMenu" [class]="subNavClass" [backdropClass]="subNavBackDropClass" [overlapTrigger]="true">
+        <ng-container *ngFor="let child1 of menuItem.subMenus | filterSearchableOnly">
+            <ng-container *ngIf="child1 | hasChildren">
+                <button mat-menu-item [matMenuTriggerFor]="submenu2">{{ child1.name }}</button>
+                <mat-menu #submenu2="matMenu">
+                    <button
+                        *ngFor="let child2 of child1.subMenus | filterSearchableOnly"
+                        mat-menu-item
+                        (click)="navigate.emit(child2.path)"
+                        >{{ child2.name }}</button
+                    >
+                </mat-menu>
+            </ng-container>
+            <ng-container *ngIf="!(child1 | hasChildren)">
+                <button mat-menu-item (click)="navigate.emit(child1.path)">{{ child1.name }}</button>
+            </ng-container>
+        </ng-container>
+    </mat-menu>
+</ng-container>
+<ng-template #rootLeaf>
+    <mat-list-item mat-icon-button class="sub-nav-toggler" (click)="navigate.emit(menuItem.path)">
+        <ng-container *ngTemplateOutlet="navItem"></ng-container>
+    </mat-list-item>
+</ng-template>
+<ng-template #navItem>
+    <span [ngClass]="currentPage ? 'current-page' : ''">
+        <div class="nav-icon">
+            <mat-icon>{{ menuItem.icon }}</mat-icon>
+        </div>
+        <div class="nav-title-wrapper">
+            <span class="nav-title">{{ menuItem.name }}</span>
+        </div>
+    </span>
+</ng-template>

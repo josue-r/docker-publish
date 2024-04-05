@@ -1,0 +1,21 @@
+{
+    "name": "shared-ui-stepper-navigation",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/shared/ui-stepper-navigation/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/shared/ui-stepper-navigation/jest.config.ts"
+            }
+        }
+    },
+    "generators": {
+        "@nx/angular:component": {
+            "styleext": "sass"
+        }
+    },
+    "tags": ["scope:shared", "type:ui"]
+}

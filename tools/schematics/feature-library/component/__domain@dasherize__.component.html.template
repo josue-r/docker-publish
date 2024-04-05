@@ -1,0 +1,64 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button mat-stroked-button id="cancel-action" (click)="cancel()">CANCEL</button>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    (click)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    (click)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+
+            <div class="section">
+                <span class="header"><%= startCase(domain) %> Information</span>
+                <!-- TODO: Add column details here. -->
+                <!-- Simple column example: -->
+                <!--<mat-form-field class="flex-item">
+                        <input
+                            matInput
+                            required
+                            formControlName="code"
+                            placeholder="Code"
+                            type="text"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('code').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                -->
+                <!-- Filtered dropdown example: -->
+                <!--
+                    <vioc-angular-filtered-input
+                            [options]="todoDropdown$ | async"
+                            [valueControl]="form.get('todoFormControl')"
+                            [placeHolder]="'TODO'"
+                            [editable]="true"
+                            [displayFn]="todoFunctionToConvertObjectToDisplayString()"
+                        >
+                    </vioc-angular-filtered-input>
+                -->
+            </div>
+            
+            <!--
+            <div class="section">
+                <span class="header">Section Two...</span>
+            </div>
+            -->
+        </div>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>

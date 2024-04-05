@@ -1,0 +1,82 @@
+<div class="page" [formGroup]="form">
+    <vioc-angular-stepper-navigation [stepper]="stepper">
+        <mat-horizontal-stepper #stepper [linear]="true">
+            <mat-step [stepControl]="storesControl">
+                <ng-template matStepLabel>Select Stores</ng-template>
+                <vioc-angular-store-selection
+                    #storeSelection
+                    [control]="storesControl"
+                    [accessRoles]="accessRoles"
+                    [searchFn]="searchStores"
+                ></vioc-angular-store-selection>
+            </mat-step>
+
+            <mat-step [stepControl]="servicesControl">
+                <ng-template matStepLabel>Select Services</ng-template>
+                <vioc-angular-service-selection
+                    #serviceSelection
+                    [control]="servicesControl"
+                    [searchFn]="searchServices"
+                    [multiple]="false"
+                ></vioc-angular-service-selection>
+            </mat-step>
+
+            <mat-step [stepControl]="storeServiceControl">
+                <ng-template matStepLabel>Enter Service Information</ng-template>
+                <ng-container *ngIf="storesControl.valid && servicesControl.valid">
+                    <vioc-angular-store-service [massAddForm]="form"></vioc-angular-store-service>
+                </ng-container>
+            </mat-step>
+
+            <!-- TODO: should be refactored into a preview component -->
+            <mat-step>
+                <ng-template matStepLabel>Preview</ng-template>
+                <div class="page">
+                    <vioc-angular-loading-overlay [loading]="loadingPreview">
+                        <ng-container *ngIf="preview.data.length > 0; else noResults">
+                            <div class="actions">
+                                <button
+                                    id="addStoreService"
+                                    mat-raised-button
+                                    color="primary"
+                                    [disabled]="form.invalid"
+                                    disableButtonClick
+                                    (disableClick)="addStoreServices()"
+                                >
+                                    Add Store Services
+                                </button>
+                            </div>
+                            <p id="preview-desc">The following stores will have the following services assigned:</p>
+                            <table id="preview-table" mat-table [dataSource]="preview" aria-describedby="preview-desc">
+                                <ng-container matColumnDef="storeNumber">
+                                    <th id="preview-store-header" mat-header-cell *matHeaderCellDef>Store</th>
+                                    <td mat-cell *matCellDef="let element">{{ element.storeNumber }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="serviceCodes">
+                                    <th id="preview-service-header" mat-header-cell *matHeaderCellDef>Services</th>
+                                    <td mat-cell *matCellDef="let element">{{ element.serviceCodes.join(', ') }}</td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="['storeNumber', 'serviceCodes']"></tr>
+                                <tr mat-row *matRowDef="let row; columns: ['storeNumber', 'serviceCodes']"></tr>
+                            </table>
+                        </ng-container>
+                        <ng-template #noResults>
+                            <p id="no-preview"
+                                >No store services will be added with the current store and service selections.</p
+                            >
+                        </ng-template>
+                    </vioc-angular-loading-overlay>
+                    <!-- Hiding paginator with a class to allow @ViewChild to always work -->
+                    <mat-paginator
+                        #previewPaginator
+                        [length]="preview.data.length"
+                        [ngClass]="preview.data.length === 0 ? 'hidden' : ''"
+                        [pageSizeOptions]="pageSizeOptions"
+                        [pageSize]="initialPageSize"
+                        showFirstLastButtons
+                    ></mat-paginator>
+                </div>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </vioc-angular-stepper-navigation>
+</div>

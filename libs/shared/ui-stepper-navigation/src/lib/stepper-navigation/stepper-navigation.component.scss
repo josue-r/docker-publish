@@ -1,0 +1,42 @@
+.stepper-header {
+    ::ng-deep mat-horizontal-stepper {
+        display: table;
+        ::ng-deep .mat-horizontal-stepper-header-container {
+            position: sticky;
+            top: 0;
+            z-index: 3;
+            background: linear-gradient(to bottom, white 52px, transparent 62px);
+        }
+        ::ng-deep mat-step-header {
+            padding: 0 12px;
+        }
+        ::ng-deep .mat-step-label {
+            display: table;
+        }
+    }
+    .stepper-arrow {
+        height: 72px;
+        width: 40px;
+        position: sticky;
+        top: 0;
+        z-index: 3;
+        background: linear-gradient(to bottom, white 52px, transparent 62px);
+        button {
+            height: 72px;
+            border-radius: 0;
+            mat-icon {
+                font-size: 32px;
+                font-weight: bold;
+            }
+            mat-icon:disabled {
+                background-color: rgba(0, 0, 0, 0.12);
+            }
+        }
+    }
+    .stepper-arrow-left {
+        float: left;
+    }
+    .stepper-arrow-right {
+        float: right;
+    }
+}

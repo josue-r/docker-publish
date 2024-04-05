@@ -1,0 +1,49 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'TechnicalAlert'"
+    [searchPageFacade]="technicalAlertFacade"
+    [columns]="columns"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="toStringId"
+    [gridModeEnabled]="false"
+    [selectionActionsTemplate]="selectionActions"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <ng-container *viocAngularFeatureFlag="'technicalAlert.search.add'">
+            <button
+                mat-button
+                color="primary"
+                id="add-button"
+                *ngIf="searchPage.hasAddAccess"
+                class="action-button"
+                [routerLink]="['../add']"
+                >Add Technical Alert
+            </button>
+        </ng-container>
+    </ng-template>
+    <ng-template #selectionActions>
+        <ng-container *viocAngularFeatureFlag="'technicalAlert.search.activateDeactivate'">
+            <button
+                id="activate-button"
+                mat-button
+                color="primary"
+                class="action-button"
+                disableButtonClick
+                (disableClick)="activate()"
+                *ngIf="searchPage.hasEditAccess"
+                >Activate
+            </button>
+            <button
+                id="deactivate-button"
+                mat-button
+                color="primary"
+                class="action-button"
+                disableButtonClick
+                (disableClick)="deactivate()"
+                *ngIf="searchPage.hasEditAccess"
+                >Deactivate
+            </button>
+        </ng-container>
+    </ng-template>
+</vioc-angular-search-page>

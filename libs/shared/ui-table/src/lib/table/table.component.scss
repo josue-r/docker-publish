@@ -1,0 +1,23 @@
+@use '@angular/material' as mat;
+
+.mat-mdc-table.hover:hover {
+    cursor: pointer;
+
+    .mat-mdc-row:hover {
+        background-color: map-get(mat.$grey-palette, 200);
+        cursor: pointer;
+    }
+
+    .mat-mdc-header-row {
+        cursor: default;
+    }
+}
+
+.mat-column-Select {
+    &.mat-mdc-cell,
+    &.mat-mdc-header-cell {
+        overflow: initial;
+        flex: 0 0 18px;
+        padding-right: 24px;
+    }
+}

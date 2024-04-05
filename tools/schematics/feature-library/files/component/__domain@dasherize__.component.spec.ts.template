@@ -1,0 +1,334 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { DebugElement, Type } from '@angular/core';
+import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {
+    DateAdapter,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule
+} from '@angular/material';
+import { By, HAMMER_LOADER } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { ActivatedRoute, Router } from '@angular/router';
+import { <%= classify(domain) %>Facade } from '@vioc-angular/central-ui/<%=dasherize(group)%>/data-access-<%= dasherize(domain) %>';
+import { RouterService } from '@vioc-angular/central-ui/util-router';
+import { AccessMode } from '@vioc-angular/security/util-authorization';
+import { MessageFacade } from '@vioc-angular/shared/data-access-message';
+import { UiActionBarModule } from '@vioc-angular/shared/ui-action-bar';
+import { UiAuditModule } from '@vioc-angular/shared/ui-audit';
+import { UiInfoButtonModule } from '@vioc-angular/shared/ui-info-button';
+import { MockLoadingOverlayComponent, UiLoadingMockModule } from '@vioc-angular/shared/ui-loading';
+import { GATEWAY_TOKEN } from '@vioc-angular/shared/util-api';
+import { FormFactory, UtilFormModule } from '@vioc-angular/shared/util-form';
+import {
+    expectInput,
+    getApplyActionButton,
+    getCancelActionButton,
+    getSaveActionButton
+} from '@vioc-angular/test/util-test';
+import { of, Subject } from 'rxjs';
+import { <%= classify(domain) %>Forms } from '../<%= dasherize(domain) %>.forms';
+import { <%= classify(domain) %>Component } from './<%= dasherize(domain) %>.component';
+
+describe('<%= classify(domain) %>Component', () => {
+    let component: <%= classify(domain) %>Component;
+    let fixture: ComponentFixture<<%= classify(domain) %>Component>;
+    let <%= camelize(domain) %>Facade: <%= classify(domain) %>Facade;
+    const routeParams = new Subject();
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [<%= classify(domain) %>Component],
+            imports: [
+                NoopAnimationsModule,
+                HttpClientTestingModule,
+                ReactiveFormsModule,
+                MatCheckboxModule,
+                MatFormFieldModule,
+                MatInputModule,
+                MatButtonModule,
+                MatSelectModule,
+                MatOptionModule,
+                UiActionBarModule,
+                UiAuditModule,
+                UiInfoButtonModule,
+                UtilFormModule,
+                UiLoadingMockModule
+            ],
+            providers: [
+                FormFactory,
+                { provide: ActivatedRoute, useValue: { params: routeParams, parent: '/<%= dasherize(group) %>/<%= dasherize(domain) %>' } },
+                { provide: Router, useValue: { navigate: jest.fn() } },
+                { provide: RouterService, useValue: { back: jest.fn() } },
+                { provide: MessageFacade, useValue: { addMessage: jest.fn() } },
+                { provide: GATEWAY_TOKEN, useValue: '//gateway/' },
+                { provide: HAMMER_LOADER, useValue: () => new Promise(() => {}) }
+            ]
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
+        <%= classify(domain) %>Forms.registerForms(TestBed.inject(FormFactory), TestBed.inject(FormBuilder));
+        fixture = TestBed.createComponent(<%= classify(domain) %>Component);
+        component = fixture.componentInstance;
+        <%= camelize(domain) %>Facade = component.<%= camelize(domain) %>Facade;
+    });
+
+    function initialize(accessMode: AccessMode, routeParameters= {/* TODO provide defaults or type*/ }) {
+        routeParameters['accessMode'] = accessMode.urlSegement;
+        routeParams.next(routeParameters);
+        // TODO: Implement what is necessary to allow a successful call of ngOnInit.  
+        // TODO: It may be useful to add other parameters like a model to mock the facade.
+    }
+  
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+
+    it('should display loading overlay if isLoading', fakeAsync(() => {
+        initialize(AccessMode.VIEW);
+        const loadingOverlay: MockLoadingOverlayComponent = fixture.debugElement.query(
+            By.directive(MockLoadingOverlayComponent)
+        ).componentInstance;
+
+        component.isLoading = false;
+        fixture.detectChanges();
+        expect(loadingOverlay.loading).toEqual(false);
+
+        component.isLoading = true;
+        fixture.detectChanges();
+        expect(loadingOverlay.loading).toEqual(true);
+    }));
+
+    describe('ngOnInit', () => {
+        describe('view mode', () => {
+            beforeEach(() => {
+                initialize(AccessMode.VIEW);
+            });
+            it.todo('should load a disabled form');
+            it.todo('should create singleton dropdowns'); // TODO: Implement if dropdowns are present
+            it.todo('should TODO....'); // TODO: add other expects based on implementation
+        });
+ 
+        describe('edit mode', () => {
+            beforeEach(() => {
+                initialize(AccessMode.EDIT);
+            });
+            it.todo('should load an enabled form');
+            it.todo('should load dropdowns'); // TODO: Implement if dropdowns are present
+            it.todo('should TODO....'); // TODO: add other expects based on implementation
+        });
+
+        describe('add mode', () => {
+            beforeEach(() => {
+                initialize(AccessMode.ADD);
+            });
+            it.todo('should load an enabled form');
+            it.todo('should TODO....'); // TODO: add other expects based on implementation
+
+            // TODO: Implement checks for each for control with a default value
+            describe.each`
+                formControl       | defaultValue
+                ${'foo'}          | ${'defaultValueForFooOnScreen'}
+            `('%s', ({ formControl, defaultValue }) => {
+                it(`should default to ${JSON.stringify(defaultValue )} `, () => {
+                    expectInput(fixture, formControl).toHaveValue(defaultValue);
+                })
+            });
+        });
+    });
+
+    describe('Screen Elements', () => {
+        beforeEach(waitForAsync(() => {
+            initialize(AccessMode.EDIT);
+        }));
+
+        // TODO: Implement checks to ensure each element is loaded and displayed to screen
+        it.each`
+            control  | value                    | enabled
+            ${'foo'} | ${'valueOfFooOnScreen'}  | ${false}
+        `('formControl=$control should have value=$value, enabled=$enabled', ({ control, value, enabled }) => {
+            expectInput(fixture, control)
+                .toHaveValue(value)
+                .toBeEnabled(enabled);
+        });
+    });
+
+
+    describe('Action Bar', () => {
+        describe.each`
+            accessMode    | saveDisplayed | applyDisplayed | cancelDisplayed | addLikeDisplayed | hasAddRole
+            ${'view'}     | ${false}      | ${false}       | ${true}         | ${true}          | ${true}
+            ${'edit'}     | ${true}       | ${true}        | ${true}         | ${true}          | ${true}
+            ${'add'}      | ${true}       | ${true}        | ${true}         | ${false}         | ${true}
+            ${'add-like'} | ${true}       | ${true}        | ${true}         | ${false}         | ${true}
+            ${'view'}     | ${false}      | ${false}       | ${true}         | ${false}         | ${false}
+            ${'edit'}     | ${true}       | ${true}        | ${true}         | ${false}         | ${false}
+        `('in $accessMode mode', ({ accessMode, saveDisplayed, applyDisplayed, cancelDisplayed, hasAddRole }) => {
+            const verifyDisplayedState = (element: DebugElement, shouldBeDisplayed: boolean) => {
+                jest.spyOn(component['roleFacade'], 'hasAnyRole').mockReturnValue(of(hasAddRole));
+                initialize(accessMode);
+                if (shouldBeDisplayed) {
+                    expect(element).toBeDefined();
+                } else {
+                    expect(element).toBeNull();
+                }
+            };
+
+            it(`should ${saveDisplayed ? '' : 'not'} display the save button`, fakeAsync(() => {
+                verifyDisplayedState(getSaveActionButton(fixture), saveDisplayed);
+            }));
+            it(`should ${applyDisplayed ? '' : 'not'} display the apply button`, fakeAsync(() => {
+                verifyDisplayedState(getApplyActionButton(fixture), applyDisplayed);
+            }));
+            it(`should ${cancelDisplayed ? '' : 'not'} display the cancel button`, fakeAsync(() => {
+                verifyDisplayedState(getCancelActionButton(fixture), cancelDisplayed);
+            }));
+        });
+
+        describe.each`
+            formState    | saveEnabled | applyEnabled | cancelEnabled | addLikeEnabled | hasAddRole
+            ${'valid'}   | ${true}     | ${true}      | ${true}       | ${true}        | ${true}
+            ${'invalid'} | ${false}    | ${false}     | ${true}       | ${false}       | ${true}
+            ${'valid'}   | ${true}     | ${true}      | ${true}       | ${false}       | ${false}
+            ${'invalid'} | ${false}    | ${false}     | ${true}       | ${false}       | ${false}
+        `(`with $formState form`, ({ formState, saveEnabled, applyEnabled, cancelEnabled, hasAddRole }) => {
+            beforeEach(waitForAsync(() => {
+                jest.spyOn(component['roleFacade'], 'hasAnyRole').mockReturnValue(of(hasAddRole));
+                // Initialize component with a valid form
+                initialize(AccessMode.EDIT);
+
+                // Set form to invalid
+                if (formState === 'invalid') {
+                    component.form.setErrors({ invalid: true });
+                }
+                fixture.detectChanges();
+            }));
+
+            it(`save button should be ${saveEnabled ? 'en' : 'dis'}abled`, fakeAsync(() => {
+                expect(getSaveActionButton(fixture).nativeElement.disabled).toBe(!saveEnabled);
+            }));
+            it(`apply button should be ${applyEnabled ? 'en' : 'dis'}abled`, fakeAsync(() => {
+                expect(getApplyActionButton(fixture).nativeElement.disabled).toBe(!applyEnabled);
+            }));
+            it(`cancel button should be ${cancelEnabled ? 'en' : 'dis'}abled`, fakeAsync(() => {
+                expect(getCancelActionButton(fixture).nativeElement.disabled).toBe(!cancelEnabled);
+            }));
+        });
+
+        describe('saving', () => {
+            let messageFacade: MessageFacade;
+            let routerService: RouterService;
+            let router: Router;
+
+            beforeEach(() => {
+                <%= camelize(domain) %>Facade.save = jest.fn(() => of(null));
+                messageFacade = TestBed.inject(MessageFacade);
+                routerService = TestBed.inject(RouterService);
+                router = TestBed.inject(Router);
+            });
+
+            describe('with save button', () => {
+                it('should save, add an info message, and navigate to previous page', fakeAsync(() => {
+                    initialize(AccessMode.EDIT);
+                    getSaveActionButton(fixture).nativeElement.click();
+                    
+                    expect(<%= camelize(domain) %>Facade.save).toHaveBeenCalled();
+                    expect(messageFacade.addMessage).toHaveBeenCalledWith({
+                        message: `<%= startCase(domain) %> saved successfully`,
+                        severity: 'info'
+                    });
+                    expect(routerService.back).toHaveBeenCalled();
+                }));
+
+                it('should show loading overlay when processing', fakeAsync(() => {
+                    const saveSubject = new Subject();
+                    <%= camelize(domain) %>Facade.save = jest.fn(() => saveSubject);
+                    initialize(AccessMode.EDIT);
+                    getSaveActionButton(fixture).nativeElement.click();
+
+                    expect(component.isLoading).toBeTruthy();
+
+                    saveSubject.next(null);
+                    flush();
+
+                    expect(component.isLoading).toBeFalsy();
+                }));
+
+                it('should cancel loading overlay if an error occurs', fakeAsync(() => {
+                    const saveSubject = new Subject();
+                    <%= camelize(domain) %>Facade.save = jest.fn(() => saveSubject);
+                    initialize(AccessMode.EDIT);
+                    getSaveActionButton(fixture).nativeElement.click();
+
+                    expect(component.isLoading).toBeTruthy();
+
+                    expect(() => {
+                        saveSubject.error('An error occurred');
+                        flush();
+                    }).toThrow();
+
+                    expect(component.isLoading).toBeFalsy();
+                }));
+            });
+
+            describe('with apply button', () => {
+                it('should reload model in edit mode', fakeAsync(() => {
+                    initialize(AccessMode.EDIT);
+                    jest.spyOn(component, 'ngOnInit');
+                    <%= camelize(domain) %>Facade.save = jest.fn(() => of(null));
+
+                    getApplyActionButton(fixture).nativeElement.click();
+                    
+                    expect(<%= camelize(domain) %>Facade.save).toHaveBeenCalled();
+                    expect(component.ngOnInit).toHaveBeenCalled();
+                }));
+
+                it.todo('should navigate to the edit page when in add mode');
+
+                it('should show loading overlay when processing', fakeAsync(() => {
+                    const applySubject = new Subject();
+                    <%= camelize(domain) %>Facade.save = jest.fn(() => applySubject);
+                    initialize(AccessMode.EDIT);
+                    getApplyActionButton(fixture).nativeElement.click();
+
+                    expect(component.isLoading).toBeTruthy();
+
+                    applySubject.next(null);
+                    flush();
+
+                    expect(component.isLoading).toBeFalsy();
+                }));
+
+                it('should cancel loading overlay if an error occurs', fakeAsync(() => {
+                    const saveSubject = new Subject();
+                    <%= camelize(domain) %>Facade.save = jest.fn(() => saveSubject);
+                    initialize(AccessMode.EDIT);
+                    // Trigger the subscribe to the save subject.  We will make it throw an error a few lines down
+                    getApplyActionButton(fixture).nativeElement.click();
+                    // Verify loading dialog displayed
+                    expect(component.isLoading).toBeTruthy();
+
+                    // Trigger the error on the saveSubject
+                    saveSubject.error('An error occurred');
+
+                    // Verify loading dialog cleared
+                    expect(component.isLoading).toBeFalsy();
+                }));
+            });
+        });
+
+        describe('unsavedChanges', () => {
+            it('should track if the form has been modified', fakeAsync(() => {
+                initialize(AccessMode.EDIT);
+                expect(component.unsavedChanges).toBeFalsy();
+                component.form.markAsDirty();
+                expect(component.unsavedChanges).toBeTruthy();
+            }));
+        });
+    });
+});

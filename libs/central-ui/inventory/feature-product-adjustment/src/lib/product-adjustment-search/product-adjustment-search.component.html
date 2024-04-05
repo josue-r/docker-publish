@@ -1,0 +1,25 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'ProductAdjustment'"
+    [searchPageFacade]="productAdjustmentFacade"
+    [columns]="columns"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="toPathVariables"
+    [dataSyncable]="false"
+    [gridModeEnabled]="false"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <ng-container *viocAngularFeatureFlag="'productAdjustment.search.add'">
+            <button
+                mat-button
+                color="primary"
+                id="add-button"
+                *ngIf="searchPage.hasAddAccess"
+                class="action-button"
+                [routerLink]="['../add']"
+                >Add Adjustment</button
+            >
+        </ng-container>
+    </ng-template>
+</vioc-angular-search-page>

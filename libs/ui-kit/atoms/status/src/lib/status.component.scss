@@ -1,0 +1,49 @@
+@import '../../../../styles/styles.scss';
+
+.ui-kit-bottom-side-status {
+    color: $primary-white;
+    font-family: 'Roboto', sans-serif;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.64px;
+    display: flex;
+    width: 336px;
+    height: 124px;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    flex-shrink: 0;
+    text-transform: uppercase;
+
+    p {
+        text-align: center;
+        width: 70%;
+    }
+
+    &--green {
+        background: $success;
+    }
+
+    &--yellow {
+        background: $warning-mid;
+        color: $warning-light;
+    }
+
+    &--light-blue {
+        background: $blue-3;
+    }
+
+    &--dark-blue {
+        background: $blue-4;
+    }
+
+    &--red {
+        background: $error;
+    }
+
+    &--gray {
+        background: $gray;
+    }
+}

@@ -1,0 +1,29 @@
+.alert-name-input {
+    max-width: 55%;
+}
+
+#alert-vehicle-details {
+    margin-top: 15px;
+}
+
+#alert-product-details {
+    margin-top: 15px;
+}
+
+.selection-list {
+    margin-right: 90px;
+    margin-bottom: 15px;
+    mat-selection-list {
+        padding-top: 0px;
+    }
+    p {
+        font-size: 85%;
+    }
+    .item-list {
+        border: 1px solid black;
+    }
+}
+
+#product-selection ::ng-deep vioc-angular-table > div.overflow-container {
+    max-height: 40vh;
+}

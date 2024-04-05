@@ -1,0 +1,58 @@
+<div class="overflow-container">
+    <table
+        mat-table
+        [dataSource]="data"
+        matSort
+        [matSortActive]="sort.column.name"
+        [matSortDirection]="sort.direction"
+        (matSortChange)="sortData($event)"
+        class="hover content-fit-table"
+        aria-describedby="search table"
+    >
+        <ng-container matColumnDef="Select">
+            <th id="vui-table-toggle" mat-header-cell *matHeaderCellDef>
+                <mat-checkbox
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [disabled]="data?.length === 0"
+                    *ngIf="multiple && !singleSelection"
+                >
+                </mat-checkbox>
+            </th>
+            <td mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+                <mat-checkbox
+                    (change)="
+                        singleSelection
+                            ? singleSelectedRow(row)
+                            : multiple
+                            ? selection.toggle(row)
+                            : rowSelect.emit(row)
+                    "
+                    [checked]="singleSelection ? selected === row : selection.isSelected(row)"
+                >
+                </mat-checkbox>
+            </td>
+        </ng-container>
+
+        <ng-container *ngFor="let column of columns" matColumnDef="{{ column.name }}">
+            <ng-container *ngIf="column.sortable; else notSortable">
+                <th id="vui-table-column" mat-header-cell *matHeaderCellDef mat-sort-header>{{ column.name }}</th>
+            </ng-container>
+            <ng-template #notSortable>
+                <th id="vui-table-column" mat-header-cell *matHeaderCellDef>{{ column.name }}</th>
+            </ng-template>
+            <td [ngClass]="column.columnStyleClass" mat-cell *matCellDef="let row">
+                {{ row | tableDisplay: column:locale }}
+            </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumnsWithSelect"></tr>
+        <tr
+            mat-row
+            id="vui-table-row"
+            *matRowDef="let row; columns: displayedColumnsWithSelect"
+            (click)="singleSelection ? singleSelectedRow(row) : rowSelect.emit(row)"
+        ></tr>
+    </table>
+</div>

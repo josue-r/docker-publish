@@ -1,0 +1,10 @@
+<div [ngClass]="classes">
+    <mat-icon
+        *ngIf="description !== '-'"
+        svgIcon="exclamation-triangle"
+        aria-hidden="false"
+        aria-label="exclamation-triangle"
+        [ngClass]="iconClasses"
+    ></mat-icon>
+    <p [ngClass]="descriptionClasses">{{ description }}</p>
+</div>

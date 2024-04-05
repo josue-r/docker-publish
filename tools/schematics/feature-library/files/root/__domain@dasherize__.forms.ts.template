@@ -1,0 +1,33 @@
+import { FormBuilder } from '@angular/forms';
+// tslint:disable-next-line: nx-enforce-module-boundaries
+import { <%= classify(domain) %> } from '@vioc-angular/central-ui/<%=dasherize(group)%>/data-access-<%= dasherize(domain) %>';
+import {
+    CentralValidators, FormCreator,
+    FormFactory,
+    FormFactoryOptions,
+    TypedFormGroup
+} from '@vioc-angular/shared/util-form';
+
+export class <%= classify(domain) %>Forms {
+    constructor(
+        private readonly formBuilder: FormBuilder,
+        private readonly formFactory: FormFactory,
+        ) {}
+
+    static registerForms(formFactory: FormFactory, formBuilder: FormBuilder) {
+        const forms = new <%= classify(domain) %>Forms(formBuilder, formFactory);
+        formFactory.register('<%= classify(domain) %>', forms.<%= camelize(domain) %>FormCreator);
+    }
+
+    private readonly <%= camelize(domain) %>FormCreator: FormCreator<<%= classify(domain) %>> = (model, componentDestroyed, opts) => {
+        const form = new TypedFormGroup<<%= classify(domain) %>>(this.formBuilder.group(model, opts), componentDestroyed);
+        FormFactoryOptions.validateRequiredOptions(opts, 'changeDetector');
+        // TODO: Complete
+        //  Examples
+        //  form.addValidators('description', Validators.required, Validators.maxLength(50));
+        //  form.addValidators('price', 
+        //      CentralValidators.currency(), 
+        //      Validators.required );
+        return form;
+    };
+}

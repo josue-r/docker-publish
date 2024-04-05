@@ -1,0 +1,21 @@
+{
+    "name": "shared-util-google-analytics",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/shared/util-google-analytics/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/shared/util-google-analytics/jest.config.ts"
+            }
+        }
+    },
+    "generators": {
+        "@nx/angular:component": {
+            "styleext": "scss"
+        }
+    },
+    "tags": ["scope:shared", "type:util"]
+}

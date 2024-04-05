@@ -1,0 +1,158 @@
+{
+    "name": "bottom-side-ui",
+    "$schema": "../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "application",
+    "generators": {
+        "@nx/angular:component": {
+            "style": "scss"
+        }
+    },
+    "i18n": {
+        "sourceLocale": "en-US"
+    },
+    "prefix": "vioc-angular",
+    "sourceRoot": "apps/bottom-side-ui/src",
+    "tags": ["scope:bottom-side-ui", "type:app"],
+    "implicitDependencies": ["styles-shared-theme"],
+    "targets": {
+        "build": {
+            "executor": "@angular-devkit/build-angular:browser",
+            "outputs": ["{options.outputPath}"],
+            "options": {
+                "outputPath": "dist/apps/bottom-side-ui",
+                "index": "apps/bottom-side-ui/src/index.html",
+                "main": "apps/bottom-side-ui/src/main.ts",
+                "polyfills": "apps/bottom-side-ui/src/polyfills.ts",
+                "tsConfig": "apps/bottom-side-ui/tsconfig.app.json",
+                "aot": true,
+                "assets": ["apps/bottom-side-ui/src/favicon.ico", "apps/bottom-side-ui/src/assets"],
+                "styles": ["apps/bottom-side-ui/src/styles.scss"],
+                "stylePreprocessorOptions": {
+                    "includePaths": ["libs/styles/shared-theme/src/lib"]
+                },
+                "scripts": []
+            },
+            "configurations": {
+                "deploy": {
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/bottom-side-ui/src/environments/environment.ts",
+                            "with": "apps/bottom-side-ui/src/environments/environment.deploy.ts"
+                        }
+                    ],
+                    "optimization": true,
+                    "outputHashing": "all",
+                    "sourceMap": false,
+                    "namedChunks": false,
+                    "aot": true,
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "buildOptimizer": true,
+                    "budgets": [
+                        {
+                            "type": "initial",
+                            "maximumWarning": "2mb",
+                            "maximumError": "5mb"
+                        },
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "6kb",
+                            "maximumError": "10kb"
+                        }
+                    ],
+                    "deployUrl": "<%=deployUrl%>",
+                    "baseHref": "<%=baseHref%>",
+                    "index": "apps/bottom-side-ui/src/index.ejs"
+                },
+                "local": {
+                    "budgets": [
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "6kb"
+                        }
+                    ],
+                    "optimization": false,
+                    "outputHashing": "all",
+                    "sourceMap": true,
+                    "namedChunks": false,
+                    "aot": true,
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "buildOptimizer": true,
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/bottom-side-ui/src/environments/environment.ts",
+                            "with": "apps/bottom-side-ui/src/environments/environment.local.ts"
+                        }
+                    ],
+                    "index": "apps/bottom-side-ui/.immutable/index.html"
+                },
+                "es5": {
+                    "budgets": [
+                        {
+                            "type": "anyComponentStyle",
+                            "maximumWarning": "6kb"
+                        }
+                    ],
+                    "tsConfig": "apps/bottom-side-ui/tsconfig-es5.app.json",
+                    "optimization": false,
+                    "outputHashing": "all",
+                    "sourceMap": true,
+                    "namedChunks": false,
+                    "aot": true,
+                    "extractLicenses": true,
+                    "vendorChunk": false,
+                    "buildOptimizer": true,
+                    "fileReplacements": [
+                        {
+                            "replace": "apps/bottom-side-ui/src/environments/environment.ts",
+                            "with": "apps/bottom-side-ui/src/environments/environment.local.ts"
+                        }
+                    ],
+                    "index": "apps/bottom-side-ui/.immutable/index.html"
+                }
+            }
+        },
+        "serve": {
+            "executor": "@angular-devkit/build-angular:dev-server",
+            "options": {
+                "browserTarget": "bottom-side-ui:build"
+            },
+            "configurations": {
+                "production": {
+                    "browserTarget": "bottom-side-ui:build:production"
+                },
+                "local": {
+                    "browserTarget": "bottom-side-ui:build:local",
+                    "port": 4202,
+                    "ssl": true
+                },
+                "es5": {
+                    "browserTarget": "bottom-side-ui:build:es5",
+                    "port": 4202,
+                    "ssl": true
+                }
+            }
+        },
+        "extract-i18n": {
+            "executor": "@angular-devkit/build-angular:extract-i18n",
+            "options": {
+                "browserTarget": "bottom-side-ui:build"
+            }
+        },
+        "lint": {
+            "executor": "@nx/linter:eslint",
+            "outputs": ["{options.outputFile}"],
+            "options": {
+                "lintFilePatterns": ["apps/bottom-side-ui/**/*.ts", "apps/bottom-side-ui/**/*.html"]
+            }
+        },
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+            "options": {
+                "jestConfig": "apps/bottom-side-ui/jest.config.ts"
+            }
+        }
+    }
+}

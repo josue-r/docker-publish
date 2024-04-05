@@ -1,0 +1,17 @@
+{
+    "name": "central-ui-inventory-data-access-non-inventory-order",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/central-ui/inventory/data-access-non-inventory-order/src",
+    "projectType": "library",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/central-ui/inventory/data-access-non-inventory-order"],
+            "options": {
+                "jestConfig": "libs/central-ui/inventory/data-access-non-inventory-order/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": ["scope:central-ui", "type:data-access"]
+}

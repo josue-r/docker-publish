@@ -1,0 +1,92 @@
+<vioc-angular-search-filter
+    #searchFilter
+    [columns]="columnsArray"
+    [searchForm]="searchForm"
+    [chips]="searchChips"
+    (search)="page.index = 0; search()"
+    (clearFilter)="clearSearchFilterForm()"
+    (resetFilter)="initializeSearchFilterForm()"
+    (addLine)="addLine()"
+    (removeLine)="removeLine($event)"
+></vioc-angular-search-filter>
+
+<vioc-angular-table-header
+    [selection]="selection"
+    [actionsTemplate]="actionsTemplate"
+    [selectionActionsTemplate]="selectionActions"
+    [menuItemsTemplate]="searchMenuItems"
+    class="sticky-header"
+></vioc-angular-table-header>
+<ng-template #searchMenuItems>
+    <button mat-menu-item (click)="manageColumns.openDialog()">
+        <mat-icon>view_column</mat-icon>
+        Manage Columns
+        <vioc-angular-manage-columns
+            #manageColumns
+            [columns]="columns"
+            [displayedColumns]="displayedColumns"
+            (apply)="applyColumnChanges($event)"
+        ></vioc-angular-manage-columns>
+    </button>
+    <ng-container *ngIf="gridModeEnabled">
+        <span mat-menu-item *ngIf="!gridMode; else disableGrid" (click)="gridMode = true">
+            <mat-icon>grid_on</mat-icon>
+            Enable Grid View
+        </span>
+        <ng-template #disableGrid>
+            <span mat-menu-item (click)="gridMode = false">
+                <mat-icon>grid_off</mat-icon>
+                Disable Grid View
+            </span>
+        </ng-template>
+    </ng-container>
+    <ng-template *ngTemplateOutlet="menuItemsTemplate"></ng-template>
+</ng-template>
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <ng-container *ngIf="!gridMode; else gridTemplate">
+        <vioc-angular-table
+            [data]="content"
+            [columns]="displayableColumns"
+            [displayedColumns]="displayedColumns"
+            [selection]="selectable ? selection : undefined"
+            [sort]="sort"
+            [multiple]="multiple"
+            [singleSelection]="singleSelection"
+            (sortChange)="pageChange(0, page.size, $event)"
+            (rowSelect)="rowSelect.emit($event)"
+        ></vioc-angular-table>
+    </ng-container>
+    <ng-template #gridTemplate>
+        <vioc-angular-grid
+            #grid
+            [form]="gridForm"
+            [columns]="displayableColumns"
+            [displayedColumns]="displayedColumns"
+            [selection]="selection"
+            [sort]="sort"
+            (sortChange)="pageChange(0, page.size, $event)"
+        ></vioc-angular-grid>
+    </ng-template>
+</vioc-angular-loading-overlay>
+
+<div class="paginator-center">
+    <vioc-angular-paginator
+        #paginator
+        [index]="page.index"
+        [size]="page.size"
+        [length]="totalElements"
+        [sizeOptions]="pageSizeOptions"
+        (pageChange)="pageChange($event.pageIndex, $event.pageSize)"
+    ></vioc-angular-paginator>
+</div>
+
+<ng-template #selectionActions>
+    <ng-container *ngIf="!gridMode; else saveAction">
+        <ng-container *ngTemplateOutlet="selectionActionsTemplate"></ng-container>
+    </ng-container>
+    <ng-template #saveAction>
+        <button mat-button color="primary" class="link-button" (click)="save()" [disabled]="isLoading">
+            Save Selected
+        </button>
+    </ng-template>
+</ng-template>

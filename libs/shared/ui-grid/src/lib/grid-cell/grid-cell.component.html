@@ -1,0 +1,110 @@
+<div>
+    <ng-container [ngSwitch]="inputType" *ngIf="editable; else readOnly">
+        <mat-form-field *ngSwitchCase="'date'" addFocusfloatLabel="never" appearance="outline">
+            <input
+                #input
+                matInput
+                class="date-input"
+                [matDatepicker]="lineDatePicker"
+                [formControl]="formControl"
+                (keydown.arrowup)="arrowKeyPressed($event, 'UP')"
+                (keydown.arrowdown)="arrowKeyPressed($event, 'DOWN')"
+                (keydown.arrowleft)="arrowKeyPressed($event, 'LEFT')"
+                (keydown.arrowright)="arrowKeyPressed($event, 'RIGHT')"
+                (focus)="input.select()"
+            />
+            <mat-error *viocAngularFormError="formControl.errors; let error">{{ error }}</mat-error>
+            <mat-datepicker-toggle matSuffix [for]="lineDatePicker"></mat-datepicker-toggle>
+            <mat-datepicker #lineDatePicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field *ngSwitchCase="'integer'" addFocusfloatLabel="never" appearance="outline">
+            <input
+                #input
+                class="integer-input"
+                type="number"
+                matInput
+                [formControl]="formControl"
+                (keydown.arrowup)="arrowKeyPressed($event, 'UP')"
+                (keydown.arrowdown)="arrowKeyPressed($event, 'DOWN')"
+                (keydown.arrowleft)="arrowKeyPressed($event, 'LEFT')"
+                (keydown.arrowright)="arrowKeyPressed($event, 'RIGHT')"
+                (focus)="input.select()"
+            />
+            <mat-error *viocAngularFormError="formControl.errors; let error">{{ error }}</mat-error>
+        </mat-form-field>
+        <mat-form-field *ngSwitchCase="'decimal'" addFocusfloatLabel="never" appearance="outline">
+            <input
+                #input
+                class="decimal-input"
+                viocAngularDecimalPlaces
+                [decimalPlaces]="column.decimalPlaces"
+                matInput
+                [formControl]="formControl"
+                (keydown.arrowup)="arrowKeyPressed($event, 'UP')"
+                (keydown.arrowdown)="arrowKeyPressed($event, 'DOWN')"
+                (keydown.arrowleft)="arrowKeyPressed($event, 'LEFT')"
+                (keydown.arrowright)="arrowKeyPressed($event, 'RIGHT')"
+                (focus)="input.select()"
+            />
+            <mat-error *viocAngularFormError="formControl.errors; let error">{{ error }}</mat-error>
+            <vioc-angular-currency-prefix
+                matPrefix
+                *ngIf="column.type | isType: 'currency'"
+            ></vioc-angular-currency-prefix>
+        </mat-form-field>
+        <mat-form-field *ngSwitchCase="'boolean'" addFocusfloatLabel="never" appearance="outline">
+            <mat-select
+                #input
+                class="boolean-input"
+                type="number"
+                matInput
+                [formControl]="formControl"
+                (keydown.arrowup)="arrowKeyPressed($event, 'UP')"
+                (keydown.arrowdown)="arrowKeyPressed($event, 'DOWN')"
+                (keydown.arrowleft)="arrowKeyPressed($event, 'LEFT')"
+                (keydown.arrowright)="arrowKeyPressed($event, 'RIGHT')"
+            >
+                <mat-option></mat-option>
+                <mat-option [value]="true">Y</mat-option>
+                <mat-option [value]="false">N</mat-option>
+            </mat-select>
+            <mat-error *viocAngularFormError="formControl.errors; let error">{{ error }}</mat-error>
+        </mat-form-field>
+        <mat-form-field *ngSwitchCase="'single-select-dropdown'" addFocusfloatLabel="never" appearance="outline">
+            <vioc-angular-dropdown-column
+                #input
+                class="dropdown-input"
+                [column]="column"
+                [multiple]="false"
+                [formControl]="formControl"
+                (keydown.arrowup)="arrowKeyPressed($event, 'UP')"
+                (keydown.arrowdown)="arrowKeyPressed($event, 'DOWN')"
+                (keydown.arrowleft)="arrowKeyPressed($event, 'LEFT')"
+                (keydown.arrowright)="arrowKeyPressed($event, 'RIGHT')"
+            >
+            </vioc-angular-dropdown-column>
+            <mat-error *viocAngularFormError="formControl.errors; let error">{{ error }}</mat-error>
+        </mat-form-field>
+        <mat-form-field *ngSwitchDefault addFocusfloatLabel="never" appearance="outline">
+            <input
+                #input
+                class="text-input"
+                type="text"
+                matInput
+                [formControl]="formControl"
+                (keydown.arrowup)="arrowKeyPressed($event, 'UP')"
+                (keydown.arrowdown)="arrowKeyPressed($event, 'DOWN')"
+                (keydown.arrowleft)="arrowKeyPressed($event, 'LEFT')"
+                (keydown.arrowright)="arrowKeyPressed($event, 'RIGHT')"
+                [size]="textInputWidth"
+                (focus)="input.select()"
+            />
+            <mat-error *viocAngularFormError="formControl.errors; let error">{{ error }}</mat-error>
+        </mat-form-field>
+    </ng-container>
+    <ng-template #readOnly>
+        <span class="read-only">
+            {{ row.getRawValue() | tableDisplay: column }}
+        </span>
+    </ng-template>
+</div>

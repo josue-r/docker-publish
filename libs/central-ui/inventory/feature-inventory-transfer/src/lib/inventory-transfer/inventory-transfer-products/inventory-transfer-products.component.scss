@@ -1,0 +1,19 @@
+@import 'variables';
+
+.qoh-column {
+    .value {
+        padding-top: 20px;
+        padding-bottom: 7px;
+    }
+    .warning {
+        font-size: 75%;
+        color: $warn;
+    }
+}
+
+@media screen and (max-width: 1180px) {
+    #products-table {
+        max-width: 100%;
+        overflow: hidden;
+    }
+}

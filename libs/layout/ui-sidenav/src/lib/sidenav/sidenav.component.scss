@@ -1,0 +1,23 @@
+@import 'variables';
+
+mat-nav-list {
+    padding-top: 0px;
+}
+
+.nav-menu {
+    &.logo {
+        height: 81px;
+        border-bottom: $solid-gray-border;
+        display: flex;
+        align-items: center;
+
+        img {
+            height: 74px;
+        }
+
+        a {
+            margin: auto;
+            cursor: pointer;
+        }
+    }
+}

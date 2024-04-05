@@ -1,0 +1,110 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <div class="page">
+        <vioc-angular-action-bar> </vioc-angular-action-bar>
+        <div class="section">
+            <span class="header">Count Information</span>
+        </div>
+        <div class="section">
+            <div class="flex-container">
+                <vioc-angular-select-and-go
+                    id="go-button"
+                    [goButtonDisplayed]="true"
+                    [goButtonDisabled]="store.invalid || frequency.invalid"
+                    (go)="checkOpenRMsAndCreateCount()"
+                    class="flex-item"
+                >
+                    <vioc-angular-filtered-input
+                        id="store-input"
+                        class="flex-item"
+                        [options]="(stores$ | async)?.resources"
+                        [valueControl]="store"
+                        [editable]="true"
+                        placeHolder="Store"
+                        [compareWith]="describedEquals"
+                        [displayFn]="storeDisplayFn"
+                        [required]="true"
+                    >
+                    </vioc-angular-filtered-input>
+                    <vioc-angular-filtered-input
+                        id="frequency-input"
+                        class="flex-item"
+                        [options]="frequencies$ | async"
+                        [valueControl]="frequency"
+                        [editable]="isFrequencyEditable"
+                        placeHolder="Frequency"
+                        [displayFn]="descriptionDisplayFn"
+                        [compareWith]="describedEquals"
+                        [required]="true"
+                    >
+                    </vioc-angular-filtered-input>
+                </vioc-angular-select-and-go>
+            </div>
+        </div>
+    </div>
+</vioc-angular-loading-overlay>
+
+<vioc-angular-dialog
+    #openReceiptsDialog
+    [name]="'Open Receipts'"
+    [content]="openReceiptsContent"
+    [actions]="openReceiptsActions"
+></vioc-angular-dialog>
+<ng-template #openReceiptsContent>
+    <div id="open-receipts-context">
+        There are receipts that have not been finalized, click the receipt to finalize, Continue to proceed to your
+        Count or go back.
+    </div>
+    <div id="open-receipts-text-{{ i }}" *ngFor="let rm of openReceipts; let i = index">
+        <button
+            mat-button
+            tabindex="-1"
+            color="primary"
+            id="open-receipt-{{ i }}"
+            (click)="openReceiptsDialog.close(); navigateToOpenReceipt(rm.number)"
+        >
+            {{ rm.number }}
+        </button>
+        opened on {{ rm.receiptDate | moment: true }}.
+    </div>
+</ng-template>
+<ng-template #openReceiptsActions>
+    <button mat-stroked-button id="open-receipts-cancel-button" (click)="openReceiptsDialog.close()">GO BACK</button>
+    <button
+        mat-raised-button
+        tabindex="0"
+        id="open-receipts-continue-button"
+        class="continue-button"
+        color="primary"
+        (click)="openReceiptsDialog.close(); createCount()"
+        >CONTINUE</button
+    >
+</ng-template>
+
+<vioc-angular-dialog
+    #existingProductCountDialog
+    id="existing-product-count-dialog"
+    [name]="'Existing Product Count'"
+    [content]="existingProductCountDialogContent"
+    [actions]="existingProductCountDialogActions"
+></vioc-angular-dialog>
+<ng-template #existingProductCountDialogContent>
+    <div id="existing-product-count-content">
+        A product count is already open for this store, click the number to view the count or GO BACK to close the
+        dialog.
+    </div>
+    <div id="existing-product-count-number">
+        <button
+            mat-button
+            color="primary"
+            id="existing-product-count-number-button"
+            (click)="(closeExistingProductCountDialog); navigateToOpenExistingProductCount(existingProductCountNumber)"
+        >
+            {{ existingProductCountNumber }}</button
+        >
+    </div>
+</ng-template>
+<ng-template #existingProductCountDialogActions>
+    <button mat-stroked-button id="existing-product-count-go-back-button" (click)="closeExistingProductCountDialog()"
+        >GO BACK</button
+    >
+</ng-template>

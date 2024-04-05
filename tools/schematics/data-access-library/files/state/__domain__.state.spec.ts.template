@@ -1,0 +1,14 @@
+import { <%= classify(domain) %>State } from '../state/<%= dasherize(domain) %>.state';
+
+describe('<%= classify(domain) %>State', () => {
+    let state: <%= classify(domain) %>State;
+    beforeEach(() => {
+        state = new <%= classify(domain) %>State();
+    });
+
+    it('should create an instance', () => {
+        expect(state).toBeTruthy();
+    });
+    
+    it.todo('should have other tests implemented');
+});

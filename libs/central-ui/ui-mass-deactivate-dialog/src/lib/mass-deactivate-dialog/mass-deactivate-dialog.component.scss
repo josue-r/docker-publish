@@ -1,0 +1,30 @@
+@import 'variables';
+
+.selection-counter {
+    padding: 4px 0px 8px 24px;
+}
+
+.deactivation-table {
+    border: 1px solid #3131342e;
+    max-height: 500px;
+    overflow: auto;
+
+    mat-header-cell,
+    mat-cell {
+        width: 165px;
+        flex: auto;
+    }
+
+    mat-header-cell:first-child,
+    mat-cell:first-child {
+        flex: 0;
+        flex-basis: auto;
+        padding-right: 40px;
+        width: 20px;
+    }
+
+    mat-header-cell:last-child,
+    mat-cell:last-child {
+        width: 300px;
+    }
+}

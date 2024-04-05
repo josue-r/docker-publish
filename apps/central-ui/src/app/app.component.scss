@@ -1,0 +1,60 @@
+@import 'variables';
+
+#watermark {
+    position: fixed;
+    bottom: 50px;
+    right: 25px;
+    opacity: 0.25;
+    z-index: 99;
+    color: $med-blue;
+    font-size: 150px;
+    pointer-events: none;
+}
+
+.header-item {
+    margin-bottom: 60px;
+
+    .mat-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 4px;
+        font-size: 24px;
+    }
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 768px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    .app-sidenav {
+        background: #efefef;
+        overflow-x: hidden;
+        &.overflowed,
+        &.overflowed ::ng-deep > .mat-drawer-inner-container {
+            overflow: visible;
+        }
+        width: $side-nav-width;
+    }
+    .sidenav-container {
+        flex: 1;
+    }
+    .mat-sidenav-content {
+        flex-direction: column;
+    }
+    main {
+        display: block;
+        padding: 8px;
+        box-sizing: border-box;
+        min-height: $content-min-height;
+    }
+}
+
+.app-logo {
+    width: 240px;
+    height: 64px;
+}

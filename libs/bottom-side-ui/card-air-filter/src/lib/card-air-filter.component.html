@@ -1,0 +1,18 @@
+<vioc-card
+    [title]="titleConfiguration.label"
+    [titleAlign]="titleConfiguration.align"
+    [titleColor]="titleConfiguration.color"
+    [titleSize]="titleConfiguration.size"
+>
+    <div class="card-air-filter-content">
+        <vioc-card-content
+            *ngIf="!apiError; else isError"
+            [title]="contentTitle"
+            [titleColor]="contentTitleColor"
+            [description]="contentNotes"
+        ></vioc-card-content>
+        <ng-template #isError>
+            <vioc-content-error [description]="apiErrorMessage"></vioc-content-error>
+        </ng-template>
+    </div>
+</vioc-card>

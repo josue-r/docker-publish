@@ -1,0 +1,32 @@
+/* widths/heights */
+$screen-min-width: 768px; // support ipad & up
+$side-nav-width: 105px;
+$header-height: 120px;
+$footer-height: 32px;
+$header-and-footer-height: 152px; // header + footer (IE doesn't support calc within calc)
+$content-min-height: calc(100vh - #{$header-and-footer-height});
+
+/* DASH GUIDES */
+$header-gray: #303030;
+$body-copy: #6e6e6e;
+$legal-gray: #979797;
+$background-gray: #efefef;
+$content-background: #ffffff;
+
+/* colors */
+$light-blue: #00b6fd;
+$blue: #009cd9;
+$blue-5: #008ac0;
+$blue-10: #0077a6;
+$med-blue: #085e8f;
+$red: #e1261c;
+$gray: #6e6e6e;
+$light-gray: rgba(0, 0, 0, 0.12);
+$line-gray: #e5e5e5;
+$black: #111820;
+$solid-gray-border: 1px solid $light-gray;
+$warn: #ff8c00;
+$error: #e1261c;
+$info: #17a2b8;
+$success: #26cc58;
+$blue-background: #e1ecf2;

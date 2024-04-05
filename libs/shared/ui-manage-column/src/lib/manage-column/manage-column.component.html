@@ -1,0 +1,97 @@
+<vioc-angular-dialog [name]="'Manage Columns'" [content]="content" [actions]="actions"></vioc-angular-dialog>
+<ng-template #content>
+    <div class="manage-columns">
+        <div class="available-columns">
+            <vioc-angular-drop-list
+                [name]="'Available Columns'"
+                [listId]="'available-columns'"
+                [data]="managedColumns.hidden"
+                [connectedDropLists]="['displayed-columns']"
+                [displayItemsTemplate]="hiddenColumns"
+                [sortingDisabled]="true"
+                (selectItem)="select($event)"
+                (moveItem)="add($event)"
+            >
+            </vioc-angular-drop-list>
+            <ng-template #hiddenColumns let-hiddenColumn="templateItem">
+                <ng-container
+                    *ngTemplateOutlet="columnDisplayPanel; context: { column: hiddenColumn, isDisplayed: false }"
+                >
+                </ng-container>
+            </ng-template>
+        </div>
+        <div class="column-actions">
+            <button mat-icon-button id="vui-remove-all-button" (click)="removeAll()">
+                <mat-icon>first_page</mat-icon>
+            </button>
+            <button mat-icon-button id="vui-remove-selected-button" (click)="removeSelected()">
+                <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button mat-icon-button id="vui-add-selected-button" (click)="addSelected()">
+                <mat-icon>chevron_right</mat-icon>
+            </button>
+            <button mat-icon-button id="vui-add-all-button" (click)="addAll()">
+                <mat-icon>last_page</mat-icon>
+            </button>
+        </div>
+        <div class="selected-columns">
+            <vioc-angular-drop-list
+                [name]="'Displayed Columns'"
+                [listId]="'displayed-columns'"
+                [data]="managedColumns.displayed"
+                [connectedDropLists]="['available-columns']"
+                [displayItemsTemplate]="displayedColumns"
+                (selectItem)="select($event)"
+                (moveitem)="remove($event)"
+            >
+            </vioc-angular-drop-list>
+            <ng-template #displayedColumns let-displayedColumn="templateItem">
+                <ng-container
+                    *ngTemplateOutlet="columnDisplayPanel; context: { column: displayedColumn, isDisplayed: true }"
+                >
+                </ng-container>
+            </ng-template>
+        </div>
+        <ng-template #columnDisplayPanel let-column="column" let-isDisplayed="isDisplayed">
+            <div *ngIf="!column.groupedColumns" class="reorder-column-list">
+                <mat-icon *ngIf="isDisplayed">reorder</mat-icon>
+                <span>{{ column.name }}</span>
+            </div>
+            <mat-expansion-panel *ngIf="column.groupedColumns" [togglePosition]="'after'" class="column-group-panel">
+                <mat-expansion-panel-header class="column-group-panel-header">
+                    <mat-panel-title>
+                        <mat-icon *ngIf="isDisplayed" class="column-reorder">reorder</mat-icon>
+                        {{ getGroupName(column.name) }}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <vioc-angular-drop-list
+                    [listId]="toDropListId(column.name, isDisplayed)"
+                    [data]="column.groupedColumns"
+                    [connectedDropLists]="toDropListId(column.name, !isDisplayed)"
+                    [sortingDisabled]="!isDisplayed"
+                    (selectItem)="select($event)"
+                    (moveitem)="remove($event)"
+                >
+                </vioc-angular-drop-list>
+            </mat-expansion-panel>
+        </ng-template>
+    </div>
+</ng-template>
+<ng-template #actions>
+    <button mat-stroked-button id="vui-cancel-button" (click)="closeDialog()" class="action-button">Cancel</button>
+    <button mat-stroked-button color="primary" id="vui-reset-button" (click)="reset()" class="action-button"
+        >Reset</button
+    >
+    <!-- TODO: reimplement once default columns can be saved across sessions -->
+    <!-- <button mat-stroked-button color="primary" id="vui-save-as-default-button" (click)="saveAsDefault()" class="action-button"
+            >Save As Default</button
+        > -->
+    <button
+        mat-raised-button
+        color="primary"
+        id="vui-apply-changes-button"
+        (click)="applyChanges()"
+        class="action-button"
+        >Apply</button
+    >
+</ng-template>

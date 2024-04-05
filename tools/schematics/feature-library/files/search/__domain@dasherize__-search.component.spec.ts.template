@@ -1,0 +1,92 @@
+import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatButtonModule } from '@angular/material';
+import { By, HAMMER_LOADER } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FeatureSearchPageMockModule, MockSearchPageComponent } from '@vioc-angular/central-ui/feature-search-page';
+import { UiLoadingModule } from '@vioc-angular/shared/ui-loading';
+import { GATEWAY_TOKEN } from '@vioc-angular/shared/util-api';
+import { MockRouterLinkDirective } from '@vioc-angular/test/util-test';
+import { <%=classify(domain)%>SearchComponent } from './<%=dasherize(domain)%>-search.component';
+
+describe('<%=classify(domain)%>SearchComponent', () => {
+    let component: <%=classify(domain)%>SearchComponent;
+    let fixture: ComponentFixture<<%=classify(domain)%>SearchComponent>;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [
+                CommonModule,
+                NoopAnimationsModule,
+                UiLoadingModule,
+                MatButtonModule,
+                FeatureSearchPageMockModule
+            ],
+            declarations: [MockRouterLinkDirective],
+            providers: [
+                { provide: GATEWAY_TOKEN, useValue: '//gateway/' },
+                { provide: HttpClient, useValue: {} },
+                { provide: HAMMER_LOADER, useValue: () => new Promise(() => {}) }
+            ]
+        }).compileComponents();
+    });
+
+    beforeEach(() => {
+        fixture = TestBed.createComponent(<%=classify(domain)%>SearchComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+
+    describe('searchPage', () => {
+        let searchPage: MockSearchPageComponent;
+        beforeEach(() => {
+            searchPage = fixture.debugElement.query(By.directive(MockSearchPageComponent)).componentInstance;
+            fixture.detectChanges();
+        });
+
+        it('should pass the entityType', () => {
+            expect(searchPage.entityType).toEqual('<%=classify(domain)%>');
+        });
+
+        it('should pass the searchPageFacade', () => {
+            expect(searchPage.searchPageFacade).toEqual(component.<%=camelize(domain)%>Facade);
+        });
+
+        it('should pass the columns', () => {
+            expect(searchPage.columns).toEqual(component.columns);
+        });
+
+        it.todo('should pass the routePathVariables function'); // TODO: Implement
+
+        it('should pass the gridFormOptions', () => {
+            expect(searchPage.gridFormOptions).toEqual(component.gridFormOptions);
+        });
+    });
+
+    it('should navigate to add page on add button', () => {
+        fixture.detectChanges();
+        component.searchPage.hasAddAccess = true;
+        fixture.detectChanges();
+
+        const routerLink = fixture.debugElement
+            .query(By.css('#add-button'))
+            .injector.get<MockRouterLinkDirective>(MockRouterLinkDirective).routerLink;
+
+        expect(routerLink).toEqual(['../add']);
+    });
+
+    it('should hide add button if no add access', () => {
+        fixture.detectChanges();
+        component.searchPage.hasAddAccess = false;
+        fixture.detectChanges();
+
+        const addButton = fixture.debugElement.query(By.css('#add-button'));
+
+        expect(addButton).toBeFalsy();
+    });
+});

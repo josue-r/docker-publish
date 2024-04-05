@@ -1,0 +1,35 @@
+<!--
+    Template is required since the "multiple" property can't be changed after creation:
+    "Cannot change `multiple` mode of select after initialization."
+-->
+<ng-container *ngIf="multiple; else columnDropdown">
+    <ng-container *ngTemplateOutlet="columnDropdown; context: { $implicit: true }"></ng-container>
+</ng-container>
+<ng-template #columnDropdown let-multiSelect>
+    <mat-select
+        #select
+        id="{{ column.apiFieldPath }}-dropdown"
+        [value]="value"
+        [placeholder]="placeholder"
+        [multiple]="multiSelect"
+        [disabled]="disabled"
+        [ngClass]="errorState ? 'mat-select-invalid' : ''"
+        (selectionChange)="onChange($event.value)"
+        (openedChange)="openedChanged($event)"
+    >
+        <mat-option>
+            <ngx-mat-select-search
+                [formControl]="searchFilterControl"
+                [placeholderLabel]="column.hint"
+                [searching]="searching"
+            ></ngx-mat-select-search>
+        </mat-option>
+        <mat-option [value]="null" *ngIf="noSelectionOption && !empty && !multiple"></mat-option>
+        <ng-container *ngIf="option$ | async as options">
+            <mat-option *ngIf="!(options | hasData)" [disabled]="true"> No values found </mat-option>
+            <mat-option *ngFor="let o of options" [value]="o">
+                {{ o | dropdownDisplay: column }}
+            </mat-option>
+        </ng-container>
+    </mat-select>
+</ng-template>

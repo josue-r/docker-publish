@@ -1,0 +1,78 @@
+@import 'variables.scss';
+
+.sub-nav-toggler {
+    height: 73px;
+    border-bottom: $solid-gray-border;
+
+    &:hover {
+        .nav-icon,
+        .nav-title {
+            color: $blue;
+        }
+    }
+
+    &.active {
+        color: $blue;
+        background: rgba(0, 0, 0, 0.04);
+    }
+
+    ::ng-deep .mdc-list-item__content {
+        /* TODO: ng-deep is deprecated, but there's no replacement as of yet */
+        display: block;
+        text-align: center;
+        padding-top: 5px;
+
+        .nav-icon {
+            margin: 0 auto;
+            width: 45px;
+            height: 45px;
+            color: $body-copy;
+
+            .mat-icon {
+                font-size: 32px;
+                width: 32px;
+                height: 32px;
+                line-height: 1.4;
+                overflow: visible;
+            }
+        }
+
+        .current-page {
+            .nav-icon {
+                background: $blue;
+                border-radius: 50%;
+                color: white;
+            }
+            .nav-title {
+                color: $blue;
+            }
+        }
+
+        .nav-title-wrapper {
+            height: 22px;
+            display: table;
+            width: 100%;
+        }
+
+        .nav-title {
+            color: $body-copy;
+            font-size: 10px;
+            line-height: 1;
+            display: table-cell;
+            vertical-align: middle;
+        }
+    }
+}
+
+::ng-deep .sub-nav-overlay {
+    margin-left: $side-nav-width;
+}
+
+::ng-deep .cdk-overlay-pane {
+    /* TODO: ng-deep is deprecated, but there's no replacement as of yet */
+    /* cdk-overlay-pane outside of the page-container */
+    .sub-nav-menu.mat-mdc-menu-panel {
+        box-shadow: none;
+        border: $solid-gray-border;
+    }
+}

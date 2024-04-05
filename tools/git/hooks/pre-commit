@@ -1,0 +1,26 @@
+#!/bin/sh
+
+nxJson=$(git diff --name-only --cached | grep nx.json)
+if [[ "${#nxJson}" -gt 0 ]]; 
+then 
+    npm run sort:nx-json
+    git add ./nx.json
+    tools/scripts/maintain-project-names.sh
+    git add .vscode/launch.json
+fi
+
+tsconfigJson=$(git diff --name-only --cached | grep tsconfig.base.json)
+if [[ "${#tsconfigJson}" -gt 0 ]]; 
+then 
+    npm run sort:tsconfig-json
+    git add ./tsconfig.base.json
+fi
+
+
+angularJson=$(git diff --name-only --cached | grep angular.json)
+if [[ "${#angularJson}" -gt 0 ]]; 
+then 
+    npm run sort:angular-json
+    git add ./angular.json
+fi
+

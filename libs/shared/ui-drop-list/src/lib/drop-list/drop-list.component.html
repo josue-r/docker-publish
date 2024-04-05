@@ -1,0 +1,34 @@
+<div class="items-list">
+    <h4 *ngIf="name">{{ name }}</h4>
+    <div
+        id="{{ listId }}"
+        class="draggable-list"
+        cdkDropList
+        [cdkDropListSortingDisabled]="sortingDisabled"
+        [cdkDropListData]="data"
+        (cdkDropListDropped)="drop($event)"
+        [cdkDropListConnectedTo]="connectedDropLists"
+    >
+        <div
+            cdkDrag
+            *ngFor="let item of data"
+            (click)="select(item)"
+            (dblclick)="move(item)"
+            [ngClass]="item.selected ? 'selected' : ''"
+            class="item"
+            matRipple
+            [matRippleDisabled]="item.selected"
+        >
+            <ng-container
+                *ngTemplateOutlet="
+                    displayItemsTemplate ? displayItemsTemplate : defaultDisplayItems;
+                    context: { templateItem: item }
+                "
+            >
+            </ng-container>
+            <ng-template #defaultDisplayItems>
+                {{ item.name }}
+            </ng-template>
+        </div>
+    </div>
+</div>

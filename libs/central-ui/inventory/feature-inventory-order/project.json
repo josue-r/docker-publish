@@ -1,0 +1,22 @@
+{
+    "name": "central-ui-inventory-feature-inventory-order",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/central-ui/inventory/feature-inventory-order/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/central-ui/inventory/feature-inventory-order/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "generators": {
+        "@nx/angular:component": {
+            "style": "sass"
+        }
+    },
+    "tags": ["scope:central-ui", "type:feature"]
+}

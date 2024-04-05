@@ -1,0 +1,351 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar *ngIf="!accessMode.isAdd">
+                <!-- TODO: 6/4/2020 implement with #5584 -->
+                <!-- <button
+                    mat-stroked-button
+                    id="clone-action"
+                    *ngIf="showClone"
+                    [disabled]="storeServiceForm.dirty || storeServiceForm.invalid"
+                    color="primary"
+                    (click)="clone()"
+                    >ADD LIKE</button
+                > -->
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <div class="flex-container serviceInfo">
+                    <mat-form-field class="flex-item" *ngIf="!accessMode.isAdd">
+                        <mat-label>Store</mat-label>
+                        <input
+                            id="store"
+                            matInput
+                            placeholder="Store"
+                            type="text"
+                            [value]="storeDescription"
+                            [disabled]="true"
+                            required
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item" *ngIf="!accessMode.isAdd">
+                        <mat-label>Service</mat-label>
+                        <input
+                            id="service"
+                            matInput
+                            placeholder="Service"
+                            type="text"
+                            [value]="serviceDescription"
+                            [disabled]="true"
+                            required
+                        />
+                    </mat-form-field>
+                    <mat-checkbox class="flex-item" formControlName="active">Active</mat-checkbox>
+                </div>
+                <div class="flex-container servicePriceInfo">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Service Price</mat-label>
+                        <input
+                            matInput
+                            viocUiDecimal
+                            placeholder="Service Price"
+                            id="servicePrice"
+                            formControlName="servicePrice"
+                            type="number"
+                            required
+                        />
+                        <mat-error *viocAngularFormError="form.get('servicePrice').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                        <mat-hint id="promotionalPriceWarning" class="warning" *ngIf="promotionalPriceIsInEffect()">
+                            Promotional price is in effect</mat-hint
+                        >
+                        <mat-hint id="productBasedpricingStrategy" *ngIf="isProductBasedPricingStrategy">
+                            Does not apply for product based pricing services</mat-hint
+                        >
+                        <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Labor Price</mat-label>
+                        <input
+                            matInput
+                            viocUiDecimal
+                            placeholder="Labor Price"
+                            id="laborPrice"
+                            formControlName="laborAmount"
+                            type="number"
+                            required
+                        />
+                        <mat-error *viocAngularFormError="form.get('laborAmount').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                        <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                    </mat-form-field>
+                    <mat-checkbox class="flex-item" formControlName="taxable">Taxable</mat-checkbox>
+                </div>
+                <div class="flex-container servicePriceOverrideInfo">
+                    <mat-checkbox class="flex-item" formControlName="priceOverridable">Overridable</mat-checkbox>
+                    <ng-container>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Minimum Price</mat-label>
+                            <input
+                                matInput
+                                viocUiDecimal
+                                placeholder="Minimum Price"
+                                formControlName="priceOverrideMin"
+                                type="number"
+                            />
+                            <mat-hint
+                                id="minPriceWarning"
+                                class="warning"
+                                *ngIf="minimumPriceIsGreaterThanOverrideableMax()"
+                                >Minimum overridable price should be less than the max price</mat-hint
+                            >
+                            <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                        </mat-form-field>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Maximum Price</mat-label>
+                            <input
+                                matInput
+                                viocUiDecimal
+                                placeholder="Maximum Price"
+                                formControlName="priceOverrideMax"
+                                type="number"
+                            />
+                            <mat-hint
+                                id="maxPriceWarning"
+                                class="warning"
+                                *ngIf="servicePriceIsGreaterThanOverrideableMax()"
+                                >Maximum overridable price should be greater than the service price</mat-hint
+                            >
+                            <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                        </mat-form-field>
+                        <mat-checkbox class="flex-item" formControlName="priceOverrideMinMaxOverrideable"
+                            >Min/Max Overridable
+                        </mat-checkbox>
+                    </ng-container>
+                </div>
+            </div>
+            <ng-container *viocAngularLoading="extraChargeItems$ | async; class: 'section'; let items">
+                <div class="section" *ngIf="form.getArray('productExtraCharges')?.controls?.length">
+                    <span class="header">Product Extra Charges</span>
+                    <div formArrayName="productExtraCharges">
+                        <div
+                            class="productExtraChargeInfo fixed-width-container"
+                            *ngFor="let extraCharge of form.getArray('productExtraCharges').controls; let i = index"
+                            [formGroupName]="i"
+                        >
+                            <div>
+                                <mat-form-field class="large">
+                                    <mat-label>Product Category</mat-label>
+                                    <input
+                                        matInput
+                                        placeholder="Product Category"
+                                        value="{{ extraCharge.get('productCategory').value.code }}"
+                                        disabled="true"
+                                    />
+                                </mat-form-field>
+                                <mat-form-field class="extra-large">
+                                    <mat-label>Extra Charge</mat-label>
+                                    <mat-select
+                                        matInput
+                                        formControlName="charge"
+                                        placeholder="Extra Charge"
+                                        [compareWith]="describedEquals"
+                                    >
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let item of items" [value]="item">{{
+                                            item.description
+                                        }}</mat-option>
+                                    </mat-select>
+                                    <mat-hint
+                                        id="productExtraChargeWarning"
+                                        class="warning"
+                                        *ngIf="noProductExtraChargeExists()"
+                                        >A product extra charge has not been set up for this service.</mat-hint
+                                    >
+                                </mat-form-field>
+                            </div>
+                            <div
+                                *ngIf="(extraCharge | asTypedForm).isRequiredFieldGroupDisplayed('extraCharge') | async"
+                            >
+                                <div class="spacer large"></div>
+                                <mat-form-field class="small">
+                                    <mat-label>Amount</mat-label>
+                                    <input
+                                        matInput
+                                        viocUiDecimal
+                                        placeholder="Amount"
+                                        formControlName="amount"
+                                        type="number"
+                                    />
+                                    <mat-error *viocAngularFormError="extraCharge.get('amount').errors; let error"
+                                        >{{ error }}
+                                    </mat-error>
+                                    <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                                </mat-form-field>
+                                <mat-form-field class="small has-info">
+                                    <mat-label>Quantity Included</mat-label>
+                                    <input
+                                        matInput
+                                        type="number"
+                                        placeholder="Quantity Included"
+                                        formControlName="quantityIncluded"
+                                    />
+                                    <mat-error
+                                        class="error-wrap"
+                                        *viocAngularFormError="extraCharge.get('quantityIncluded').errors; let error"
+                                        >{{ error }}</mat-error
+                                    >
+                                </mat-form-field>
+                                <vioc-angular-info-button info="Quantity of the product included in the service price">
+                                </vioc-angular-info-button>
+                                <mat-form-field class="small has-info">
+                                    <mat-label>Begin Extra Charge</mat-label>
+                                    <input
+                                        matInput
+                                        type="number"
+                                        placeholder="Begin Extra Charge"
+                                        formControlName="beginExtraCharge"
+                                    />
+                                    <mat-error
+                                        class="error-wrap"
+                                        *viocAngularFormError="extraCharge.get('beginExtraCharge').errors; let error"
+                                        >{{ error }}</mat-error
+                                    >
+                                </mat-form-field>
+                                <vioc-angular-info-button info="Start adding the extra charge at this product quantity">
+                                </vioc-angular-info-button>
+                                <mat-checkbox formControlName="taxable">Taxable</mat-checkbox>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <vioc-angular-service-extra-charge
+                    [serviceExtraCharges]="[form.getArray('extraCharge1'), form.getArray('extraCharge2')]"
+                    [isViewMode]="accessMode.isView"
+                ></vioc-angular-service-extra-charge>
+            </ng-container>
+            <div class="section">
+                <span class="header">Price Changes</span>
+                <div class="flex-container scheduledPriceInfo">
+                    <span class="flex-item">Scheduled</span>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Change Date</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="scheduledPriceChangeDatePicker"
+                            placeholder="Change Date"
+                            formControlName="scheduledChangeDate"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="scheduledPriceChangeDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #scheduledPriceChangeDatePicker></mat-datepicker>
+                        <mat-error *viocAngularFormError="form.get('scheduledChangeDate').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="flex-item">
+                        <mat-form-field *ngIf="form.isRequiredFieldGroupDisplayed('scheduledPriceChange') | async">
+                            <mat-label>New Price</mat-label>
+                            <input
+                                matInput
+                                viocUiDecimal
+                                placeholder="New Price"
+                                formControlName="scheduledChangePrice"
+                                type="number"
+                            />
+                            <mat-error *viocAngularFormError="form.get('scheduledChangePrice').errors; let error">{{
+                                error
+                            }}</mat-error>
+                            <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                        </mat-form-field>
+                    </div>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                </div>
+                <div class="flex-container PromotionalPriceInfo">
+                    <span class="flex-item">Promotional</span>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Start Date</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="promotionalPriceStartDatePicker"
+                            placeholder="Start Date"
+                            formControlName="promotionStartDate"
+                        />
+                        <mat-error *viocAngularFormError="form.get('promotionStartDate').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                        <mat-datepicker-toggle
+                            matSuffix
+                            [for]="promotionalPriceStartDatePicker"
+                        ></mat-datepicker-toggle>
+                        <mat-datepicker #promotionalPriceStartDatePicker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>End Date</mat-label>
+                        <input
+                            matInput
+                            [matDatepicker]="promotionalPriceEndDatePicker"
+                            placeholder="End Date"
+                            formControlName="promotionEndDate"
+                        />
+                        <mat-error *viocAngularFormError="form.get('promotionEndDate').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                        <mat-datepicker-toggle matSuffix [for]="promotionalPriceEndDatePicker"></mat-datepicker-toggle>
+                        <mat-datepicker #promotionalPriceEndDatePicker></mat-datepicker>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>New Price</mat-label>
+                        <input
+                            matInput
+                            viocUiDecimal
+                            placeholder="New Price"
+                            formControlName="promotionPrice"
+                            type="number"
+                        />
+                        <mat-error *viocAngularFormError="form.get('promotionPrice').errors; let error"
+                            >{{ error }}
+                        </mat-error>
+                        <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>New Labor Price</mat-label>
+                        <input
+                            matInput
+                            viocUiDecimal
+                            placeholder="New Labor Price"
+                            formControlName="promotionLaborAmount"
+                            type="number"
+                        />
+                        <mat-error *viocAngularFormError="form.get('promotionLaborAmount').errors; let error">{{
+                            error
+                        }}</mat-error>
+                        <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                    </mat-form-field>
+                </div>
+            </div>
+        </div>
+        <vioc-angular-audit-trail [audited]="storeService"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>

@@ -1,0 +1,109 @@
+@import 'variables';
+
+.mat-column-Select {
+    &.mat-mdc-cell,
+    &.mat-mdc-header-cell {
+        overflow: initial;
+        flex: 0 0 18px;
+        padding-right: 24px;
+    }
+}
+
+.grid ::ng-deep {
+    tr {
+        vertical-align: middle;
+    }
+
+    .read-only {
+        color: rgba(0, 0, 0, 0.38);
+    }
+
+    .grid-cell {
+        height: 52.75px;
+        border-left: 1px solid rgba(71, 23, 23, 0.12);
+        padding-left: 5px;
+
+        &.grid-edit-cell {
+            .mat-mdc-form-field {
+                width: 100%;
+                .mat-mdc-text-field-wrapper {
+                    margin-right: 5px;
+                    padding: 0;
+                }
+                .mat-mdc-form-field-infix {
+                    display: table;
+                    padding: 0;
+                    min-height: 26px;
+                    height: 50px;
+
+                    .mat-mdc-input-element,
+                    .mat-mdc-select,
+                    .mat-mdc-select-trigger {
+                        height: 100%;
+                        vertical-align: middle;
+                    }
+                }
+                .mat-mdc-form-field-subscript-wrapper {
+                    height: 0;
+                }
+            }
+
+            .mat-mdc-input-element {
+                min-width: 100%;
+                width: auto;
+                max-width: none;
+            }
+
+            &:hover {
+                background: rgba(0, 0, 0, 0.04);
+                .mat-mdc-form-field-input-control {
+                    color: $blue;
+                }
+            }
+
+            &:focus-within {
+                z-index: 1;
+                outline: 2px solid $blue;
+                outline-offset: -1px;
+            }
+
+            &.invalid {
+                outline: 2px solid $red;
+                outline-offset: -1px;
+
+                .mat-mdc-form-field-error-wrapper {
+                    padding: 0;
+                }
+
+                .mat-mdc-form-field-error {
+                    /* Reduce error text size/space to allow two lines of error text to display */
+                    line-height: 10px;
+                    font-size: 10px;
+                    margin-top: -6px;
+                }
+
+                .mat-mdc-form-field-infix {
+                    height: 26px;
+                    padding-top: 2px;
+                }
+
+                .mat-mdc-form-field-flex {
+                    /* Prevent calendar option from pushing errors off screen */
+                    height: 26px;
+                }
+
+                .mat-mdc-form-field-subscript-wrapper {
+                    height: auto;
+                }
+            }
+        }
+    }
+}
+
+.grid-edit-cell ::ng-deep {
+    .mdc-notched-outline__trailing,
+    .mdc-notched-outline__leading {
+        /* Inputs in the grid are using the 'outline' appearance, but the grid will serve as the border */
+        border: none;
+    }
+}

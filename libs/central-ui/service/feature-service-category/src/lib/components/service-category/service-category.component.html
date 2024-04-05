@@ -1,0 +1,381 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+
+            <div id="category-information" class="section">
+                <span class="header">Category Information</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Category Code</mat-label>
+                        <input
+                            id="code"
+                            matInput
+                            formControlName="code"
+                            placeholder="Category Code"
+                            type="text"
+                            required
+                        />
+                        <mat-error
+                            *viocAngularFormError="
+                                form.getControl('code').errors;
+                                customErrorMapping: categoryCodeErrorMapping;
+                                let error
+                            "
+                        >
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <vioc-angular-filtered-input
+                        id="parent-category"
+                        class="flex-item"
+                        [options]="parentCategory$ | async"
+                        [valueControl]="parentCategory"
+                        [editable]="!accessMode.isView"
+                        [nullable]="true"
+                        placeHolder="Parent Category"
+                        [compareWith]="describedEquals"
+                        [displayFn]="parentCategoryDisplayFn"
+                        [customErrorMapping]="parentCategoryErrorMapping"
+                        (selectionChange)="reload()"
+                    ></vioc-angular-filtered-input>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Description</mat-label>
+                        <input
+                            id="description"
+                            matInput
+                            formControlName="description"
+                            placeholder="Description"
+                            type="text"
+                            required
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('description').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-checkbox id="active" class="flex-item small" matInput formControlName="active"
+                        >Active</mat-checkbox
+                    >
+                </div>
+            </div>
+
+            <div id="store-app-settings" class="section" *ngIf="isRootCategory">
+                <span class="header">Store App Settings</span>
+                <div class="flex-container" formGroupName="serviceInfo">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Car System</mat-label>
+                        <mat-select
+                            id="carSystem"
+                            matInput
+                            formControlName="carSystem"
+                            placeholder="Car System"
+                            [compareWith]="describedEquals"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let car of carSystem$ | async" [value]="car">
+                                {{ car.description }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-checkbox
+                        class="flex-item"
+                        id="appear-on-work-order"
+                        matInput
+                        formControlName="appearOnWorkOrder"
+                        >Appear On Work Order
+                        <mat-error
+                            *viocAngularFormError="
+                                form.getControl('serviceInfo').get('appearOnWorkOrder').errors;
+                                let error
+                            "
+                        >
+                            {{ error }}
+                        </mat-error>
+                    </mat-checkbox>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Default Service</mat-label>
+                        <mat-select
+                            id="default-service"
+                            matInput
+                            formControlName="defaultService"
+                            placeholder="Default Service"
+                            [compareWith]="describedEquals"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let service of defaultService$ | async" [value]="service">
+                                {{ service.code }} - {{ service.description }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item" formGroupName="serviceInfo">
+                        <mat-label>Recommendation Order</mat-label>
+                        <input
+                            id="recommendation-order"
+                            matInput
+                            formControlName="recommendationOrder"
+                            placeholder="Recommendation Order"
+                            type="number"
+                        />
+                        <mat-error
+                            *viocAngularFormError="
+                                form.getControl('serviceInfo').get('recommendationOrder').errors;
+                                let error
+                            "
+                        >
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container" formGroupName="serviceInfo">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Competitive Pricing</mat-label>
+                        <input
+                            id="competitive-pricing"
+                            matInput
+                            viocAngularDecimalPlaces
+                            formControlName="competitivePrice"
+                            placeholder="Competitive Pricing"
+                        />
+                        <mat-error
+                            *viocAngularFormError="
+                                form.getControl('serviceInfo').get('competitivePrice').errors;
+                                let error
+                            "
+                        >
+                            {{ error }}
+                        </mat-error>
+                        <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Service Time</mat-label>
+                        <input
+                            id="service-time"
+                            matInput
+                            formControlName="serviceTime"
+                            placeholder="Service Time"
+                            type="text"
+                        />
+                        <mat-error
+                            *viocAngularFormError="form.getControl('serviceInfo').get('serviceTime').errors; let error"
+                        >
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container" formGroupName="serviceInfo">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Service Importance</mat-label>
+                        <textarea
+                            id="importance"
+                            matInput
+                            formControlName="importance"
+                            placeholder="Service Importance"
+                            cdkTextareaAutosize
+                            type="text"
+                        ></textarea>
+                        <mat-error
+                            *viocAngularFormError="form.getControl('serviceInfo').get('importance').errors; let error"
+                        >
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container" formGroupName="serviceInfo">
+                    <mat-checkbox
+                        id="technical-information-required"
+                        matInput
+                        formControlName="technicalInformationRequired"
+                    >
+                        Technical Information Required
+                    </mat-checkbox>
+                    <vioc-angular-info-button
+                        info="Will not display recommendations if no technical information is present."
+                    ></vioc-angular-info-button>
+                </div>
+            </div>
+
+            <div id="external-settings" class="section" *ngIf="isRootCategory">
+                <span class="header">External Settings</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item" formGroupName="serviceInfo">
+                        <mat-label>Customer Display Name</mat-label>
+                        <textarea
+                            id="customerDisplayName"
+                            matInput
+                            formControlName="customerDisplayName"
+                            placeholder="Customer Display Name"
+                            cdkTextareaAutosize
+                            type="text"
+                        ></textarea>
+                        <mat-error
+                            *viocAngularFormError="
+                                form.getControl('serviceInfo').get('customerDisplayName').errors;
+                                let error
+                            "
+                        >
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div id="report-settings" class="section">
+                <span class="header">Report Settings</span>
+                <div class="flex-container">
+                    <mat-form-field *ngIf="isRootCategory" class="flex-item" formGroupName="serviceInfo">
+                        <mat-label>Report Grouping</mat-label>
+                        <mat-select
+                            id="report-group"
+                            matInput
+                            formControlName="reportGroup"
+                            placeholder="Report Grouping"
+                            [compareWith]="describedEquals"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let report of reportGroup$ | async" [value]="report">{{
+                                report.description
+                            }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>NOCR Grouping</mat-label>
+                        <mat-select
+                            id="nocr-group"
+                            matInput
+                            formControlName="nocrGroup"
+                            placeholder="NOCR Grouping"
+                            [compareWith]="describedEquals"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let nocr of nocrGroup$ | async" [value]="nocr">{{
+                                nocr.description
+                            }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <div *ngIf="!isRootCategory" class="spacer large"></div>
+                </div>
+                <div class="report-settings-checkboxes">
+                    <mat-checkbox id="premium" matInput formControlName="premium">Premium</mat-checkbox>
+                    <mat-checkbox id="exclude-from-metrics" matInput formControlName="excludeFromMetrics">
+                        Exclude From Metrics
+                    </mat-checkbox>
+                </div>
+            </div>
+
+            <div id="fleet-billing-settings" class="section">
+                <span class="header">Fleet Billing Settings</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Fleet Product Code</mat-label>
+                        <mat-select
+                            id="fleet-product-code"
+                            matInput
+                            formControlName="fleetProductCode"
+                            placeholder="Fleet Product Code"
+                            [compareWith]="describedEquals"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let fleet of fleetProductCode$ | async" [value]="fleet">{{
+                                fleet.description
+                            }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>NACS Product Code</mat-label>
+                        <mat-select
+                            id="nacs-product-code"
+                            matInput
+                            formControlName="nacsProductCode"
+                            placeholder="NACS Product Code"
+                            [compareWith]="describedEquals"
+                            required
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let nacs of nacsProductCode$ | async" [value]="nacs">{{
+                                nacs.description
+                            }}</mat-option>
+                        </mat-select>
+                        <mat-error *viocAngularFormError="form.getControl('nacsProductCode').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div id="carFax-mapping" class="section" *ngIf="hasCarfaxMapping">
+                <span class="header">CarFax Mappings</span>
+                <vioc-angular-service-category-car-fax-mapping
+                    [carFaxMappingFormArray]="carFaxMapping"
+                    [isViewMode]="accessMode.isView"
+                    [carFaxServiceNames]="carFaxServices$ | async"
+                ></vioc-angular-service-category-car-fax-mapping>
+            </div>
+
+            <div id="motor-info" class="section" *ngIf="hasMotorInfo">
+                <span class="header">Motor Info</span>
+                <vioc-angular-service-category-motor-info
+                    [motorInfoFormArray]="motorInfo"
+                    [isViewMode]="accessMode.isView"
+                ></vioc-angular-service-category-motor-info>
+            </div>
+
+            <div id="preventative-maintenance-qualifiers" class="section" *ngIf="hasPmQualifier">
+                <span class="header">Preventative Maintenance Qualifiers</span>
+                <vioc-angular-preventative-maintenance-qualifier
+                    [pmQualifierFormArray]="pmQualifier"
+                    [isViewMode]="accessMode.isView"
+                ></vioc-angular-preventative-maintenance-qualifier>
+            </div>
+        </div>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>
+
+<vioc-angular-dialog
+    #confirmDialog
+    id="parent-category-dialog"
+    [name]="'Switching to child category'"
+    [content]="content"
+    [actions]="actions"
+></vioc-angular-dialog>
+<ng-template #content>
+    <div>
+        Switching this category to a child category will remove information from the following sections:
+        <ul>
+            <li>Store App Settings</li>
+            <li>Carfax Mappings</li>
+            <li>Motor Info</li>
+            <li>Preventative Maintenance Qualifiers</li>
+        </ul>
+        Would you like to continue?
+    </div>
+</ng-template>
+<ng-template #actions>
+    <button mat-button id="continue-button" disableButtonClick (disableClick)="loadChildForm()">Continue</button>
+    <button cmat-button id="cancel-button" disableButtonClick (disableClick)="cancelRootSwitch()">Cancel</button>
+</ng-template>

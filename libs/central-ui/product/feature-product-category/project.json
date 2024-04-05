@@ -1,0 +1,17 @@
+{
+    "name": "central-ui-product-feature-product-category",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/central-ui/product/feature-product-category/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/central-ui/product/feature-product-category/jest.config.ts"
+            }
+        }
+    },
+    "generators": {},
+    "tags": ["scope:central-ui", "type:feature"]
+}

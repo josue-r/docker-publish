@@ -1,0 +1,351 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <div *ngIf="!isOldOrder">
+        <!-- If user clicks enter, browser tries to perform the first submit action it gets(e.g. If first
+        button on that page is cancel and user performs enter, it'll try to perform the action for cancel).
+        preventDefault stops this behavior-->
+        <form *viocAngularLoading="form" [formGroup]="form" (keydown.enter)="$event.preventDefault()">
+            <div class="page">
+                <vioc-angular-action-bar>
+                    <button
+                        mat-stroked-button
+                        id="apply-action"
+                        *ngIf="form.enabled"
+                        [disabled]="form.invalid"
+                        color="primary"
+                        disableButtonClick
+                        (disableClick)="apply()"
+                        >APPLY</button
+                    >
+                    <button
+                        mat-stroked-button
+                        id="save-action"
+                        *ngIf="form.enabled"
+                        [disabled]="form.invalid"
+                        color="primary"
+                        disableButtonClick
+                        (disableClick)="save()"
+                        >SAVE</button
+                    >
+                    <span class="horizontal-spacer small"></span>
+                    <button
+                        mat-raised-button
+                        id="finalize-order-action"
+                        *ngIf="accessMode.isEdit || accessMode.isAdd"
+                        [disabled]="form.invalid"
+                        color="primary"
+                        (click)="openFinalizeOrderDialog()"
+                        >FINALIZE NON-INVENTORY ORDER</button
+                    >
+                </vioc-angular-action-bar>
+                <div class="section">
+                    <span class="header">Non Inventory Order Information</span>
+                </div>
+
+                <div class="section">
+                    <div class="flex-container">
+                        <vioc-angular-filtered-input
+                            id="store-input"
+                            class="flex-item small"
+                            [options]="storeList"
+                            [valueControl]="form.getControl('store')"
+                            [editable]="isStoreEditable"
+                            placeHolder="Store"
+                            [nullable]="false"
+                            [compareWith]="describedEquals"
+                            [displayFn]="storeDisplayFn"
+                            [required]="true"
+                        >
+                        </vioc-angular-filtered-input>
+                        <mat-form-field class="flex-item small">
+                            <mat-label>Comments</mat-label>
+                            <textarea
+                                matInput
+                                id="comments-input"
+                                cdkTextareaAutosize
+                                placeholder="Comments"
+                                type="text"
+                                formControlName="comments"
+                            ></textarea>
+                            <mat-error *viocAngularFormError="form.getControl('comments').errors; let error">
+                                {{ error }}
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="flex-container" *ngIf="!accessMode.isAdd">
+                        <mat-form-field class="flex-item">
+                            <mat-label>Order Number</mat-label>
+                            <input
+                                id="order-number-input"
+                                matInput
+                                [value]="form.getControlValue('orderNumber')"
+                                placeholder="Order Number"
+                                type="text"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Order Date</mat-label>
+                            <input
+                                id="order-date-input"
+                                matInput
+                                [value]="form.getControlValue('orderDate') | moment"
+                                placeholder="Order Date"
+                                type="text"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Created By</mat-label>
+                            <input
+                                matInput
+                                id="created-by-input"
+                                placeholder="Created By"
+                                type="text"
+                                [value]="form.get('createdByEmployee').value.name"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="flex-container" *ngIf="orderIsFinalized">
+                        <mat-form-field class="flex-item">
+                            <mat-label>Last Updated Date</mat-label>
+                            <input
+                                id="finalized-on-input"
+                                matInput
+                                [value]="form.getControlValue('updatedOn') | moment"
+                                placeholder="Last Updated Date"
+                                type="text"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Last Updated By</mat-label>
+                            <input
+                                id="finalized-by-input"
+                                matInput
+                                [value]="form.get('updatedByEmployee').value.name"
+                                placeholder="Last Updated By"
+                                type="text"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Displaying while generating order to allow loading icon to show -->
+                <div class="section">
+                    <div class="header"> Items </div>
+                    <button
+                        mat-stroked-button
+                        id="remove-items-button"
+                        color="primary"
+                        class="action-button not-printable"
+                        (click)="removeItems()"
+                        [disabled]="this.selection && this.selection.selected.length === 0"
+                        *ngIf="renderSelection"
+                        >Remove Items</button
+                    >
+                    <ng-container *ngIf="items.data.length > 0 || accessMode.isAdd; else noResults">
+                        <div class="overflow-container">
+                            <table
+                                mat-table
+                                matSort
+                                id="products-table"
+                                [dataSource]="items"
+                                class="content-fit-table"
+                                aria-describedby="Ordered products table"
+                            >
+                                <ng-container matColumnDef="select">
+                                    <th id="vui-table-toggle" mat-header-cell class="not-printable" *matHeaderCellDef>
+                                        <mat-checkbox
+                                            id="master-checkbox"
+                                            (change)="$event ? masterToggle(nonInventoryOrderItems.controls) : null"
+                                            [checked]="
+                                                selection.hasValue() && isAllSelected(nonInventoryOrderItems.controls)
+                                            "
+                                            [indeterminate]="
+                                                selection.hasValue() && !isAllSelected(nonInventoryOrderItems.controls)
+                                            "
+                                            *ngIf="renderSelection"
+                                        >
+                                        </mat-checkbox>
+                                    </th>
+                                    <td
+                                        mat-cell
+                                        class="not-printable"
+                                        *matCellDef="let row; let i = index"
+                                        (click)="$event.stopPropagation()"
+                                    >
+                                        <mat-checkbox
+                                            id="checkbox-{{ i }}"
+                                            (change)="selection.toggle(row)"
+                                            [checked]="selection.isSelected(row)"
+                                            *ngIf="renderSelection"
+                                        >
+                                        </mat-checkbox>
+                                    </td>
+                                </ng-container>
+                                <ng-container matColumnDef="nonInventoryCatalog.number">
+                                    <th mat-header-cell id="itemCodeHeader" *matHeaderCellDef mat-sort-header>
+                                        Item Code
+                                    </th>
+                                    <td mat-cell id="itemCode-{{ i }}" *matCellDef="let row; let i = index">{{
+                                        row.getControlValue('nonInventoryCatalog').number
+                                    }}</td>
+                                </ng-container>
+                                <ng-container matColumnDef="nonInventoryCatalog.description">
+                                    <th mat-header-cell id="itemDescHeader" *matHeaderCellDef mat-sort-header>
+                                        Item Description
+                                    </th>
+                                    <td mat-cell id="itemDesc-{{ i }}" *matCellDef="let row; let i = index">{{
+                                        row.getControlValue('nonInventoryCatalog').description
+                                    }}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="nonInventoryCatalog.minimumQuantity">
+                                    <th
+                                        mat-header-cell
+                                        id="minQuantityHeader"
+                                        class="not-printable"
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Min Order Qty
+                                    </th>
+                                    <td
+                                        mat-cell
+                                        id="minQuantity-{{ i }}"
+                                        class="not-printable numeric"
+                                        *matCellDef="let row; let i = index"
+                                        >{{ row.getControlValue('nonInventoryCatalog').minimumQuantity }}</td
+                                    >
+                                </ng-container>
+                                <ng-container matColumnDef="nonInventoryCatalog.maximumQuantity">
+                                    <th
+                                        mat-header-cell
+                                        id="maxQuantityHeader"
+                                        class="not-printable"
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Max Order Qty
+                                    </th>
+                                    <td
+                                        mat-cell
+                                        id="maxQuantity-{{ i }}"
+                                        class="not-printable numeric"
+                                        *matCellDef="let row; let i = index"
+                                        >{{ row.getControlValue('nonInventoryCatalog').maximumQuantity }}</td
+                                    >
+                                </ng-container>
+                                <ng-container matColumnDef="nonInventoryCatalog.quantityPerPack">
+                                    <th
+                                        mat-header-cell
+                                        id="quantityPerPackHeader"
+                                        class="not-printable"
+                                        *matHeaderCellDef
+                                        mat-sort-header
+                                    >
+                                        Qty Per Pack
+                                    </th>
+                                    <td
+                                        mat-cell
+                                        id="quantityPerPack-{{ i }}"
+                                        class="not-printable numeric"
+                                        *matCellDef="let row; let i = index"
+                                        >{{ row.getControlValue('nonInventoryCatalog').quantityPerPack }}</td
+                                    >
+                                </ng-container>
+
+                                <ng-container matColumnDef="uom">
+                                    <th mat-header-cell id="uomHeader" *matHeaderCellDef mat-sort-header>Unit</th>
+                                    <td mat-cell id="uom-{{ i }}" *matCellDef="let row; let i = index">{{
+                                        row.getControlValue('uom').description | uppercase
+                                    }}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="quantity">
+                                    <th mat-header-cell id="orderQuantityHeader" *matHeaderCellDef mat-sort-header>
+                                        Quantity
+                                    </th>
+                                    <td mat-cell *matCellDef="let row; let i = index">
+                                        <mat-form-field>
+                                            <input
+                                                id="orderQuantity-{{ i }}"
+                                                type="text"
+                                                matInput
+                                                class="numeric"
+                                                viocAngularDecimalPlaces
+                                                [formControl]="row.getControl('quantity')"
+                                            />
+                                        </mat-form-field>
+                                        <mat-error
+                                            id="quantity-errors-{{ i }}"
+                                            *viocAngularFormError="
+                                                row.getControl('quantity').errors;
+                                                customErrorMapping: inventoryOrderErrorMapping;
+                                                let error
+                                            "
+                                        >
+                                            {{ error }}
+                                        </mat-error>
+                                    </td>
+                                </ng-container>
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                            </table>
+                        </div>
+                    </ng-container>
+                    <ng-template #noResults>
+                        <p id="no-preview">There are no products associated with this order.</p>
+                    </ng-template>
+                </div>
+                <vioc-angular-non-inventory-item-add-input
+                    *ngIf="itemsEditable"
+                    id="item-add-input"
+                    class="not-printable"
+                    [addDisabled]="isLoading || !storesSelected"
+                    [existingItemNumbers]="existingItemNumbers"
+                    [searchFn]="searchItemsFn"
+                    (items)="addRequestedItems($event)"
+                >
+                </vioc-angular-non-inventory-item-add-input>
+            </div>
+        </form>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </div>
+</vioc-angular-loading-overlay>
+
+<vioc-angular-dialog
+    #finalizeOrderDialog
+    id="finalize-nio-dialog"
+    [name]="'Finalize Non-Inventory Order'"
+    [content]="accessMode.isAdd ? finalizeAddOrderContent : finalizeOrderContent"
+    [actions]="finalizeOrderActions"
+></vioc-angular-dialog>
+<ng-template #finalizeOrderContent>
+    <div id="finalize-order-confirmation">
+        Are you sure you want to finalize the non-inventory order number {{ orderNumber }}?
+    </div>
+</ng-template>
+<ng-template #finalizeAddOrderContent>
+    <div id="finalize-order-confirmation"> Are you sure you want to finalize the non-inventory order? </div>
+</ng-template>
+<ng-template #finalizeOrderActions>
+    <button mat-stroked-button id="finalize-cancel-button" (click)="closeFinalizeDialog()">GO BACK</button>
+    <button
+        mat-raised-button
+        id="finalize-continue-button"
+        color="primary"
+        class="continue-button"
+        disableButtonClick
+        (disableClick)="finalize()"
+        >FINALIZE NON-INVENTORY ORDER</button
+    >
+</ng-template>

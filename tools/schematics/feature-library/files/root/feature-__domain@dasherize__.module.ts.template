@@ -1,0 +1,63 @@
+import { NgModule, Optional, SkipSelf } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { RouterModule, Routes } from '@angular/router';
+import { CentralFormUiModule, CentralSearchUiModule } from '@vioc-angular/central-ui/ui-modules';
+import {
+    AccessModeActivateGuard,
+    AccessModeRoleMapping,
+    HasRoleActivateGuard
+} from '@vioc-angular/security/util-authorization';
+import { FeatureFeatureFlagModule } from '@vioc-angular/shared/feature-feature-flag';
+import { UiCurrencyPrefixModule } from '@vioc-angular/shared/ui-currency-prefix';
+import { UiFilteredInputModule } from '@vioc-angular/shared/ui-filtered-input';
+import { UnsavedChangesGuard } from '@vioc-angular/shared/util-data-modifying';
+import { FormFactory } from '@vioc-angular/shared/util-form';
+import { <%= classify(domain) %>SearchComponent } from './<%= dasherize(domain) %>-search/<%= dasherize(domain) %>-search.component';
+import { <%= classify(domain) %>Forms } from './<%= dasherize(domain) %>.forms';
+import { <%= classify(domain) %>Component } from './<%= dasherize(domain) %>/<%= dasherize(domain) %>.component';
+
+const routes: Routes = [
+    { path: '', redirectTo: 'search' },
+    {
+        path: 'search',
+        component: <%= classify(domain) %>SearchComponent,
+        canActivate: [HasRoleActivateGuard],
+        canDeactivate: [UnsavedChangesGuard],
+        data: { requiredRoles: ['<%= rolePrefix %>_READ'] }
+    }
+// TODO: Uncomment once edit page is done
+//  ,{
+//     path: ':accessMode/:code', // TODO: Update as required
+//     component: <%= classify(domain) %>Component,
+//     canActivate: [AccessModeActivateGuard],
+//     canDeactivate: [UnsavedChangesGuard],
+//     data: {
+//         accessModes: {
+//             view: ['<%= rolePrefix %>_READ'],
+//             edit: ['<%= rolePrefix %>_UPDATE'],
+//             add: ['<%= rolePrefix %>_ADD']
+//         } as AccessModeRoleMapping
+//     }
+// }
+];
+
+@NgModule({
+    imports: [
+        RouterModule.forChild(routes),
+        UiCurrencyPrefixModule,
+        CentralFormUiModule,
+        CentralSearchUiModule,
+        UiFilteredInputModule,
+        FeatureFeatureFlagModule
+    ],
+    declarations: [<%= classify(domain) %>SearchComponent, <%= classify(domain) %>Component],
+    providers: [FormFactory]
+})
+export class Feature<%= classify(domain) %>Module {
+    constructor(
+        readonly formFactory: FormFactory,
+        readonly formBuilder: FormBuilder
+    ) {
+        <%= classify(domain) %>Forms.registerForms(formFactory, formBuilder);
+    }
+}

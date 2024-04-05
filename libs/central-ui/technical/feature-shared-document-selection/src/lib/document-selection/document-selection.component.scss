@@ -1,0 +1,25 @@
+$file-header-size: 40px;
+
+.document-selection {
+    margin: 0 auto;
+}
+#target {
+    margin-bottom: 15px;
+}
+.document-header {
+    height: $file-header-size;
+
+    span {
+        font-weight: bold;
+        line-height: $file-header-size;
+    }
+    button {
+        float: right;
+    }
+}
+#document {
+    box-shadow: 0px 1px 2px #888;
+    display: block;
+    margin: 0 auto;
+    min-width: 600px;
+}

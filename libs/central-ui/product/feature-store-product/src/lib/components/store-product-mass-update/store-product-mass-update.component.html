@@ -1,0 +1,79 @@
+<div class="page" [formGroup]="form">
+    <vioc-angular-stepper-navigation [stepper]="stepper">
+        <mat-horizontal-stepper #stepper [linear]="true">
+            <mat-step [stepControl]="storesControl">
+                <ng-template matStepLabel>Select Stores</ng-template>
+                <vioc-angular-store-selection
+                    #storeSelectionComponent
+                    [control]="storesControl"
+                    [accessRoles]="accessRoles"
+                    [searchFn]="searchStores"
+                ></vioc-angular-store-selection>
+            </mat-step>
+
+            <mat-step [stepControl]="productsControl">
+                <ng-template matStepLabel>Select Products</ng-template>
+                <vioc-angular-product-selection
+                    #productSelectionComponent
+                    [control]="productsControl"
+                    [searchFn]="searchProducts"
+                ></vioc-angular-product-selection>
+            </mat-step>
+
+            <mat-step [stepControl]="patchControl">
+                <ng-template matStepLabel>Enter Product Information</ng-template>
+                <vioc-angular-mass-update #massUpdateComponent [columns]="columns" [updatableFieldForm]="patchControl">
+                </vioc-angular-mass-update>
+            </mat-step>
+
+            <mat-step>
+                <ng-template matStepLabel>Preview</ng-template>
+                <vioc-angular-loading-overlay [loading]="isLoading">
+                    <div class="actions">
+                        <button
+                            id="update-action"
+                            mat-raised-button
+                            color="primary"
+                            disableButtonClick
+                            (disableClick)="update()"
+                        >
+                            Update
+                        </button>
+                    </div>
+                    <div id="preview">
+                        <strong id="product-message">These products will be updated: </strong>
+                        <!-- Input used to determine if read more or read less option shows for product list -->
+                        <input type="checkbox" id="product-read-more" />
+                        <div id="product-list">
+                            <span id="products" *ngFor="let product of productsControl.value; last as isLast">
+                                {{ product.code }}<span *ngIf="!isLast">,</span>
+                            </span>
+                        </div>
+                        <!-- Only display read more option if there are more than 25 products to display, controlled by the product-read-more input -->
+                        <label
+                            id="product-label"
+                            *ngIf="productsControl.value?.length > maxPreviewableProducts"
+                            for="product-read-more"
+                            >Read
+                        </label>
+                        <strong id="store-message">At the following applicable stores:</strong>
+                        <!-- Input used to determine if read more or read less option shows for store list -->
+                        <input type="checkbox" id="store-read-more" />
+                        <div id="store-list">
+                            <span id="stores" *ngFor="let store of storesControl.value; last as isLast">
+                                {{ store.code }}<span *ngIf="!isLast">,</span>
+                            </span>
+                        </div>
+                        <!-- Only display read more option if there are more than 55 stores to display, controlled by the store-read-more input -->
+                        <label
+                            id="store-label"
+                            *ngIf="storesControl.value?.length > maxPreviewableStores"
+                            for="store-read-more"
+                            >Read
+                        </label>
+                    </div>
+                </vioc-angular-loading-overlay>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </vioc-angular-stepper-navigation>
+</div>

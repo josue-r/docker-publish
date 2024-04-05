@@ -1,0 +1,57 @@
+<div class="section">
+    <span class="header">Service Extra Charges</span>
+    <ng-container *viocAngularLoading="extraChargeItems | async; class: 'section'; let items">
+        <div *ngIf="serviceExtraCharges.length > 0; else emptyServiceChargeList">
+            <div
+                class="flex-container serviceExtraChargeInfo"
+                *ngFor="let extraCharge of serviceExtraCharges; let i = index"
+            >
+                <vioc-angular-add-remove-button
+                    *ngIf="!isViewMode || isExtraChargeAddable(i)"
+                    [removeButtonDisplayed]="!isViewMode"
+                    [addButtonDisplayed]="isExtraChargeAddable(i)"
+                    (removeItem)="removeServiceExtraCharge(i)"
+                    (addItem)="addServiceExtraCharge()"
+                >
+                </vioc-angular-add-remove-button>
+                <mat-form-field class="flex-item">
+                    <mat-select
+                        matInput
+                        [formControl]="extraCharge.get('charge')"
+                        placeholder="Extra Charge"
+                        [compareWith]="describedEquals"
+                    >
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let item of items" [value]="item">{{ item.description }}</mat-option>
+                    </mat-select>
+                    <mat-error *viocAngularFormError="extraCharge.get('charge').errors; let error">{{
+                        error
+                    }}</mat-error>
+                </mat-form-field>
+                <mat-form-field class="flex-item">
+                    <input
+                        matInput
+                        viocAngularDecimal
+                        placeholder="Amount"
+                        [formControl]="extraCharge.get('amount')"
+                        type="number"
+                    />
+                    <mat-error *viocAngularFormError="extraCharge.get('amount').errors; let error">{{
+                        error
+                    }}</mat-error>
+                    <vioc-angular-currency-prefix matPrefix></vioc-angular-currency-prefix>
+                </mat-form-field>
+                <mat-checkbox class="flex-item small" [formControl]="extraCharge.get('taxable')">Taxable</mat-checkbox>
+            </div>
+        </div>
+        <ng-template #emptyServiceChargeList>
+            <div class="flex-container noServiceExtraCharges" *ngIf="!isViewMode">
+                <vioc-angular-add-remove-button
+                    [addButtonDisplayed]="true"
+                    (addItem)="addServiceExtraCharge()"
+                ></vioc-angular-add-remove-button>
+                <div class="spacer"></div>
+            </div>
+        </ng-template>
+    </ng-container>
+</div>

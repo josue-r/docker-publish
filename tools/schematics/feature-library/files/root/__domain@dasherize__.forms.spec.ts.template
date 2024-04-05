@@ -1,0 +1,39 @@
+import { FormBuilder } from '@angular/forms';
+// tslint:disable-next-line: nx-enforce-module-boundaries
+import { <%= classify(domain) %> } from '@vioc-angular/central-ui/<%=dasherize(group)%>/data-access-<%= dasherize(domain) %>';
+import { FormFactory } from '@vioc-angular/shared/util-form';
+import { ReplaySubject } from 'rxjs';
+import { <%= classify(domain) %>Forms } from './<%= dasherize(domain) %>.forms';
+import { Platform } from '@angular/cdk/platform';
+
+describe('<%= classify(domain) %>Forms', () => {
+    describe('registerForms', () => {
+        it('should register <%= classify(domain) %> models', () => {
+            const mockFormFactory = ({ register: jest.fn() } as unknown) as FormFactory;
+            <%= classify(domain) %>Forms.registerForms(mockFormFactory, undefined);
+            expect(mockFormFactory.register).toHaveBeenCalledWith('<%= classify(domain) %>', expect.any(Function));
+        });
+    });
+
+    describe('validations', () => {
+        const formBuilder = new FormBuilder();
+        const formFactory = new FormFactory(formBuilder);
+        let componentDestroyed: ReplaySubject<any>;
+
+        beforeAll(() => <%= classify(domain) %>Forms.registerForms(
+                formFactory,
+                formBuilder)
+        );
+        beforeEach(() => (componentDestroyed = new ReplaySubject(1)));
+        afterEach(() => componentDestroyed.next());
+
+        describe('<%= camelize(domain) %> form', () => {
+            it.todo('should ...');
+
+            describe('validates', () => {
+                it.todo('should ...');
+            });
+        });
+
+    });
+});

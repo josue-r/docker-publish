@@ -1,0 +1,147 @@
+<form *viocAngularLoading="form" (keydown.enter)="$event.preventDefault()" [formGroup]="form">
+    <div *ngIf="form?.value?.type?.code === discountExcludeLineItem || form?.value?.type?.code === discountLineItem">
+        <ng-container *viocAngularLoading="category$ | async; let categories">
+            <button
+                mat-stroked-button
+                id="remove-category-button"
+                color="primary"
+                class="action-button not-printable"
+                (click)="removeCategories()"
+                [disabled]="selection && selection.selected.length === 0"
+                *ngIf="renderSelection"
+                >Remove Products/Services</button
+            >
+            <div class="overflow-container">
+                <table
+                    mat-table
+                    matSort
+                    id="category-table"
+                    [dataSource]="categories"
+                    [matSortActive]="sort?.active"
+                    [matSortDirection]="sort?.direction"
+                    (matSortChange)="sortChange(categories)"
+                    class="content-fit-table"
+                    aria-describedby="Discount table"
+                    *ngIf="categories.data.length > 0; else noResults"
+                >
+                    <ng-container matColumnDef="select">
+                        <th id="vui-table-toggle" mat-header-cell class="not-printable" *matHeaderCellDef>
+                            <mat-checkbox
+                                class="line-item-checkbox"
+                                id="master-checkbox"
+                                [disabled]="accessMode.isView"
+                                (change)="$event ? masterToggle(categories.data) : null"
+                                [checked]="selection.hasValue() && isAllSelected(categories.data)"
+                                [indeterminate]="selection.hasValue() && !isAllSelected(categories.data)"
+                                *ngIf="renderSelection"
+                            >
+                            </mat-checkbox>
+                        </th>
+                        <td
+                            mat-cell
+                            class="not-printable"
+                            *matCellDef="let row; let i = index"
+                            (click)="$event.stopPropagation()"
+                        >
+                            <mat-checkbox
+                                class="line-item-checkbox"
+                                [disabled]="accessMode.isView"
+                                id="category-checkbox-{{ i }}"
+                                (change)="selection.toggle(row)"
+                                [checked]="selection.isSelected(row)"
+                                *ngIf="renderSelection"
+                            >
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="discountTarget">
+                        <th mat-header-cell id="discountTargetHeader" *matHeaderCellDef mat-sort-header>
+                            Product/Service
+                        </th>
+                        <td mat-cell id="category-target-{{ i }}" *matCellDef="let row; let i = index">{{
+                            row.getControlValue('discountTarget')
+                        }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="category.code">
+                        <th mat-header-cell id="categoryHeader" *matHeaderCellDef mat-sort-header>Category Code</th>
+                        <td mat-cell id="category-{{ i }}" *matCellDef="let row; let i = index">{{
+                            row.getControlValue('category').code
+                        }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="approach" *ngIf="form?.value?.type?.code === discountLineItem">
+                        <th
+                            mat-header-cell
+                            id="discountApproachHeader"
+                            class="not-printable tablet-view"
+                            *matHeaderCellDef
+                            mat-sort-header
+                        >
+                            Discount Approach
+                        </th>
+                        <td
+                            mat-cell
+                            id="approach-{{ i }}"
+                            class="not-printable tablet-view"
+                            *matCellDef="let row; let i = index"
+                        >
+                            <mat-form-field class="fill-remaining-space">
+                                <mat-select
+                                    id="approach-{{ i }}"
+                                    matInput
+                                    [formControl]="row.getControl('approach')"
+                                    placeholder="Approach"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let approach of approach$ | async" [value]="approach">
+                                        {{ approach.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="row.getControl('approach').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="amount" *ngIf="form?.value?.type?.code === discountLineItem">
+                        <th
+                            mat-header-cell
+                            id="amountHeader"
+                            class="not-printable tablet-view"
+                            *matHeaderCellDef
+                            mat-sort-header
+                        >
+                            Discount Amount
+                        </th>
+                        <td
+                            mat-cell
+                            id="amountHeader-{{ i }}"
+                            class="not-printable tablet-view"
+                            *matCellDef="let row; let i = index"
+                        >
+                            <mat-form-field class="flex-item">
+                                <input
+                                    id="amount-{{ i }}"
+                                    matInput
+                                    [formControl]="row.getControl('amount')"
+                                    placeholder="Amount"
+                                    type="text"
+                                />
+                                <mat-error *viocAngularFormError="row.getControl('amount').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                        </td>
+                    </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="lineItemColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: lineItemColumns"></tr>
+                </table>
+            </div>
+        </ng-container>
+    </div>
+    <ng-template #noResults>
+        <p id="no-preview">There are no categories associated with this Discount</p>
+    </ng-template>
+</form>

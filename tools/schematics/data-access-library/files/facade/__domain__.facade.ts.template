@@ -1,0 +1,39 @@
+import { HttpClient } from '@angular/common/http';
+import { Inject, Injectable } from '@angular/core';
+import { SearchPageFacade } from '@vioc-angular/central-ui/feature-search-page';
+import { QuerySearch } from '@vioc-angular/shared/common-api-models';
+import { EntityPatch, GATEWAY_TOKEN, ResponseEntity } from '@vioc-angular/shared/util-api';
+import { Observable } from 'rxjs';
+import { <%= classify(domain) %>Api } from '../api/<%= dasherize(domain) %>.api';
+<%= createState ? `import { ${classify(domain)}State } from '../state/${dasherize(domain)}.state';
+` : '' %>
+import { <%= classify(domain) %>, <%= classify(domain) %>Id } from '../model/<%= dasherize(domain) %>.model';
+
+@Injectable()
+export class <%= classify(domain) %>Facade implements SearchPageFacade<<%= classify(domain) %>> {
+    private readonly api: <%= classify(domain) %>Api;
+
+    constructor(
+        @Inject(GATEWAY_TOKEN) gateway: string, http: HttpClient<%= createState ? `, 
+        private readonly state: ${classify(domain)}State` : '' %>
+    ) {
+        this.api = new <%= classify(domain) %>Api(gateway, { http });
+    }
+    
+    search(querySearch: QuerySearch): Observable<ResponseEntity<<%= classify(domain) %>>> {
+        return this.api.query(querySearch);
+    }
+
+    entityPatch(patches: EntityPatch<<%= classify(domain) %>Id>[]): Observable<Object> {
+        return this.api.entityPatch(...patches);
+    }
+
+    dataSync(ids: <%= classify(domain) %>Id[]): Observable<number> {
+        return this.api.dataSync(ids);
+    }
+
+    save(<%= camelize(domain) %>: <%= classify(domain) %>): Observable<Object> {
+        return this.api.save(<%= camelize(domain) %>);
+    }
+
+}

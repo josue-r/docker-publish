@@ -1,0 +1,70 @@
+<div class="page" [formGroup]="form" #formDirective="ngForm">
+    <vioc-angular-stepper-navigation [stepper]="stepper">
+        <mat-horizontal-stepper #stepper [linear]="true">
+            <mat-step [stepControl]="companyControl">
+                <ng-template matStepLabel>Select Company</ng-template>
+                <div class="flex-container" *viocAngularLoading="accessibleCompanies; class: 'section'">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Company</mat-label>
+                        <mat-select
+                            id="company-select"
+                            matInput
+                            placeholder="Company"
+                            [compareWith]="describedEquals"
+                            (selectionChange)="selectCompany($event.value)"
+                            [formControl]="companyControl"
+                            required
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let comp of accessibleCompanies" [value]="comp"
+                                >{{ comp.code }} - {{ comp.description }}</mat-option
+                            >
+                        </mat-select>
+                        <mat-error *viocAngularFormError="companyControl.errors; let error">{{ error }}</mat-error>
+                    </mat-form-field>
+                </div>
+            </mat-step>
+
+            <mat-step [stepControl]="servicesControl">
+                <ng-template matStepLabel>Select Services</ng-template>
+                <vioc-angular-service-selection
+                    #serviceSelectionComponent
+                    [control]="servicesControl"
+                    [searchFn]="searchServices"
+                ></vioc-angular-service-selection>
+            </mat-step>
+
+            <mat-step [stepControl]="companyServiceControl">
+                <ng-template matStepLabel>Enter Service Information</ng-template>
+                <ng-container *ngIf="companyControl.valid && servicesControl.valid">
+                    <vioc-angular-company-service [form]="companyServiceControl"></vioc-angular-company-service>
+                </ng-container>
+            </mat-step>
+
+            <mat-step [stepControl]="previewControl">
+                <ng-template matStepLabel>Preview</ng-template>
+                <ng-container *ngIf="previewControl.valid">
+                    <vioc-angular-loading-overlay [loading]="isLoading">
+                        <vioc-angular-action-bar [isCancelButtonDisplayed]="false">
+                            <button
+                                id="add-services"
+                                mat-raised-button
+                                color="primary"
+                                disableButtonClick
+                                (disableClick)="addServices()"
+                                >Add Services</button
+                            >
+                        </vioc-angular-action-bar>
+                        These services will be added to <strong>{{ companyControl.value.description }}</strong
+                        >:
+                        <mat-list class="vioc-mat-list">
+                            <mat-list-item *ngFor="let service of servicesControl.value">
+                                {{ service.code }} - {{ service.description }}
+                            </mat-list-item>
+                        </mat-list>
+                    </vioc-angular-loading-overlay>
+                </ng-container>
+            </mat-step>
+        </mat-horizontal-stepper>
+    </vioc-angular-stepper-navigation>
+</div>

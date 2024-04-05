@@ -1,0 +1,17 @@
+{
+    "name": "central-ui-discount-data-access-discount",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/central-ui/discount/data-access-discount/src",
+    "projectType": "library",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/central-ui/discount/data-access-discount"],
+            "options": {
+                "jestConfig": "libs/central-ui/discount/data-access-discount/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": ["scope:central-ui", "type:data-access"]
+}

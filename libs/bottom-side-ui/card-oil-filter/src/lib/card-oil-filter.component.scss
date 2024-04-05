@@ -1,0 +1,12 @@
+:host {
+    display: block;
+}
+
+.oil_filter_card {
+    &--client {
+        display: flex;
+        justify-content: center;
+        align-content: space-between;
+        padding: 5px 40px;
+    }
+}

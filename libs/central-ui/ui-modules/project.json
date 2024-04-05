@@ -1,0 +1,21 @@
+{
+    "name": "central-ui-ui-modules",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/central-ui/ui-modules/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/central-ui/ui-modules/jest.config.ts"
+            }
+        }
+    },
+    "generators": {
+        "@nx/angular:component": {
+            "styleext": "sass"
+        }
+    },
+    "tags": ["scope:central-ui", "type:ui"]
+}

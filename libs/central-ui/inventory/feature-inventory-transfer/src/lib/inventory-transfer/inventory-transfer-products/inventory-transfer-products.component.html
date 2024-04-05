@@ -1,0 +1,96 @@
+<div *ngIf="form" class="overflow-container">
+    <button
+        mat-stroked-button
+        id="remove-products-button"
+        color="primary"
+        (click)="removeSelectedProducts()"
+        [disabled]="disableSelection || selection.selected.length === 0"
+        >Remove Products</button
+    >
+    <div id="table-description" class="hidden">Inventory Transfer Products</div>
+    <table
+        mat-table
+        matSort
+        id="products-table"
+        [dataSource]="products"
+        class="content-fit-table"
+        aria-describedby="table-description"
+    >
+        <ng-container matColumnDef="select">
+            <th id="select-all-header" mat-header-cell *matHeaderCellDef>
+                <mat-checkbox
+                    id="select-all-checkbox"
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                    [disabled]="disableSelection"
+                    *ngIf="!isTransferFinalized"
+                >
+                </mat-checkbox>
+            </th>
+            <td class="select-single" mat-cell *matCellDef="let row; let i = index">
+                <mat-checkbox
+                    id="checkbox-{{ i }}"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                    [disabled]="disableSelection"
+                    *ngIf="!isTransferFinalized"
+                >
+                </mat-checkbox>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="code">
+            <th mat-header-cell id="code-header" *matHeaderCellDef mat-sort-header>Product Code</th>
+            <td mat-cell id="code-{{ i }}" *matCellDef="let row; let i = index">{{
+                row.getControlValue('product').code
+            }}</td>
+        </ng-container>
+        <ng-container matColumnDef="description">
+            <th mat-header-cell id="description-header" *matHeaderCellDef mat-sort-header>Product Description</th>
+            <td mat-cell id="description-{{ i }}" *matCellDef="let row; let i = index">{{
+                row.getControlValue('product').description
+            }}</td>
+        </ng-container>
+        <ng-container matColumnDef="quantityOnHand">
+            <th mat-header-cell id="quantityOnHand-header" *matHeaderCellDef mat-sort-header>Qty on Hand</th>
+            <td
+                mat-cell
+                id="quantityOnHand-{{ i }}"
+                [ngClass]="qohWarning(row.getRawValue()) ? 'qoh-column' : ''"
+                *matCellDef="let row; let i = index"
+            >
+                <div id="quantityOnHand-{{ i }}-value" class="value">{{ row.getControlValue('quantityOnHand') }}</div>
+                <div id="quantityOnHand-{{ i }}-warning" *ngIf="qohWarning(row.getRawValue())" class="warning">{{
+                    qohWarning(row.getRawValue())
+                }}</div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="uom">
+            <th mat-header-cell id="uom-header" *matHeaderCellDef mat-sort-header>Unit</th>
+            <td mat-cell id="uom-{{ i }}" *matCellDef="let row; let i = index">{{
+                row.getControlValue('uom').description
+            }}</td>
+        </ng-container>
+        <ng-container matColumnDef="quantity">
+            <th mat-header-cell id="quantity-header" *matHeaderCellDef mat-sort-header>Quantity</th>
+            <td mat-cell id="quantity-{{ i }}" *matCellDef="let row; let i = index">
+                <mat-form-field id="quantity-form-field-{{ i }}">
+                    <input
+                        id="quantity-input-{{ i }}"
+                        matInput
+                        viocAngularDecimalPlaces
+                        [formControl]="row.getControl('quantity')"
+                    />
+                    <mat-error
+                        id="quantity-errors-{{ i }}"
+                        *viocAngularFormError="row.getControl('quantity').errors; let error"
+                    >
+                        {{ error }}
+                    </mat-error>
+                </mat-form-field>
+            </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+</div>

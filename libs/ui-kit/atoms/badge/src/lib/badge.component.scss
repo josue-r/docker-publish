@@ -1,0 +1,56 @@
+@import '../../../../styles/styles.scss';
+
+.ui-kit-badge {
+    // display: flex;
+    font-family: 'Roboto', sans-serif;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    padding: 0px 12px;
+
+    &--round {
+        display: inline-flex;
+        height: 32px;
+        border-radius: 64px;
+        @extend .body;
+    }
+    &--square {
+        display: inline-flex;
+        height: 52px;
+        border-radius: 8px;
+        @extend .pre-title;
+    }
+    &--primary {
+        background: $neutral-mid;
+        color: $ocean;
+    }
+    &--secondary {
+        background: $lake;
+        color: $white;
+    }
+    &--error {
+        color: $white;
+        background: $apple;
+    }
+    &--warning {
+        $color: $black;
+        background: $warning-mid;
+    }
+    &--success {
+        color: $white;
+        background: $success;
+    }
+    &--clear {
+        border: 1.151px solid $steel;
+        background: $linem;
+        $color: $black;
+    }
+    &--silver {
+        background: $steel;
+        color: $white;
+    }
+    &--black {
+        color: $white;
+        background: $black;
+    }
+}

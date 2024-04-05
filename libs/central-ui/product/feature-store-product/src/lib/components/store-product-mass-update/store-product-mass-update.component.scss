@@ -1,0 +1,90 @@
+input[type='checkbox'] {
+    display: none;
+}
+
+/** Input and Label details for Products **/
+
+// Formatting product read more label
+#product-label {
+    display: flex;
+    border: 2px solid grey;
+    padding: 2px;
+    cursor: pointer;
+}
+
+// Changes label to 'Read More'
+#product-label:after {
+    content: 'More';
+}
+
+// Changes label to 'Read Less'
+#product-read-more:checked ~ #product-label:after {
+    content: 'Less';
+}
+
+// Allows all products to be visible when read more is selected
+#product-read-more:checked + #product-list {
+    max-height: 100%;
+}
+
+// Format product message
+#product-message {
+    display: flex;
+    width: 100%;
+    padding-bottom: 7px;
+    white-space: pre-line;
+}
+
+// Limits the number of products visible without clicking read more
+#product-list {
+    display: flexbox;
+    padding-bottom: 3px;
+    max-height: 95px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    width: 700px;
+}
+
+/** Input and Label details for Stores **/
+
+// Formatting store read more label
+#store-label {
+    display: flexbox;
+    border: 2px solid grey;
+    padding: 2px;
+    cursor: pointer;
+}
+
+// Changes label to 'Read More'
+#store-label:after {
+    content: 'More';
+}
+
+// Changes label to 'Read Less'
+#store-read-more:checked ~ #store-label:after {
+    content: 'Less';
+}
+
+// Allows all stores to be visible when read more is selected
+#store-read-more:checked + #store-list {
+    max-height: 100%;
+}
+
+// Format store message
+#store-message {
+    display: flex;
+    width: 100%;
+    padding-top: 20px;
+    padding-bottom: 7px;
+    white-space: pre-line;
+}
+
+// Limits the number of stores visible without clicking read more
+#store-list {
+    display: flexbox;
+    padding-bottom: 3px;
+    max-height: 95px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    width: 700px;
+}

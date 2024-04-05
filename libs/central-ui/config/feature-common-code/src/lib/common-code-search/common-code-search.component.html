@@ -1,0 +1,27 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'CommonCode'"
+    [searchPageFacade]="commonCodeFacade"
+    [columns]="columns"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="viewEditRoutePathVariables"
+    [gridFormOptions]="gridFormOptions"
+    [gridModeEnabled]="false"
+    [selectionActionsTemplate]="selectionActions"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <ng-container *viocAngularFeatureFlag="'commonCode.search.add'">
+            <button
+                mat-button
+                color="primary"
+                id="add-button"
+                *ngIf="searchPage.hasAddAccess"
+                class="action-button"
+                [routerLink]="['../add']"
+                >Add Common Code</button
+            >
+        </ng-container>
+    </ng-template>
+    <ng-template #selectionActions> </ng-template>
+</vioc-angular-search-page>

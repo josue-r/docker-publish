@@ -1,0 +1,6 @@
+<vioc-angular-dialog [name]="'Session Timeout'" [content]="content"></vioc-angular-dialog>
+<ng-template #content>
+    <div class="timeout-dialog">
+        <p>Session will expire in {{ expiresIn }} seconds due to inactivity</p>
+    </div>
+</ng-template>

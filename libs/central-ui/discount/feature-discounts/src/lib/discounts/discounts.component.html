@@ -1,0 +1,581 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" (keydown.enter)="$event.preventDefault()" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-stroked-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <mat-accordion class="discount-information" multi>
+                <mat-expansion-panel #filterPanel class="filter-panel" [expanded]="true">
+                    <mat-expansion-panel-header collapsedHeight="auto" expandedHeight="auto">
+                        <mat-panel-title class="header">Discount Information</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="section">
+                        <div class="flex-container" *ngIf="!accessMode.isAdd">
+                            <!-- Company is only included if it is a local discount -->
+                            <mat-form-field class="flex-item" *ngIf="!form.getControlValue('national')">
+                                <mat-label>Company</mat-label>
+                                <input
+                                    id="company"
+                                    matInput
+                                    required
+                                    placeholder="Company"
+                                    type="text"
+                                    [value]="companyCodeAndDescription"
+                                    [disabled]="true"
+                                />
+                            </mat-form-field>
+                            <mat-form-field class="flex-item small">
+                                <mat-label>Discount Code</mat-label>
+                                <input
+                                    id="discountCode"
+                                    matInput
+                                    formControlName="code"
+                                    placeholder="Discount Code"
+                                    type="text"
+                                    [disabled]="true"
+                                />
+                            </mat-form-field>
+                            <mat-form-field class="flex-item small">
+                                <mat-label>Discount Type</mat-label>
+                                <input
+                                    id="discountType"
+                                    matInput
+                                    [value]="discountType"
+                                    placeholder="Discount Type"
+                                    type="text"
+                                    [disabled]="true"
+                                />
+                            </mat-form-field>
+                            <mat-checkbox class="flex-item small" id="active" matInput formControlName="active">
+                                Active
+                            </mat-checkbox>
+                        </div>
+                        <!-- Configuration for add mode fields -->
+                        <div class="flex-container" *ngIf="accessMode.isAdd">
+                            <mat-form-field class="flex-item large">
+                                <mat-label>Company</mat-label>
+                                <mat-select
+                                    id="company-dropdown"
+                                    matInput
+                                    formControlName="company"
+                                    placeholder="Company"
+                                    [compareWith]="describedEquals"
+                                    (selectionChange)="clearSelected()"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let company of companies$ | async" [value]="company">
+                                        {{ company.code }} - {{ company.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="form.getControl('company').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="flex-item medium discountCodeField">
+                                <mat-label class="discount-code-floating-label">Discount Code</mat-label>
+                                <span matTextPrefix>{{ discountCodePrefix }}</span>
+                                <input
+                                    id="discountCode"
+                                    matInput
+                                    formControlName="code"
+                                    placeholder="Discount Code"
+                                    type="text"
+                                />
+                                <mat-error *viocAngularFormError="form.getControl('code').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-checkbox class="flex-item small" id="active" matInput formControlName="active">
+                                Active
+                            </mat-checkbox>
+                        </div>
+                        <!-- End of configuration for add mode fields -->
+                        <div class="flex-container">
+                            <mat-form-field class="flex-item">
+                                <mat-label>Discount Description</mat-label>
+                                <input
+                                    id="description"
+                                    matInput
+                                    formControlName="description"
+                                    placeholder="Description"
+                                    type="text"
+                                />
+                                <mat-error *viocAngularFormError="form.getControl('description').errors; let error">{{
+                                    error
+                                }}</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-container">
+                            <mat-form-field class="flex-item">
+                                <mat-label>Start Date</mat-label>
+                                <input
+                                    id="startDate"
+                                    matInput
+                                    required
+                                    [matDatepicker]="startDateDatePicker"
+                                    placeholder="Start Date"
+                                    formControlName="startDate"
+                                    [disabled]="true"
+                                />
+                                <mat-error *viocAngularFormError="form.getControl('startDate').errors; let error">{{
+                                    error
+                                }}</mat-error>
+                                <mat-datepicker-toggle matSuffix [for]="startDateDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #startDateDatePicker></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field class="flex-item">
+                                <mat-label>End Date</mat-label>
+                                <input
+                                    id="endDate"
+                                    matInput
+                                    required
+                                    [matDatepicker]="endDateDatePicker"
+                                    placeholder="End Date"
+                                    formControlName="endDate"
+                                />
+                                <mat-error *viocAngularFormError="form.getControl('endDate').errors; let error">{{
+                                    error
+                                }}</mat-error>
+                                <mat-datepicker-toggle matSuffix [for]="endDateDatePicker"></mat-datepicker-toggle>
+                                <mat-datepicker #endDateDatePicker></mat-datepicker>
+                            </mat-form-field>
+                            <mat-form-field class="flex-item">
+                                <mat-label>Expiration Date</mat-label>
+                                <input
+                                    id="expirationDate"
+                                    matInput
+                                    [matDatepicker]="expirationDateDatePicker"
+                                    placeholder="Expiration Date"
+                                    formControlName="expirationDate"
+                                />
+                                <mat-error
+                                    *viocAngularFormError="form.getControl('expirationDate').errors; let error"
+                                    >{{ error }}</mat-error
+                                >
+                                <mat-datepicker-toggle
+                                    matSuffix
+                                    [for]="expirationDateDatePicker"
+                                ></mat-datepicker-toggle>
+                                <mat-datepicker #expirationDateDatePicker></mat-datepicker>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-container">
+                            <mat-checkbox
+                                class="flex-item small"
+                                id="uniqueCodeRequired"
+                                matInput
+                                formControlName="uniqueCodeRequired"
+                            >
+                                Unique Code Required
+                            </mat-checkbox>
+                            <mat-checkbox
+                                class="flex-item small"
+                                id="explanationRequired"
+                                matInput
+                                formControlName="explanationRequired"
+                            >
+                                Explanation Required
+                            </mat-checkbox>
+                            <mat-checkbox class="flex-item small" id="fleetOnly" matInput formControlName="fleetOnly">
+                                Fleet Only
+                            </mat-checkbox>
+                        </div>
+                        <div class="flex-container">
+                            <mat-form-field class="flex-item small">
+                                <mat-label>Max Percentage</mat-label>
+                                <input
+                                    id="percentMaxAmount"
+                                    matInput
+                                    viocAngularDecimalPlaces
+                                    decimalPlaces="2"
+                                    formControlName="percentMaxAmount"
+                                    placeholder="Max Percentage"
+                                    type="decimal"
+                                />
+                                <mat-error
+                                    *viocAngularFormError="form.getControl('percentMaxAmount').errors; let error"
+                                    >{{ error }}</mat-error
+                                >
+                            </mat-form-field>
+                            <mat-checkbox
+                                class="flex-item small"
+                                id="overridable"
+                                matInput
+                                formControlName="overridable"
+                            >
+                                Overridable
+                            </mat-checkbox>
+                        </div>
+                        <div class="flex-container">
+                            <mat-form-field class="flex-item">
+                                <mat-label>Min Override Amount</mat-label>
+                                <input
+                                    id="overrideMinAmount"
+                                    matInput
+                                    viocAngularDecimalPlaces
+                                    decimalPlaces="2"
+                                    formControlName="overrideMinAmount"
+                                    placeholder="Min Override Amount"
+                                    type="decimal"
+                                />
+                                <mat-error
+                                    *viocAngularFormError="form.getControl('overrideMinAmount').errors; let error"
+                                    >{{ error }}</mat-error
+                                >
+                            </mat-form-field>
+                            <mat-form-field class="flex-item">
+                                <mat-label>Max Override Amount</mat-label>
+                                <input
+                                    id="overrideMaxAmount"
+                                    matInput
+                                    viocAngularDecimalPlaces
+                                    decimalPlaces="2"
+                                    formControlName="overrideMaxAmount"
+                                    placeholder="Max Override Amount"
+                                    type="decimal"
+                                />
+                                <mat-error
+                                    *viocAngularFormError="form.getControl('overrideMaxAmount').errors; let error"
+                                    >{{ error }}</mat-error
+                                >
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-container">
+                            <mat-form-field class="flex-item large">
+                                <mat-label>Security Required</mat-label>
+                                <mat-select
+                                    id="securityRestriction"
+                                    matInput
+                                    formControlName="securityRestriction"
+                                    placeholder="security Required"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option
+                                        *ngFor="let securityRestriction of securityRestriction$ | async"
+                                        [value]="securityRestriction"
+                                    >
+                                        {{ securityRestriction.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error
+                                    *viocAngularFormError="form.getControl('securityRestriction').errors; let error"
+                                >
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="flex-item large">
+                                <mat-label>Category</mat-label>
+                                <mat-select
+                                    id="category"
+                                    matInput
+                                    formControlName="discountClassification"
+                                    placeholder="Discount Classification"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option
+                                        *ngFor="let discountClassification of discountClassification$ | async"
+                                        [value]="discountClassification"
+                                    >
+                                        {{ discountClassification.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error
+                                    *viocAngularFormError="form.getControl('discountClassification').errors; let error"
+                                >
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-container">
+                            <mat-form-field class="flex-item large">
+                                <mat-label>Device</mat-label>
+                                <mat-select
+                                    id="device"
+                                    matInput
+                                    formControlName="device"
+                                    placeholder="Device"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let device of device$ | async" [value]="device">
+                                        {{ device.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="form.getControl('device').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="flex-item large">
+                                <mat-label>Audience</mat-label>
+                                <mat-select
+                                    id="audience"
+                                    matInput
+                                    formControlName="audience"
+                                    placeholder="Audience"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let audience of audience$ | async" [value]="audience">
+                                        {{ audience.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="form.getControl('audience').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-container">
+                            <mat-form-field class="flex-item large">
+                                <mat-label>Channel</mat-label>
+                                <mat-select
+                                    id="channel"
+                                    matInput
+                                    formControlName="channel"
+                                    placeholder="Channel"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let channel of channel$ | async" [value]="channel">
+                                        {{ channel.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="form.getControl('channel').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="flex-item large">
+                                <mat-label>Program</mat-label>
+                                <mat-select
+                                    id="program"
+                                    matInput
+                                    formControlName="program"
+                                    placeholder="Program"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let program of program$ | async" [value]="program">
+                                        {{ program.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="form.getControl('program').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div class="flex-container">
+                            <mat-form-field class="flex-item large">
+                                <mat-label>Owner</mat-label>
+                                <mat-select
+                                    id="owner"
+                                    matInput
+                                    formControlName="owner"
+                                    placeholder="Owner"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let owner of owner$ | async" [value]="owner">
+                                        {{ owner.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="form.getControl('owner').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="flex-item large">
+                                <mat-label>Service Offer</mat-label>
+                                <mat-select
+                                    id="serviceOffer"
+                                    matInput
+                                    formControlName="serviceOffer"
+                                    placeholder="Service Offer"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option
+                                        *ngFor="let serviceOffers of serviceOffer$ | async"
+                                        [value]="serviceOffers"
+                                    >
+                                        {{ serviceOffers.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="form.getControl('serviceOffer').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </mat-expansion-panel>
+                <mat-expansion-panel #applyToPanel class="apply-to-panel" [expanded]="true">
+                    <mat-expansion-panel-header collapsedHeight="auto" expandedHeight="auto">
+                        <mat-panel-title class="header">Applies To</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Applies To</mat-label>
+                        <mat-select
+                            matInput
+                            id="appliesTo"
+                            required
+                            formControlName="type"
+                            placeholder="Apply To"
+                            (selectionChange)="form?.value?.type?.code ? changeApplyTo($event) : null"
+                            [compareWith]="describedEquals"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let applyTo of applyTo$ | async" [value]="applyTo">
+                                {{ applyTo.description }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *viocAngularFormError="form.getControl('type').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+
+                    <div class="page">
+                        <div class="section" *ngIf="form?.value?.type?.code != discountInvoice">
+                            <ng-container
+                                *ngTemplateOutlet="form?.value?.type?.code == discountExcludeLineItem && invoiceContent"
+                            ></ng-container>
+
+                            <div class="flex-container" *ngIf="form?.value?.type">
+                                <mat-form-field class="flex-item">
+                                    <mat-label>Max Uses Per Invoice</mat-label>
+                                    <input
+                                        id="max-uses"
+                                        matInput
+                                        formControlName="maxUses"
+                                        placeholder="MaxUses"
+                                        type="number"
+                                    />
+                                    <mat-error *viocAngularFormError="form.getControl('maxUses').errors; let error">
+                                        {{ error }}
+                                    </mat-error>
+                                </mat-form-field>
+
+                                <mat-checkbox class="flex-item" matInput formControlName="extraChargesSupported"
+                                    >Discount Extra Charges</mat-checkbox
+                                >
+                            </div>
+                            <div class="header">{{ form?.value?.type?.description }}</div>
+                            <div class="flex-container" *ngIf="form?.value?.type">
+                                <vioc-angular-product-category-add-input
+                                    id="product-add-input"
+                                    class="flex-item not-printable"
+                                    *ngIf="accessMode.isEdit || accessMode.isAdd"
+                                    [addDisabled]="isLoading"
+                                    [existingProductCategoryCodes]="existingProductCategoryCodes"
+                                    [searchFn]="searchProductsFn"
+                                    (categories)="addRequestedCategories($event, 'PRODUCT')"
+                                >
+                                </vioc-angular-product-category-add-input>
+                                <vioc-angular-service-category-add-input
+                                    id="service-add-input"
+                                    class="flex-item not-printable"
+                                    *ngIf="accessMode.isEdit || accessMode.isAdd"
+                                    [addDisabled]="isLoading"
+                                    [existingServiceCategoryCodes]="existingServiceCategoryCodes"
+                                    [searchFn]="searchServicesFn"
+                                    (categories)="addRequestedCategories($event, 'SERVICE')"
+                                >
+                                </vioc-angular-service-category-add-input>
+                            </div>
+                            <vioc-angular-discount-line-item
+                                id="discount-line-item"
+                                [form]="form"
+                                [category$]="category$"
+                                [approach$]="approach$"
+                                [accessMode]="accessMode"
+                                [model]="model"
+                                [renderSelection]="renderSelection"
+                                (initializeTableEvent)="initializeTable()"
+                                (onRemove)="removeCategories($event)"
+                            >
+                            </vioc-angular-discount-line-item>
+                        </div>
+                        <div class="section" *ngIf="form?.value?.type?.code == discountInvoice">
+                            <div class="header"> {{ form?.value?.type?.description }} </div>
+                            <ng-container *ngTemplateOutlet="invoiceContent"></ng-container>
+                        </div>
+                        <ng-template #invoiceContent>
+                            <div class="flex-container">
+                                <mat-form-field class="flex-item">
+                                    <mat-label>Discount Approach</mat-label>
+                                    <mat-select
+                                        matInput
+                                        id="discount-approach"
+                                        formControlName="approach"
+                                        placeholder="Approach"
+                                        [compareWith]="describedEquals"
+                                    >
+                                        <mat-option></mat-option>
+                                        <mat-option *ngFor="let approach of approach$ | async" [value]="approach">
+                                            {{ approach.description }}
+                                        </mat-option>
+                                    </mat-select>
+                                    <mat-error *viocAngularFormError="form.getControl('approach').errors; let error">
+                                        {{ error }}
+                                    </mat-error>
+                                </mat-form-field>
+                                <mat-form-field class="flex-item">
+                                    <mat-label>Discount Amount</mat-label>
+                                    <input
+                                        id="inoice-amount-input"
+                                        matInput
+                                        viocAngularDecimalPlaces
+                                        decimalPlaces="2"
+                                        [formControl]="form.getControl('amount')"
+                                        placeholder="Amount"
+                                        type="text"
+                                    />
+                                    <mat-error *viocAngularFormError="form.getControl('amount').errors; let error">
+                                        {{ error }}
+                                    </mat-error>
+                                </mat-form-field>
+                            </div>
+                        </ng-template>
+                    </div>
+                </mat-expansion-panel>
+                <mat-expansion-panel #filterPanel class="filter-panel" [expanded]="true">
+                    <mat-expansion-panel-header collapsedHeight="auto" expandedHeight="auto">
+                        <mat-panel-title class="header">Store Assignment</mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="section">
+                        <!-- Store Selection Component -->
+                        <vioc-angular-discounts-store-assignment
+                            #stores
+                            id="store-table"
+                            [form]="form"
+                            [accessMode]="accessMode"
+                            [hideCompanyFilter]="this.form.getControlValue('company') != null"
+                            [initiateCompanySearch]="initiateCompanySearch"
+                            [initiateRegionSearch]="initiateRegionSearch"
+                            [initiateMarketSearch]="initiateMarketSearch"
+                        >
+                        </vioc-angular-discounts-store-assignment>
+                    </div>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>

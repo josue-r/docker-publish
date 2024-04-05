@@ -1,0 +1,24 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'Discount Offer Content'"
+    [searchPageFacade]="offerContentFacade"
+    [columns]="columns"
+    [routePathVariables]="toPathVariables"
+    [gridModeEnabled]="false"
+    [dataSyncable]="false"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <ng-container *viocAngularFeatureFlag="'offerContent.search.add'">
+            <button
+                mat-button
+                color="primary"
+                id="add-button"
+                *ngIf="searchPage.hasAddAccess"
+                class="action-button"
+                [routerLink]="['../add']"
+                >ADD OFFER CONTENT</button
+            >
+        </ng-container>
+    </ng-template>
+</vioc-angular-search-page>

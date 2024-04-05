@@ -1,0 +1,39 @@
+@import 'variables';
+
+.cell-alert {
+    color: #ff8c00;
+    font-weight: bold;
+    outline: 2px solid #ff8c00;
+    outline-offset: -1px;
+}
+
+.mat-mdc-cell {
+    white-space: nowrap;
+}
+
+.mat-sort-header {
+    white-space: nowrap;
+    text-align: left;
+}
+
+.section.receipts {
+    max-width: fit-content;
+}
+
+#receipt-button {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+span.audit-info.flex-item {
+    display: flex;
+    max-width: 50%;
+}
+
+.continue-button {
+    margin-left: 10px;
+}
+
+#open-receipts-context {
+    margin-bottom: 5px;
+}

@@ -1,0 +1,56 @@
+<div class="add-section">
+    <button
+        id="item-search"
+        mat-icon-button
+        color="primary"
+        matTooltip="Search for item(s) to add"
+        [disabled]="addDisabled"
+        (click)="openSearchDialog()"
+    >
+        <mat-icon>search</mat-icon>
+    </button>
+    <mat-form-field id="product-add-form-field">
+        <mat-label>Item Code</mat-label>
+        <input
+            id="item-number-input"
+            matInput
+            [formControl]="itemNumberControl"
+            placeholder="Item Code"
+            (keydown.enter)="!itemNumberControl.value ? '' : addRequestedItem()"
+            [errorStateMatcher]="addItemErrorMatcher(productErrors)"
+        />
+        <mat-error id="item-error">{{ productErrors }}</mat-error>
+    </mat-form-field>
+    <button
+        id="item-go"
+        mat-icon-button
+        color="primary"
+        matTooltip="Add the entered product"
+        [disabled]="addDisabled || !itemNumberControl.value"
+        (click)="addRequestedItem()"
+    >
+        <mat-icon>arrow_forward</mat-icon>
+    </button>
+</div>
+
+<vioc-angular-dialog
+    #searchDialog
+    id="search-add-item"
+    [name]="'Search Item'"
+    [content]="content"
+    [actions]="actions"
+></vioc-angular-dialog>
+<ng-template #content>
+    <vioc-angular-non-inventory-order-item-selection
+        id="item-selection"
+        [control]="itemSelectionControl"
+        [searchFn]="searchFn"
+        [excludedColumns]="excludedItemSearchColumns"
+    ></vioc-angular-non-inventory-order-item-selection>
+</ng-template>
+<ng-template #actions>
+    <button id="cancel-search-button" mat-stroked-button (click)="closeSearchDialog()">CANCEL</button>
+    <button id="add-items-button" mat-raised-button color="primary" [disabled]="!isSelected()" (click)="addItems()"
+        >ADD</button
+    >
+</ng-template>

@@ -1,0 +1,33 @@
+<vioc-header [bayNumber]="bayId"></vioc-header>
+<ng-container [ngSwitch]="eventType">
+    <ng-template [ngSwitchCase]="EventTypeEnum.VEHICLE_UPDATED">
+        <div class="bay-container-details bay-container-details-initial-cards">
+            <div class="oil-filter-container">
+                <vioc-card-oil-filter class="oil-filter-card"></vioc-card-oil-filter>
+            </div>
+            <div class="air-filters-container">
+                <vioc-card-air-filter class="air-filter-card"></vioc-card-air-filter>
+                <vioc-card-cabin-air-filter class="cabin-air-filter-card"></vioc-card-cabin-air-filter>
+            </div>
+        </div>
+    </ng-template>
+    <ng-template [ngSwitchCase]="EventTypeEnum.BEGIN_DAY">
+        <div class="bay-container-details bay-container-details-centered">
+            <p>Begin Day!</p>
+        </div>
+    </ng-template>
+    <ng-template [ngSwitchCase]="EventTypeEnum.SERVICE_EDITED">
+        <div class="bay-container-details bay-container-details-centered">
+            <vioc-card-oil-filter-change
+                [vehicleToEngineConfigId]="vehicleToEngineConfigId"
+                [bayNumber]="bayId"
+            ></vioc-card-oil-filter-change>
+        </div>
+    </ng-template>
+    <ng-template ngSwitchDefault>
+        <div class="bay-container-details bay-container-details-centered">
+            <mat-icon svgIcon="wrench-icon" aria-hidden="false" aria-label="Wrench icon" class="wrench-icon"></mat-icon>
+            <p class="gray-text">Services Not Added</p>
+        </div>
+    </ng-template>
+</ng-container>

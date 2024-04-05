@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "data-access-library",
+    "type": "object",
+    "properties": {
+        "group": {
+            "type": "string",
+            "description": "A group name that contains multiple unique domains. For example, the 'product' group would contain the 'store-product' and 'product-catalog' domains, among others",
+            "x-prompt": "What is the group?  For example, if you are creating a 'data-access-store-product', the group would be 'product'",
+            "minLength": 3,
+            "$default": {
+                "$source": "argv",
+                "index": 0
+            }
+        },
+        "domain": {
+            "type": "string",
+            "description": "The unique domain that this data access library will focus on. A facade, model and optionally state will be created for this domanin",
+            "x-prompt": "What is the domain?  For example, if you are creating a 'data-access-store-product', the domain would be 'store-product'",
+            "minLength": 3,
+            "$default": {
+                "$source": "argv",
+                "index": 1
+            }
+        },
+        "createState": {
+            "type": "boolean",
+            "description": "Should this facade also have a state?",
+            "x-prompt": "Should this facade also have a state?",
+            "default": false
+        },
+        "project": {
+            "type": "string",
+            "description": "Which project is this being installed in?",
+            "default": "central-ui",
+            "enum": ["central-ui"]
+        }
+    },
+    "required": []
+}

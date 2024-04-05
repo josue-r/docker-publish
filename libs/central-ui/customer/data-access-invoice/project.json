@@ -1,0 +1,17 @@
+{
+    "name": "central-ui-customer-data-access-invoice",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/central-ui/customer/data-access-invoice/src",
+    "projectType": "library",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/libs/central-ui/customer/data-access-invoice"],
+            "options": {
+                "jestConfig": "libs/central-ui/customer/data-access-invoice/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": ["scope:central-ui type:data-access"]
+}

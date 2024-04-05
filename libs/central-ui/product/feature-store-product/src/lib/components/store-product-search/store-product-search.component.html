@@ -1,0 +1,61 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'StoreProduct'"
+    [searchPageFacade]="storeProductFacade"
+    [columns]="columns"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="toPathVariables"
+    [actionsTemplate]="actions"
+    [selectionActionsTemplate]="selectionActions"
+>
+</vioc-angular-search-page>
+<ng-template #actions>
+    <ng-container *viocAngularFeatureFlag="'storeProduct.search.add'">
+        <button
+            mat-button
+            color="primary"
+            id="add-button"
+            *ngIf="searchPage.hasAddAccess"
+            class="action-button"
+            [routerLink]="['../add']"
+            >Add Store Product
+        </button>
+    </ng-container>
+    <ng-container *viocAngularFeatureFlag="'storeProduct.search.massUpdate'">
+        <button
+            mat-button
+            color="primary"
+            id="mass-update-button"
+            *ngIf="searchPage.hasEditAccess"
+            class="action-button"
+            [routerLink]="['../mass-update']"
+            >Mass Update
+        </button>
+    </ng-container>
+</ng-template>
+<ng-template #selectionActions>
+    <ng-container *viocAngularFeatureFlag="'storeProduct.search.activateDeactivate'">
+        <button
+            id="activateButton"
+            mat-button
+            color="primary"
+            table-header-selection-actions
+            *ngIf="searchPage.hasEditAccess"
+            class="action-button"
+            disableButtonClick
+            (disableClick)="activate()"
+            >Activate</button
+        >
+        <button
+            id="deactivateButton"
+            mat-button
+            color="primary"
+            table-header-selection-actions
+            *ngIf="searchPage.hasEditAccess"
+            class="action-button"
+            disableButtonClick
+            (disableClick)="deactivate()"
+            >Deactivate</button
+        >
+    </ng-container>
+</ng-template>

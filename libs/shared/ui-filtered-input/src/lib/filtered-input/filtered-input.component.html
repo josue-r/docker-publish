@@ -1,0 +1,41 @@
+<mat-form-field class="flex-item" *ngIf="!editable; else selectOne">
+    <mat-label *ngIf="!hasClass(this)">{{ placeHolder }}</mat-label>
+    <input matInput [value]="valueText" [placeholder]="placeHolder" type="text" [disabled]="true" />
+</mat-form-field>
+<ng-template #selectOne>
+    <mat-form-field class="flex-item" [floatLabel]="floatLabel || 'auto'">
+        <mat-label *ngIf="!hasClass(this)">{{ placeHolder }}</mat-label>
+        <mat-select
+            (openedChange)="openChanged($event)"
+            [multiple]="multiple"
+            [formControl]="valueControl"
+            [placeholder]="placeHolder"
+            [compareWith]="compareWith"
+            (selectionChange)="selectionChange.emit($event)"
+            [required]="required"
+            [matTooltip]="tooltipText"
+            matTooltipShowDelay="500"
+        >
+            <mat-option>
+                <ngx-mat-select-search
+                    [formControl]="filterControl"
+                    [searching]="loading"
+                    [placeholderLabel]="placeHolder"
+                    noEntriesFoundLabel="No matches found"
+                ></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngIf="nullable"></mat-option>
+            <mat-option
+                *ngFor="let option of filteredOptions$ | async"
+                (click)="selectedOption(option)"
+                [value]="valueFn(option)"
+            >
+                {{ displayFn(option) }}
+            </mat-option>
+        </mat-select>
+        <mat-hint *ngIf="hintEnabled" class="warning"> {{ hint }} </mat-hint>
+        <mat-error *viocAngularFormError="valueControl.errors; customErrorMapping: customErrorMapping; let error">
+            {{ error }}
+        </mat-error>
+    </mat-form-field>
+</ng-template>

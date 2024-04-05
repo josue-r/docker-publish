@@ -1,0 +1,15 @@
+import { Inject } from '@angular/core';
+import { Api, ApiConfig, GATEWAY_TOKEN } from '@vioc-angular/shared/util-api';
+import { <%= classify(domain) %>, <%= classify(domain) %>Id } from '../model/<%= dasherize(domain) %>.model';
+
+export class <%= classify(domain) %>Api extends Api<<%= classify(domain) %>, <%= classify(domain) %>Id> {
+    constructor(@Inject(GATEWAY_TOKEN) gateway: string, config: ApiConfig) {
+        // TODO: Update the gateway api path. This should NOT start with a slash. Example: "config"
+        // TODO: Update the path to match the controller.  Example: "v1/common-codes"
+        const apiGatewayPath = 'TODO'; 
+        const controllerPath = 'v1/todo-controller-path'; 
+        super(`${gateway}${apiGatewayPath}/${controllerPath}`, config);
+        // TODO: Update the localhost port number to support development against local apis
+        // super(`http://localhost:0000/${controllerPath}` config);
+    }
+}

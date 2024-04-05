@@ -1,0 +1,24 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'ProductCategory'"
+    [searchPageFacade]="productCategoryFacade"
+    [columns]="columns"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="toCode"
+    [gridModeEnabled]="gridModeEnabled"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <ng-container *viocAngularFeatureFlag="'productCategory.search.add'">
+            <button
+                mat-button
+                color="primary"
+                id="add-button"
+                *ngIf="searchPage.hasAddAccess"
+                class="action-button"
+                [routerLink]="['../add']"
+                >Add Product Category</button
+            >
+        </ng-container>
+    </ng-template>
+</vioc-angular-search-page>

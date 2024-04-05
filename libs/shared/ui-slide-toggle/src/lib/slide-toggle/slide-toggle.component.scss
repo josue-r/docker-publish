@@ -1,0 +1,63 @@
+:host {
+    .mat-mdc-slide-toggle {
+        ::ng-deep .mdc-switch {
+            height: 22px;
+            width: 62px;
+        }
+
+        &.mat-mdc-slide-toggle-checked {
+            ::ng-deep .mdc-label {
+                .innerLabel {
+                    left: -59px !important;
+                }
+            }
+        }
+        &:not(.mat-mdc-slide-toggle-checked) {
+            ::ng-deep .mdc-label {
+                .innerLabel {
+                    color: black !important;
+                    left: -42px;
+                }
+            }
+        }
+    }
+}
+
+.innerLabel {
+    position: relative;
+    font-size: 70%;
+    font-weight: 700;
+    color: white;
+}
+
+.outerLabel {
+    position: relative;
+    top: 2px;
+}
+
+::ng-deep .mdc-label {
+    white-space: nowrap !important;
+    overflow: unset !important;
+    text-overflow: ellipsis !important;
+}
+
+::ng-deep .mdc-switch__handle {
+    margin-top: 12.5px;
+    margin-left: 2.5px;
+    height: 12px !important;
+    width: 12px !important;
+    z-index: 0 !important;
+    top: -2px !important;
+    padding-left: 1px;
+    background-image: none;
+    .mdc-switch__icons {
+        .mdc-switch__icon > path {
+            // Removing the dash and check icon from the slide toggle
+            d: path('');
+        }
+    }
+}
+
+::ng-deep .mat-mdc-slide-toggle.mat-checked .mdc-switch.mdc-switch__handle {
+    transform: translate3d(34px, 0px, 0px) !important;
+}

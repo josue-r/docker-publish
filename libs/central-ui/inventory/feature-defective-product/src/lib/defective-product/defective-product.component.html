@@ -1,0 +1,176 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <!--When user clicks enter on the page, browser will try to perform the first submit action it gets(e.g. If first
+        button on that page is cancel and user performs enter, it'll try to perform the action for cancel).To stop
+        this behavior, use preventDefault and enabled it on the product code input by using keydown.enter event
+        if product code is focused. -->
+    <form *viocAngularLoading="form" (keydown.enter)="$event.preventDefault()" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-raised-button
+                    id="finalize-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    (click)="openFinalizeDialog()"
+                    >FINALIZE DEFECT</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <div class="header">Defective Product Information</div>
+                <div class="flex-container">
+                    <vioc-angular-filtered-input
+                        id="store-input"
+                        class="flex-item"
+                        [options]="store$ | async"
+                        [valueControl]="form.getControl('store')"
+                        [editable]="isStoreEditable"
+                        placeHolder="Store"
+                        [nullable]="false"
+                        [compareWith]="describedEquals"
+                        [displayFn]="codeAndDescriptionDisplayFn"
+                        [required]="true"
+                    >
+                    </vioc-angular-filtered-input>
+
+                    <vioc-angular-product-add-input
+                        *ngIf="accessMode.isAdd"
+                        id="product-add-input"
+                        class="flex-item not-printable"
+                        [addDisabled]="addDisabled"
+                        [searchFn]="searchProductFn"
+                        [productCodeControl]="productCodeControl"
+                        [singleSelection]="true"
+                        [existingProductCodes]="existingProductCodes"
+                        (products)="addProducts($event)"
+                    >
+                    </vioc-angular-product-add-input>
+                    <mat-form-field *ngIf="!accessMode.isAdd" class="flex-item">
+                        <mat-label>Product Code</mat-label>
+                        <input
+                            id="ProductCode"
+                            matInput
+                            placeholder="Product Code"
+                            type="text"
+                            [value]="productCode"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+                <ng-container *ngIf="!pendingProductGeneration">
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item">
+                            <mat-label>Product Description</mat-label>
+                            <input
+                                id="productDescription"
+                                matInput
+                                placeholder="Product Description"
+                                type="text"
+                                [value]="productDescription"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+
+                        <mat-form-field class="flex-item">
+                            <mat-label>Vendor Description</mat-label>
+                            <input
+                                id="vendorDescription"
+                                matInput
+                                placeholder="Vendor Description"
+                                type="text"
+                                [value]="vendorDescription"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item quantity-spacer">
+                            <mat-label>Quantity</mat-label>
+                            <input
+                                matInput
+                                formControlName="quantity"
+                                placeholder="Quantity"
+                                class="numeric"
+                                viocAngularDecimalPlaces
+                                [required]="true"
+                            />
+                            <mat-error
+                                id="quantity-errors"
+                                *viocAngularFormError="form.getControl('quantity').errors; let error"
+                                >{{ error }}</mat-error
+                            >
+                        </mat-form-field>
+
+                        <mat-form-field class="flex-item small" *ngIf="!accessMode.isAddLike">
+                            <mat-label>UOM</mat-label>
+                            <input id="uom" matInput placeholder="UOM" type="text" [value]="uom" [disabled]="true" />
+                        </mat-form-field>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Defect Date</mat-label>
+                            <input
+                                matInput
+                                id="DefectDate"
+                                [value]="defectDate"
+                                placeholder="Defect Date"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-container">
+                        <ng-container>
+                            <vioc-angular-filtered-input
+                                id="reason-input"
+                                class="flex-item"
+                                [options]="reasonType$ | async"
+                                [valueControl]="form.getControl('reason')"
+                                placeHolder="Reason"
+                                [nullable]="false"
+                                [editable]="accessMode.isAdd"
+                                [compareWith]="describedEquals"
+                                [displayFn]="descriptionDisplayFn"
+                                [required]="true"
+                            >
+                            </vioc-angular-filtered-input>
+                        </ng-container>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Comments</mat-label>
+                            <textarea
+                                matInput
+                                cdkTextareaAutosize
+                                placeholder="Comments"
+                                type="text"
+                                formControlName="comments"
+                            ></textarea>
+                            <mat-error *viocAngularFormError="form.getControl('comments').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>
+<vioc-angular-dialog
+    #finalizeDefectiveDialog
+    id="finalize-defective-dialog"
+    [name]="'Finalize Defective Product'"
+    [content]="finalizeAddContent"
+    [actions]="actions"
+></vioc-angular-dialog>
+<ng-template #finalizeAddContent>
+    <div id="finalize-confirmation"> Are you sure you want to finalize the defective product?</div>
+</ng-template>
+<ng-template #actions>
+    <button mat-stroked-button id="finalize-cancel-button" (click)="closeFinalizeDialog()">CANCEL</button>
+    <button
+        mat-raised-button
+        id="finalize-continue-button"
+        color="primary"
+        class="continue-button"
+        disableButtonClick
+        (disableClick)="finalize()"
+        >FINALIZE DEFECT</button
+    >
+</ng-template>

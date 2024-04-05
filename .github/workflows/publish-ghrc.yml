@@ -20,5 +20,5 @@ jobs:
       - name: Build and push the image
         run: |
           docker login --username josue-r --password ${{ secrets.GH_PAT }} ghcr.io
-          docker build . --tag ghcr.io/josue-r/hello-world-ghcr:latest
+          docker build . -f wizeline-side.dockerfile --tag ghcr.io/josue-r/hello-world-ghcr:latest
           docker push ghcr.io/josue-r/hello-world-ghcr:latest

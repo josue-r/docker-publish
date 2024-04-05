@@ -1,0 +1,56 @@
+@import 'variables';
+
+.filter-panel {
+    mat-expansion-panel,
+    mat-expansion-panel-header {
+        height: auto;
+        padding-top: 8px;
+        padding-bottom: 8px;
+        align-items: center;
+
+        mat-icon {
+            padding-right: 16px;
+        }
+    }
+
+    &.mat-expansion-panel {
+        margin-bottom: 5px;
+    }
+
+    width: 100%;
+}
+
+::ng-deep .mat-expansion-panel-body {
+    .button-toolbar {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.filter-container {
+    display: flex;
+    align-items: center;
+
+    vioc-angular-search-line {
+        flex: 1;
+    }
+}
+
+::ng-deep .tooltip {
+    background-color: gray;
+    font-size: 15px;
+    width: auto;
+    word-break: break-word;
+}
+
+.chip-content-overflow {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 30ch;
+    font-weight: bold;
+}
+
+::ng-deep .mat-mdc-chip-listbox {
+    margin-left: 5px;
+}

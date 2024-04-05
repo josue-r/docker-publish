@@ -1,0 +1,515 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <!--When user clicks enter on the page, browser will try to perform the first submit action it gets(e.g. If first
+        button on that page is cancel and user performs enter, it'll try to perform the action for cancel).To stop 
+        this behavior, use preventDefault and enabled it on the product code input by using keydown.enter event 
+        if product code is focused. -->
+    <form *viocAngularLoading="form" (keydown.enter)="$event.preventDefault()" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-stroked-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+                <span class="horizontal-spacer small"></span>
+                <button
+                    id="cancel-receipt-action"
+                    mat-stroked-button
+                    *ngIf="isCancelReceiptButtonShown()"
+                    color="warn"
+                    (click)="openCancelReceiptDialog()"
+                    >CANCEL RECEIPT
+                </button>
+                <button
+                    mat-raised-button
+                    id="finalize-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    (click)="openFinalizeDialog()"
+                    >FINALIZE RECEIPT</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <div class="header">Receipt Information</div>
+                <div class="flex-container">
+                    <vioc-angular-select-and-go
+                        class="flex-item store-and-vendor-select"
+                        [goButtonDisabled]="!form.getControl('store').value || !form.getControl('vendor').value"
+                        [goButtonDisplayed]="pendingReceiptGeneration"
+                        (go)="generateReceipt()"
+                    >
+                        <vioc-angular-filtered-input
+                            id="store-input"
+                            class="flex-item"
+                            [options]="store$ | async"
+                            [valueControl]="form.getControl('store')"
+                            [editable]="isStoreEditable"
+                            placeHolder="Store"
+                            [nullable]="false"
+                            [compareWith]="describedEquals"
+                            [displayFn]="codeAndDescriptionDisplayFn"
+                            [required]="true"
+                        >
+                        </vioc-angular-filtered-input>
+                        <vioc-angular-filtered-input
+                            id="vendor-input"
+                            class="flex-item"
+                            [options]="vendor$ | async"
+                            [valueControl]="form.getControl('vendor')"
+                            [editable]="isVendorEditable"
+                            placeHolder="Vendor"
+                            [nullable]="false"
+                            [compareWith]="describedEquals"
+                            [displayFn]="descriptionDisplayFn"
+                            [required]="true"
+                        >
+                        </vioc-angular-filtered-input>
+                    </vioc-angular-select-and-go>
+                    <ng-container *ngIf="!pendingReceiptGeneration">
+                        <vioc-angular-filtered-input
+                            id="receipt-type-input"
+                            class="flex-item"
+                            [options]="receiptType$ | async"
+                            [valueControl]="form.getControl('receiptType')"
+                            placeHolder="Receipt Type"
+                            [nullable]="false"
+                            [editable]="accessMode.isAdd"
+                            [compareWith]="describedEquals"
+                            [displayFn]="descriptionDisplayFn"
+                            [required]="true"
+                        >
+                        </vioc-angular-filtered-input>
+                    </ng-container>
+                </div>
+                <ng-container *ngIf="!pendingReceiptGeneration">
+                    <div class="flex-container" *ngIf="!accessMode.isAdd">
+                        <mat-form-field class="flex-item">
+                            <mat-label>RM Number</mat-label>
+                            <input matInput required formControlName="number" placeholder="RM Number" type="text" />
+                            <mat-error *viocAngularFormError="form.getControl('number').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                        <!-- This field is never editable by the user -->
+                        <mat-form-field class="flex-item">
+                            <mat-label>Status</mat-label>
+                            <mat-select
+                                matInput
+                                formControlName="status"
+                                placeholder="Status"
+                                [compareWith]="describedEquals"
+                            >
+                                <mat-option [value]="model.status">{{ model.status.description }}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Ship To</mat-label>
+                            <input matInput formControlName="shipTo" placeholder="Ship To" type="text" />
+                            <mat-error *viocAngularFormError="form.getControl('shipTo').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-container" *ngIf="!accessMode.isAdd">
+                        <mat-form-field class="flex-item">
+                            <mat-label>Receipt Date</mat-label>
+                            <input
+                                id="receiptDate"
+                                matInput
+                                [value]="form.getControlValue('receiptDate') | moment"
+                                placeholder="Receipt Date"
+                                type="text"
+                                [disabled]="true"
+                            />
+                        </mat-form-field>
+                        <mat-form-field class="flex-item">
+                            <mat-label>Created By</mat-label>
+                            <input
+                                matInput
+                                placeholder="Created By"
+                                type="text"
+                                id="createdBy"
+                                [value]="createdBy"
+                                [disabled]="true"
+                                required
+                            />
+                        </mat-form-field>
+                        <span class="audit-info flex-item" *ngIf="status === 'FINALIZED'">
+                            <mat-form-field class="flex-item">
+                                <mat-label>Finalized Date</mat-label>
+                                <input
+                                    id="finalizedOn"
+                                    matInput
+                                    [value]="form.getControlValue('finalizedOn') | moment"
+                                    placeholder="Finalized Date"
+                                    type="text"
+                                    [disabled]="true"
+                                />
+                            </mat-form-field>
+                            <mat-form-field class="flex-item">
+                                <mat-label>Finalized By</mat-label>
+                                <input
+                                    matInput
+                                    placeholder="Finalized By"
+                                    type="text"
+                                    id="finalizedBy"
+                                    [value]="finalizedBy"
+                                    [disabled]="true"
+                                    required
+                                />
+                            </mat-form-field>
+                        </span>
+                    </div>
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item" *ngIf="!isTransfer">
+                            <mat-label>PO Number</mat-label>
+                            <input matInput formControlName="poNumber" placeholder="PO Number" type="text" />
+                            <mat-error *viocAngularFormError="form.getControl('poNumber').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="flex-item" *ngIf="!isTransfer">
+                            <mat-label>Delivery Ticket</mat-label>
+                            <input
+                                matInput
+                                formControlName="deliveryTicket"
+                                placeholder="Delivery Ticket"
+                                type="text"
+                            />
+                            <mat-error *viocAngularFormError="form.getControl('deliveryTicket').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                        <mat-form-field class="flex-item" *ngIf="!isTransfer && !isRegular">
+                            <mat-label>Invoice Number</mat-label>
+                            <input matInput formControlName="invoiceNumber" placeholder="Invoice Number" type="text" />
+                            <mat-error *viocAngularFormError="form.getControl('invoiceNumber').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                        <!-- Not editable. Only applicable to splits. -->
+                        <mat-form-field class="flex-item" *ngIf="form.getControl('originalNumber').value">
+                            <mat-label>Original RM Number</mat-label>
+                            <input
+                                matInput
+                                formControlName="originalNumber"
+                                placeholder="Original RM Number"
+                                type="text"
+                            />
+                        </mat-form-field>
+                        <mat-form-field class="flex-item" *ngIf="isTransfer">
+                            <mat-label>Order/Transfer Number</mat-label>
+                            <input matInput formControlName="source" placeholder="Order/Transfer Number" type="text" />
+                            <mat-error *viocAngularFormError="form.getControl('source').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item small">
+                            <mat-label>Comments</mat-label>
+                            <textarea
+                                matInput
+                                cdkTextareaAutosize
+                                placeholder="Comments"
+                                type="text"
+                                formControlName="comments"
+                            ></textarea>
+                            <mat-error *viocAngularFormError="form.getControl('comments').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                    </div>
+                    <div class="not-printable">
+                        <ng-container *viocAngularLoading="associatedRms$ | async; class: 'section'; let rms">
+                            <ng-container *ngIf="rms?.length > 0">
+                                <span id="associatedRMs" class="header">Associated RMs</span>
+                                <div class="flex-item" *ngFor="let rm of rms">
+                                    <div>
+                                        <br />
+                                        <button
+                                            id="receipt-button-{{ rm.number }}"
+                                            mat-button
+                                            color="primary"
+                                            (click)="navigateToRm(rm.store.code, rm.number)"
+                                            >{{ rm.number }}</button
+                                        >
+                                    </div>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                    </div>
+                </ng-container>
+            </div>
+            <br />
+            <div class="section" *ngIf="!pendingReceiptGeneration">
+                <div class="header">
+                    Products
+                    <vioc-angular-print-button></vioc-angular-print-button>
+                </div>
+                <button
+                    mat-stroked-button
+                    id="remove-products-button"
+                    color="primary"
+                    class="action-button not-printable"
+                    (click)="removeProducts()"
+                    [disabled]="this.selection && this.selection.selected.length === 0"
+                    *ngIf="productsEditable"
+                    >Remove Products
+                </button>
+                <ng-container *ngIf="rmProducts.data.length > 0 || accessMode.isAdd; else noResults">
+                    <div class="overflow-container">
+                        <table
+                            mat-table
+                            id="receiptProductsTable"
+                            [dataSource]="rmProducts"
+                            class="content-fit-table"
+                            matSort
+                            aria-describedby="Received products table"
+                        >
+                            <ng-container matColumnDef="select">
+                                <th id="vui-table-toggle" mat-header-cell class="not-printable" *matHeaderCellDef>
+                                    <mat-checkbox
+                                        id="master-checkbox"
+                                        (change)="$event ? masterToggle(receiptProductsForm.controls) : null"
+                                        [checked]="selection.hasValue() && isAllSelected(receiptProductsForm.controls)"
+                                        [indeterminate]="
+                                            selection.hasValue() && !isAllSelected(receiptProductsForm.controls)
+                                        "
+                                        *ngIf="productsEditable"
+                                    >
+                                    </mat-checkbox>
+                                </th>
+                                <td
+                                    mat-cell
+                                    class="not-printable"
+                                    *matCellDef="let row; let i = index"
+                                    (click)="$event.stopPropagation()"
+                                >
+                                    <mat-checkbox
+                                        id="checkbox-{{ i }}"
+                                        (change)="selection.toggle(row)"
+                                        [checked]="selection.isSelected(row)"
+                                        *ngIf="productsEditable"
+                                    >
+                                    </mat-checkbox>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="secondLevelCategory.description">
+                                <th
+                                    mat-header-cell
+                                    id="categoryHeader"
+                                    class="not-printable tablet-view"
+                                    *matHeaderCellDef
+                                    mat-sort-header
+                                    >Product Category
+                                </th>
+                                <td
+                                    mat-cell
+                                    id="productCategory"
+                                    class="not-printable tablet-view"
+                                    *matCellDef="let row"
+                                    >{{ row.getControlValue('secondLevelCategory').description }}</td
+                                >
+                            </ng-container>
+                            <ng-container matColumnDef="product.code">
+                                <th mat-header-cell id="productCodeHeader" *matHeaderCellDef mat-sort-header>
+                                    Product Code
+                                </th>
+                                <td mat-cell id="productCode" *matCellDef="let row">{{
+                                    row.getControlValue('product').code
+                                }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="product.description">
+                                <th mat-header-cell id="productDescriptionHeader" *matHeaderCellDef mat-sort-header
+                                    >Product Description
+                                </th>
+                                <td mat-cell id="productDescription" *matCellDef="let row">{{
+                                    row.getControlValue('product').description
+                                }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="sapNumber">
+                                <th
+                                    mat-header-cell
+                                    id="sapNumberHeader"
+                                    class="not-printable tablet-view"
+                                    *matHeaderCellDef
+                                    mat-sort-header
+                                >
+                                    Part Number
+                                </th>
+                                <td mat-cell id="sapNumber" class="not-printable tablet-view" *matCellDef="let row">{{
+                                    row.getControlValue('sapNumber')
+                                }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="uom.code">
+                                <th mat-header-cell id="uomHeader" *matHeaderCellDef mat-sort-header>UOM</th>
+                                <td mat-cell id="uom" *matCellDef="let row">{{ row.getControlValue('uom').code }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="quantityOrdered" *ngIf="isTransfer || isRegular">
+                                <th mat-header-cell id="quantityOrderedHeader" *matHeaderCellDef mat-sort-header>
+                                    Qty Ordered
+                                </th>
+                                <td mat-cell id="quantityOrdered" *matCellDef="let row">{{
+                                    row.getControlValue('quantityOrdered')
+                                }}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="quantityReceived">
+                                <th mat-header-cell id="quantityReceivedHeader" *matHeaderCellDef mat-sort-header>
+                                    Qty Received
+                                </th>
+                                <td mat-cell id="quantityReceivedCell" *matCellDef="let row">
+                                    <mat-form-field>
+                                        <input
+                                            matInput
+                                            type="text"
+                                            id="quantityReceived"
+                                            [formControl]="row.getControl('quantityReceived')"
+                                        />
+                                        <mat-error
+                                            *viocAngularFormError="row.getControl('quantityReceived').errors; let error"
+                                        >
+                                            {{ error }}
+                                        </mat-error>
+                                    </mat-form-field>
+                                    <ng-container *ngIf="showQtyReceivedWarning(row.value)">
+                                        <br />
+                                        <mat-hint id="qtyReceivedWarning" class="warning">
+                                            Value entered may be high, please verify quantity
+                                        </mat-hint>
+                                    </ng-container>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="wholesalePrice">
+                                <th
+                                    mat-header-cell
+                                    id="wholesalePriceHeader"
+                                    class="not-printable"
+                                    *matHeaderCellDef
+                                    mat-sort-header
+                                >
+                                    Wholesale Price
+                                </th>
+                                <td mat-cell id="wholesalePrice" class="not-printable" *matCellDef="let row">{{
+                                    row.getControlValue('wholesalePrice')
+                                }}</td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                        </table>
+                    </div>
+                </ng-container>
+            </div>
+            <ng-template #noResults>
+                <p id="no-preview">There are no receipt products associated with this rm.</p>
+            </ng-template>
+        </div>
+        <vioc-angular-product-add-input
+            *ngIf="productsEditable"
+            id="product-add-input"
+            class="not-printable"
+            [addDisabled]="isLoading"
+            [existingProductCodes]="existingProductCodes"
+            [searchFn]="searchProductsFn"
+            (products)="addProducts($event)"
+        >
+        </vioc-angular-product-add-input>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>
+
+<vioc-angular-dialog
+    #cancelReceiptDialog
+    id="cancel-receipt-dialog"
+    [name]="'Cancel Receipt'"
+    [content]="cancelContent"
+    [actions]="cancelActions"
+></vioc-angular-dialog>
+<ng-template #cancelContent>
+    <div> Are you sure you want to cancel Receipt number {{ receiptNumber }}? </div>
+</ng-template>
+<ng-template #cancelActions>
+    <button mat-stroked-button id="cancel-cancel-button" (click)="closeCancelReceiptDialog()">GO BACK</button>
+    <button
+        mat-stroked-button
+        id="cancel-continue-button"
+        color="warn"
+        disableButtonClick
+        (disableClick)="cancelReceiptOfMaterial()"
+        >CANCEL RECEIPT</button
+    >
+</ng-template>
+
+<vioc-angular-dialog
+    #finalizeReceiptDialog
+    id="finalize-receipt-dialog"
+    [name]="'Finalize Receipt'"
+    [content]="accessMode.isAdd ? finalizeAddContent : finalizeContent"
+    [actions]="actions"
+></vioc-angular-dialog>
+<ng-template #finalizeContent>
+    <div id="finalize-confirmation"> Are you sure you want to finalize receipt {{ model.number }}? </div>
+</ng-template>
+<ng-template #finalizeAddContent>
+    <div id="finalize-confirmation"> Are you sure you want to finalize the receipt? </div>
+</ng-template>
+<ng-template #actions>
+    <button mat-stroked-button id="finalize-cancel-button" (click)="closeFinalizeDialog()">CANCEL</button>
+    <button
+        mat-raised-button
+        id="finalize-continue-button"
+        disableButtonClick
+        (disableClick)="finalize()"
+        color="primary"
+        >FINALIZE RECEIPT</button
+    >
+</ng-template>
+
+<vioc-angular-dialog
+    #splitReceiptOfMaterialDialog
+    id="split-rm-dialog"
+    [name]="'Split Receipt'"
+    [content]="splitContent"
+    [actions]="splitActions"
+></vioc-angular-dialog>
+<ng-template #splitContent>
+    <div>
+        Some products have a quantity received less than what was ordered. Would you like to create a new receipt for
+        these products?
+    </div>
+</ng-template>
+<ng-template #splitActions>
+    <button mat-stroked-button id="split-dialog-cancel-button" (click)="closeSplitDialog()">GO BACK</button>
+    <button
+        mat-stroked-button
+        id="split-dialog-finalize-button"
+        disableButtonClick
+        (disableClick)="finalize()"
+        color="primary"
+        >FINALIZE RECEIPT</button
+    >
+    <button
+        mat-raised-button
+        id="split-dialog-split-button"
+        color="primary"
+        disableButtonClick
+        (disableClick)="splitAndFinalize()"
+        >SPLIT RECEIPT</button
+    >
+</ng-template>

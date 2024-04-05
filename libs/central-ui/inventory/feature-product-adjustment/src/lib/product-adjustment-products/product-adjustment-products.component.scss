@@ -1,0 +1,43 @@
+::ng-deep .cdk-column-sign {
+    .mat-form-field-wrapper,
+    .mat-select,
+    .mat-form-field-label-wrapper {
+        width: 80px;
+        min-width: 80px;
+    }
+}
+
+@media screen and (max-width: 1180px) {
+    ::ng-deep .cdk-column-quantity {
+        .mat-form-field-wrapper,
+        .mat-select,
+        .mat-form-field-label-wrapper {
+            width: 100px;
+            min-width: 80px;
+        }
+    }
+
+    #products-table {
+        max-width: 100%;
+        overflow: hidden;
+    }
+}
+
+::ng-deep .mat-mdc-input-element {
+    background-color: transparent;
+    border: none;
+}
+
+::ng-deep .mat-sort-header {
+    white-space: nowrap;
+}
+
+::ng-deep .mat-mdc-cell {
+    white-space: nowrap;
+}
+
+@media print {
+    .mat-column-quantity {
+        max-width: 60px !important;
+    }
+}

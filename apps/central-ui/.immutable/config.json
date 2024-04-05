@@ -1,0 +1,22 @@
+{
+    "deployUrl": "{{APP_HOST}}/{{APP_VERSION}}/",
+    "baseHref": "/",
+    "env": {
+        "production": "${PRODUCTION}",
+        "environmentName": "${ENVIRONMENT_NAME}",
+        "gateway": "${GATEWAY}",
+        "oauth2RequireHttps": "${OAUTH2_REQUIRE_HTTPS}",
+        "deployUrl": "{{APP_HOST}}/{{APP_VERSION}}/",
+        "newRelicAccountID": "${NEW_RELIC_ACCOUNTID}",
+        "newRelicTrustKey": "${NEW_RELIC_TRUSTKEY}",
+        "newRelicAgentID": "${NEW_RELIC_AGENTID}",
+        "newRelicLicenseKey": "${NEW_RELIC_LICENSEKEY}",
+        "newRelicApplicationID": "${NEW_RELIC_APPLICATIONID}",
+        "oidc": {
+            "authority": "${OIDC_AUTHORITY}"
+        },
+        "version": "{{APP_VERSION}}",
+        "googleAnalyticsTrackingId": "${GOOGLE_ANALYTICS_TRACKING_ID}",
+        "features": "${FEATURES}"
+    }
+}

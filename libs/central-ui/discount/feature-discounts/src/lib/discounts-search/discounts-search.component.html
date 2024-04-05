@@ -1,0 +1,48 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'Discount'"
+    [searchPageFacade]="discountFacade"
+    [columns]="columns"
+    [isLoading]="isLoading"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="toPathVariables"
+    [gridModeEnabled]="false"
+    [selectionActionsTemplate]="selectionActions"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <button
+            mat-button
+            color="primary"
+            id="add-button"
+            *ngIf="searchPage.hasAddAccess"
+            class="action-button"
+            [routerLink]="['../add']"
+            >Add Discount</button
+        >
+    </ng-template>
+    <ng-template #selectionActions>
+        <ng-container>
+            <button
+                mat-button
+                id="activate-button"
+                color="primary"
+                *ngIf="searchPage.hasEditAccess"
+                class="action-button"
+                disableButtonClick
+                (disableClick)="activate()"
+                >Activate</button
+            >
+            <button
+                mat-button
+                id="deactivate-button"
+                color="primary"
+                *ngIf="searchPage.hasEditAccess"
+                class="action-button"
+                disableButtonClick
+                (disableClick)="deactivate()"
+                >Deactivate</button
+            >
+        </ng-container>
+    </ng-template>
+</vioc-angular-search-page>

@@ -1,0 +1,10 @@
+.loading {
+    height: 50vh; // using vh because % ends up as the minimum parent height
+    align-items: center;
+    display: flex;
+    justify-content: center;
+
+    &.section {
+        height: 100%; // use parent height if just loading a section
+    }
+}

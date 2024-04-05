@@ -1,0 +1,52 @@
+<div
+    class="nav-search-focused"
+    *ngIf="navSearchFocused || auto.isOpen; else navSearchMenuItem"
+    (viocAngularAfterIf)="afterIfWork(navInput)"
+    @expandSideBarItem
+>
+    <input
+        type="text"
+        [formControl]="searchControl"
+        #navInput
+        [matAutocomplete]="auto"
+        placeholder="Search Navigation"
+        aria-label="Navigation Search"
+        (blur)="navSearchFocus(false)"
+    />
+    <mat-icon>search</mat-icon>
+    <ng-container *ngTemplateOutlet="title"></ng-container>
+</div>
+<mat-autocomplete
+    [class]="searchResultsClass"
+    #auto="matAutocomplete"
+    (optionSelected)="optionSelected($event)"
+    autoActiveFirstOption
+    [displayWith]="displayOption"
+    (closed)="searchControl.reset()"
+>
+    <mat-option
+        *ngFor="let option of filteredOptions | async"
+        [value]="option"
+        matTooltip="{{ option.name }}"
+        [matTooltipShowDelay]="1000"
+    >
+        {{ option.name }}
+    </mat-option>
+</mat-autocomplete>
+<ng-template #navSearchMenuItem>
+    <div id="vui-nav-menu" class="nav-menu nav-search" (click)="navSearchFocus(true)">
+        <mat-list-item mat-icon-button class="sub-nav-toggler">
+            <span>
+                <div class="nav-icon">
+                    <mat-icon>search</mat-icon>
+                </div>
+                <ng-container *ngTemplateOutlet="title"></ng-container>
+            </span>
+        </mat-list-item>
+    </div>
+</ng-template>
+<ng-template #title>
+    <div class="nav-title-wrapper">
+        <div class="nav-title">Search</div>
+    </div>
+</ng-template>

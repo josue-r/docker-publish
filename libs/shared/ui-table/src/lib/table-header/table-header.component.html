@@ -1,0 +1,18 @@
+<div class="table-header" [ngClass]="{ selected: valueSelected() }">
+    <div *ngIf="valueSelected()" class="items-selected-text">{{ selection.selected.length }} item(s) selected</div>
+    <div *ngIf="!valueSelected()">
+        <ng-container *ngTemplateOutlet="actionsTemplate"></ng-container>
+    </div>
+    <div class="right-align">
+        <div *ngIf="valueSelected()">
+            <ng-container *ngTemplateOutlet="selectionActionsTemplate"></ng-container>
+        </div>
+        <button mat-icon-button [matMenuTriggerFor]="tableMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
+    <mat-menu #tableMenu="matMenu" class="table-menu">
+        <ng-container *ngTemplateOutlet="menuItemsTemplate"></ng-container>
+    </mat-menu>
+</div>
+<mat-divider></mat-divider>

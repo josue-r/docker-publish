@@ -1,0 +1,25 @@
+<mat-table [dataSource]="versions" class="hover content-fit-table">
+    <!-- Description Column-->
+    <ng-container matColumnDef="app">
+        <th id="app" mat-header-cell *matHeaderCellDef> Application </th>
+        <td mat-cell *matCellDef="let versionEntry"> {{ versionEntry.description }} </td>
+    </ng-container>
+
+    <ng-container>
+        <!-- Version Column-->
+        <ng-container matColumnDef="version">
+            <th id="version" mat-header-cell *matHeaderCellDef> Version </th>
+            <!-- Works and shows properties-->
+            <td mat-cell *matCellDef="let versionEntry"> {{ versionEntry?.version }} </td>
+        </ng-container>
+
+        <!-- Date Column-->
+        <ng-container matColumnDef="date">
+            <th id="date" mat-header-cell *matHeaderCellDef> Date </th>
+            <!-- Does not work!-->
+            <td mat-cell *matCellDef="let versionEntry">{{ versionEntry?.time | moment }}</td>
+        </ng-container>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="['app', 'version', 'date']"></tr>
+    <tr mat-row *matRowDef="let row; columns: ['app', 'version', 'date']"></tr>
+</mat-table>

@@ -1,0 +1,11 @@
+.add-section {
+    margin-top: 5px;
+}
+
+#add-products-button {
+    margin-left: 8px;
+}
+
+#discount-selection ::ng-deep vioc-angular-table > div.overflow-container {
+    max-height: 40vh;
+}

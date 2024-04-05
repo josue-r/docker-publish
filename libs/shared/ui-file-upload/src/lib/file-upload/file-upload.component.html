@@ -1,0 +1,10 @@
+<div class="file-upload-area">
+    <input id="file-upload" type="file" [multiple]="multiple" (change)="onFileSelection($event.target.files)" />
+    <div class="file-upload-text-area">
+        <div>Upload a new file by dragging and dropping here</div>
+        <div>Or click to browse</div>
+    </div>
+    <div class="file-upload-icon-area">
+        <mat-icon class="file-upload-icon" color="primary">file_upload</mat-icon>
+    </div>
+</div>

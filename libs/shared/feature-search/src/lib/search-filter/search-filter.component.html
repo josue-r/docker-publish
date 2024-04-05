@@ -1,0 +1,72 @@
+<div *ngIf="searchForm">
+    <mat-expansion-panel
+        #filterPanel
+        class="filter-panel"
+        [expanded]="true"
+        (keydown.enter)="search.emit(); filterPanel.close()"
+    >
+        <mat-expansion-panel-header collapsedHeight="auto" expandedHeight="auto">
+            <mat-panel-title>
+                <mat-icon>filter_list</mat-icon>
+                Filter:
+                <mat-chip-listbox>
+                    <mat-chip-option
+                        *ngFor="let chip of chips"
+                        matTooltip="{{ chip.value }}"
+                        matTooltipPosition="above"
+                        matTooltipClass="tooltip"
+                    >
+                        <span class="chip-content-overflow">{{ chip.value }}</span>
+                    </mat-chip-option>
+                </mat-chip-listbox>
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="filter-container" *ngFor="let line of searchForm.getArray('lines').controls; let i = index">
+            <vioc-angular-add-remove-button
+                (addItem)="addLine.emit()"
+                (removeItem)="removeLine.emit(i)"
+                [addButtonDisplayed]="isAddLineButtonDisplayed(i)"
+                [removeButtonDisplayed]="isRemoveLineButtonDisplayed(line)"
+                [addButtonDisabled]="isAddLineButtonDisabled(line)"
+            ></vioc-angular-add-remove-button>
+            <vioc-angular-search-line
+                [searchLineForm]="line"
+                [searchableColumns]="searchableColumns"
+            ></vioc-angular-search-line>
+        </div>
+        <div *ngIf="searchForm.getArray('lines').length === 0">
+            <vioc-angular-add-remove-button
+                [addButtonDisplayed]="true"
+                [removeButtonDisplayed]="false"
+                (addItem)="addLine.emit()"
+            >
+            </vioc-angular-add-remove-button>
+        </div>
+        <div class="button-toolbar">
+            <button
+                mat-stroked-button
+                color="primary"
+                (click)="clearFilter.emit()"
+                class="action-button clear-filter"
+                type="button"
+                >Clear</button
+            >
+            <button
+                mat-stroked-button
+                color="primary"
+                (click)="resetFilter.emit()"
+                class="action-button reset-filter"
+                type="button"
+                >Reset</button
+            >
+            <button
+                mat-raised-button
+                color="primary"
+                (click)="search.emit(); filterPanel.close()"
+                [disabled]="searchForm.invalid"
+                class="action-button search"
+                >Search</button
+            >
+        </div>
+    </mat-expansion-panel>
+</div>

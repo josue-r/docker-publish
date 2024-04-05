@@ -1,0 +1,62 @@
+@import '~material-design-icons/iconfont/material-icons.css';
+@import '../../../../ui-kit/styles/styles.scss';
+
+:host {
+    display: block;
+    background-color: white;
+}
+
+@mixin full-vertical-align-container($justify-content: center, $margin: 0) {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: $justify-content;
+    margin: $margin;
+}
+
+.header-container {
+    &-logo {
+        @include full-vertical-align-container();
+    }
+
+    &-flags {
+        @include full-vertical-align-container();
+        gap: 20px;
+    }
+
+    &-bay-number {
+        @include full-vertical-align-container(left);
+        color: $diesel;
+        border-right: 1px solid $white-to-black-4;
+    }
+
+    &-car-details {
+        @include full-vertical-align-container(left);
+        font-family: 'Roboto', sans-serif;
+        padding-left: 20px;
+        border-right: 1px solid $white-to-black-4;
+        &_text {
+            color: $indigo;
+            margin-left: 20px;
+        }
+    }
+}
+
+.logo {
+    width: 80%;
+    height: 80%;
+}
+
+.divider {
+    &-red {
+        border-right-color: $primary-red;
+        height: 50%;
+        border-right-width: 5px !important;
+    }
+
+    &-gray {
+        height: 100%;
+        border-right-color: $white-to-black-4;
+    }
+}

@@ -1,0 +1,160 @@
+<div [ngClass]="grouped ? 'mass-update-content grouped-mass-update-content' : 'mass-update-content'">
+    <form [formGroup]="updatableFieldForm">
+        <div
+            *ngFor="let field of updatableFields; let i = index"
+            [ngClass]="field.fieldControl?.length > 1 ? 'grouped-mass-update-fields' : 'mass-update-fields'"
+        >
+            <div class="add-remove-mass-update">
+                <vioc-angular-add-remove-button
+                    id="add-remove-button-{{ i }}"
+                    *ngIf="!grouped && !nested"
+                    [addButtonDisplayed]="isAddFieldButtonDisplayed(i)"
+                    [removeButtonDisplayed]="this.updatableFields.length > 1"
+                    (addItem)="addLine()"
+                    (removeItem)="removeLine(i)"
+                ></vioc-angular-add-remove-button>
+                <mat-form-field floatLabel="never">
+                    <ng-container *ngIf="grouped; else fieldSelection">
+                        <input
+                            id="field-{{ i }}"
+                            matInput
+                            placeholder="Field"
+                            type="text"
+                            [value]="field.columnControl.value.name"
+                            [disabled]="true"
+                        />
+                    </ng-container>
+                    <ng-template #fieldSelection>
+                        <mat-select
+                            id="field-select-{{ i }}"
+                            placeholder="Field"
+                            [formControl]="field.columnControl"
+                            [compareWith]="columnComparator"
+                            (selectionChange)="columnSelect(i)"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option
+                                *ngFor="let column of updatableColumns"
+                                [value]="column"
+                                [disabled]="isSelected(column)"
+                            >
+                                {{ column.name }}
+                            </mat-option>
+                        </mat-select>
+                    </ng-template>
+                </mat-form-field>
+            </div>
+            <ng-container *ngIf="field.columnControl.value as column" [ngSwitch]="field.inputType">
+                <mat-form-field *ngSwitchCase="'date'" class="value" floatLabel="never">
+                    <input
+                        matInput
+                        id="{{ column.apiFieldPath }}-input"
+                        class="value-input"
+                        [matDatepicker]="searchDatePicker"
+                        placeholder="{{ getPlaceholder(column) }}"
+                        [formControl]="updatableFieldForm.get(column.apiFieldPath)"
+                    />
+                    <mat-datepicker-toggle matSuffix [for]="searchDatePicker"></mat-datepicker-toggle>
+                    <mat-datepicker #searchDatePicker></mat-datepicker>
+                    <mat-error *viocAngularFormError="updatableFieldForm.get(column.apiFieldPath).errors; let error">{{
+                        error
+                    }}</mat-error>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'integer'" class="value" floatLabel="never">
+                    <input
+                        id="{{ column.apiFieldPath }}-input"
+                        class="value-input"
+                        type="number"
+                        matInput
+                        placeholder="{{ getPlaceholder(column) }}"
+                        [formControl]="updatableFieldForm.get(column.apiFieldPath)"
+                    />
+                    <mat-error *viocAngularFormError="updatableFieldForm.get(column.apiFieldPath).errors; let error">{{
+                        error
+                    }}</mat-error>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'decimal'" class="value" floatLabel="never">
+                    <input
+                        id="{{ column.apiFieldPath }}-input"
+                        class="value-input"
+                        viocAngularDecimalPlaces
+                        decimalPlaces="{{ column.decimalPlaces }}"
+                        matInput
+                        placeholder="{{ getPlaceholder(column) }}"
+                        [formControl]="updatableFieldForm.get(column.apiFieldPath)"
+                    />
+                    <mat-error *viocAngularFormError="updatableFieldForm.get(column.apiFieldPath).errors; let error">{{
+                        error
+                    }}</mat-error>
+                </mat-form-field>
+                <mat-form-field *ngSwitchCase="'boolean'" class="value" floatLabel="never">
+                    <mat-select
+                        id="{{ column.apiFieldPath }}-input"
+                        class="value-input"
+                        [formControl]="updatableFieldForm.get(column.apiFieldPath)"
+                        placeholder="{{ getPlaceholder(column) }}"
+                    >
+                        <mat-option></mat-option>
+                        <mat-option [value]="true">Y</mat-option>
+                        <mat-option [value]="false">N</mat-option>
+                    </mat-select>
+                    <mat-error *viocAngularFormError="updatableFieldForm.get(column.apiFieldPath).errors; let error">{{
+                        error
+                    }}</mat-error>
+                </mat-form-field>
+                <mat-form-field *ngSwitchDefault class="value" floatLabel="never">
+                    <input
+                        id="{{ column.apiFieldPath }}-input"
+                        class="value-input"
+                        type="text"
+                        matInput
+                        placeholder="{{ getPlaceholder(column) }}"
+                        [formControl]="updatableFieldForm.get(column.apiFieldPath)"
+                    />
+                    <mat-error *viocAngularFormError="updatableFieldForm.get(column.apiFieldPath).errors; let error">{{
+                        error
+                    }}</mat-error>
+                </mat-form-field>
+                <ng-container *ngSwitchCase="'group'" class="" floatLabel="never">
+                    <vioc-angular-mass-update
+                        [grouped]="true"
+                        [updatableFieldForm]="updatableFieldForm"
+                        [columns]="column.columns"
+                    >
+                    </vioc-angular-mass-update>
+                </ng-container>
+                <ng-container *ngSwitchCase="'single-select-dropdown'" floatLabel="never">
+                    <ng-container *ngTemplateOutlet="dropdownTemplate"></ng-container>
+                </ng-container>
+                <ng-container *ngSwitchCase="'template'" floatLabel="never">
+                    <ng-container *ngTemplateOutlet="templateMap.get(column.apiFieldPath)"></ng-container>
+                </ng-container>
+                <ng-template #dropdownTemplate>
+                    <mat-form-field class="value" floatLabel="never">
+                        <vioc-angular-dropdown-column
+                            id="{{ column.apiFieldPath }}-input"
+                            class="value-input"
+                            [formControl]="updatableFieldForm.get(column.apiFieldPath)"
+                            [multiple]="false"
+                            [column]="column"
+                            [placeholder]="getPlaceholder(column)"
+                        >
+                        </vioc-angular-dropdown-column>
+                        <mat-error
+                            *viocAngularFormError="updatableFieldForm.get(column.apiFieldPath).errors; let error"
+                            >{{ error }}</mat-error
+                        >
+                    </mat-form-field>
+                </ng-template>
+            </ng-container>
+            <vioc-angular-add-remove-button
+                id="nested-add-remove-button-{{ i }}"
+                *ngIf="!grouped && nested"
+                [addButtonDisplayed]="isAddFieldButtonDisplayed(i)"
+                [removeButtonDisplayed]="this.updatableFields.length > 1"
+                (addItem)="addLine()"
+                (removeItem)="removeLine(i)"
+            ></vioc-angular-add-remove-button>
+        </div>
+    </form>
+</div>

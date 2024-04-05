@@ -1,0 +1,226 @@
+@import 'variables';
+@import 'vioc-theme';
+@import 'vioc-ui';
+
+/* You can add global styles to this file, and also import other style files */
+$max-container-width: 1024px;
+$check-box-color: rgba(0, 0, 0, 0.75);
+$horizontal-spacing: 10px;
+$input-min-width: 145px;
+$flex-item-min-width: calc(#{$input-min-width} + #{$horizontal-spacing});
+$input-extra-min-width: 45px;
+$flex-item-extra-min-width: calc(#{$input-extra-min-width} + #{$horizontal-spacing});
+
+// basic checkbox styling (overriding the default blue style)
+.mat-mdc-checkbox:not(.mdc-checkbox--disabled) > .mdc-form-field > .mdc-checkbox {
+    .mdc-checkbox__background {
+        background-color: transparent !important;
+        border-color: $check-box-color !important;
+        .mdc-checkbox__checkmark {
+            stroke: $check-box-color !important;
+        }
+        .mdc-checkbox__mixedmark {
+            background-color: $check-box-color;
+            margin: 0px 3px;
+        }
+    }
+}
+
+.main-content {
+    background: $content-background;
+}
+
+.page-container {
+    .section .mat-mdc-checkbox,
+    .section span.flex-item {
+        box-sizing: border-box;
+    }
+
+    .section span.flex-item {
+        display: table;
+    }
+
+    .flex-container .flex-container {
+        // Prevent nested flex containers from wrapping. Only the outer one should.
+        flex-wrap: nowrap;
+        // Prevent stacking spacing
+        padding-left: 0px;
+    }
+
+    // ignore components with built in sizing/spacing
+    .mat-mdc-form-field:not(.mat-mdc-paginator-page-size-select) {
+        // reduce minimum input size
+        min-width: $input-min-width;
+
+        .mat-mdc-form-field-infix {
+            // reduce minimum input size (subtracting new input padding)
+            min-width: calc($input-min-width - 32px);
+        }
+
+        .mat-mdc-select-placeholder,
+        .mat-mdc-input-element:placeholder-shown {
+            font-style: italic;
+        }
+
+        min-height: 50px;
+        .mat-mdc-text-field-wrapper,
+        .mat-mdc-form-field-focus-overlay {
+            background-color: transparent;
+        }
+        .mat-mdc-form-field-subscript-wrapper {
+            height: 2px;
+        }
+        // allow space for error when applicable
+        padding-bottom: 15px;
+    }
+
+    .mat-mdc-form-field-error {
+        line-height: 10px;
+    }
+
+    .extra-small:not(.mat-mdc-paginator-page-size) {
+        .mat-mdc-form-field-infix {
+            // reduce minimum input size
+            min-width: $flex-item-extra-min-width;
+        }
+    }
+}
+
+.page {
+    background: $content-background;
+    padding: 0 0 8px;
+
+    .section .header {
+        font-size: 18px;
+        font-weight: bold;
+        margin: 0 0 8px;
+        color: #004990;
+
+        &.hinted {
+            margin-right: 5px;
+        }
+    }
+
+    .actions {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        padding: 8px 0;
+        background: linear-gradient(to bottom, $content-background 44px, transparent 52px);
+        position: sticky;
+        top: 0;
+        z-index: 1;
+
+        button {
+            margin-left: 8px;
+            text-transform: uppercase;
+        }
+
+        mat-divider {
+            margin-left: 8px;
+        }
+    }
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    max-width: $max-container-width;
+    min-height: 4.75em;
+    box-sizing: border-box;
+    padding-left: $horizontal-spacing;
+
+    &.header-spacer {
+        margin-top: 15px;
+    }
+
+    vioc-ui-add-remove-button {
+        padding-right: 8px;
+    }
+
+    .flex-item,
+    .spacer {
+        // providing a default min width based on input & padding/margin sizes
+        min-width: $flex-item-min-width;
+        flex: 1;
+        // prevent overlapping flex items
+        flex-basis: auto;
+        box-sizing: border-box;
+
+        &:not(:last-child) {
+            padding-right: $horizontal-spacing;
+        }
+
+        &.small {
+            flex: 0.5;
+        }
+        &.extra-small {
+            min-width: $flex-item-extra-min-width;
+            flex: 0.35;
+        }
+
+        &.large {
+            flex: 2;
+            flex-basis: auto;
+        }
+    }
+}
+
+$fixed-width-small: 160px;
+$fixed-width-large: 205px;
+$fixed-width-extra-large: 330px;
+$padding-size: 10px;
+
+.section .fixed-width-container {
+    white-space: nowrap;
+    .mat-mdc-form-field {
+        &:not(:last-child):not(.has-info) {
+            padding-right: $padding-size;
+        }
+        &.small {
+            width: $fixed-width-small;
+            input {
+                width: $fixed-width-small;
+            }
+        }
+        &.large {
+            width: $fixed-width-large;
+            input {
+                width: $fixed-width-large;
+            }
+        }
+        &.extra-large {
+            width: $fixed-width-extra-large;
+            input {
+                width: $fixed-width-large;
+            }
+        }
+    }
+    vioc-angular-info-button:not(:last-child) {
+        padding-right: $padding-size;
+    }
+    .mat-mdc-checkbox {
+        display: inline-block;
+    }
+    div.spacer {
+        display: inline-block;
+        padding-right: $padding-size;
+        &.small {
+            width: $fixed-width-small;
+        }
+        &.large {
+            width: $fixed-width-large;
+        }
+    }
+}
+
+.mat-mdc-list.vioc-mat-list {
+    mat-list-item {
+        height: 36px;
+    }
+}
+
+div[table-header-selection-actions] {
+    display: flex;
+}

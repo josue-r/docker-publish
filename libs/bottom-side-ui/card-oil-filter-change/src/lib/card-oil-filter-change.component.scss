@@ -1,0 +1,38 @@
+@use '@angular/material' as mat;
+
+:host {
+    display: block;
+}
+
+.card_oil_filter_card_change {
+    width: 1136px;
+    &--filter {
+        width: 1136px;
+
+        &--content {
+            display: flex;
+            justify-content: space-around;
+            align-content: space-between;
+            padding: 5px 40px;
+        }
+    }
+
+    &--torque {
+        display: flex;
+        &--child {
+            flex: 1;
+        }
+    }
+
+    &--product {
+        display: flex;
+        &--child {
+            flex: 1;
+        }
+    }
+
+    ::ng-deep .card {
+        margin: 0px;
+        @include mat.elevation(0);
+    }
+}

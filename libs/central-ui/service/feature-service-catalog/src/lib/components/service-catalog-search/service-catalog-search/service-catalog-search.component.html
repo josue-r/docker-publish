@@ -1,0 +1,48 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'Service'"
+    [searchPageFacade]="serviceFacade"
+    [columns]="columns"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="mapToPathVariables"
+    [selectionActionsTemplate]="selectionActions"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <button
+            mat-button
+            color="primary"
+            id="add-button"
+            *ngIf="searchPage.hasAddAccess"
+            class="action-button"
+            [routerLink]="['../add']"
+            >Add Service</button
+        >
+    </ng-template>
+    <ng-template #selectionActions>
+        <button
+            mat-button
+            id="activate-button"
+            color="primary"
+            *ngIf="searchPage.hasEditAccess"
+            class="action-button"
+            disableButtonClick
+            (disableClick)="activate()"
+            >Activate</button
+        >
+        <button
+            mat-button
+            id="deactivate-button"
+            color="primary"
+            *ngIf="searchPage.hasEditAccess"
+            class="action-button"
+            disableButtonClick
+            (disableClick)="loadUsage()"
+            >Deactivate</button
+        >
+    </ng-template>
+    <vioc-angular-mass-deactivate-dialog
+        #massDeactivate
+        (deactivate)="deactivate($event)"
+    ></vioc-angular-mass-deactivate-dialog>
+</vioc-angular-search-page>

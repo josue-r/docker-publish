@@ -1,0 +1,41 @@
+<mat-button-toggle-group id="target" #target="matButtonToggleGroup">
+    <mat-button-toggle [disabled]="documentDisabled" value="documentFile">Document</mat-button-toggle>
+    <mat-button-toggle [disabled]="externalLinkDisabled" value="externalLink">External Link</mat-button-toggle>
+</mat-button-toggle-group>
+<vioc-angular-info-button *ngIf="info" [info]="info"></vioc-angular-info-button>
+
+<ng-container [ngSwitch]="target.value">
+    <div *ngSwitchCase="'documentFile'" class="document-selection" [ngStyle]="{ 'max-width': maxWidth }">
+        <vioc-angular-file-upload
+            *ngIf="!documentFile?.document; else existingDocument"
+            [acceptedMediaTypes]="acceptedMediaTypes"
+            (upload)="onFileUpload($event)"
+            (uploadFailure)="onFileUploadFailure()"
+        ></vioc-angular-file-upload>
+        <ng-template #existingDocument>
+            <div class="document-header">
+                <span>{{ documentFile.fileName }}</span>
+                <button *ngIf="editable" mat-icon-button matTooltip="Replace document" (click)="replaceDocument()">
+                    <mat-icon>clear</mat-icon>
+                </button>
+            </div>
+            <embed
+                id="document"
+                [src]="documentContentUrl"
+                [width]="documentDisplayWidth"
+                [height]="documentDisplayHeight"
+            />
+        </ng-template>
+    </div>
+    <div *ngSwitchCase="'externalLink'" class="flex-container">
+        <mat-form-field class="flex-item external-link-field">
+            <mat-label>External Link</mat-label>
+            <input id="external-link" matInput [formControl]="externalLinkControl" placeholder="External Link" />
+            <mat-error *viocAngularFormError="externalLinkControl.errors; let error">{{ error }}</mat-error>
+            <mat-hint class="warning" *ngIf="showExternalLinkPrecedenceWarning"
+                >The attached document won't display at the store. The external link value will take precedence and must
+                be cleared out in order to display the document.</mat-hint
+            >
+        </mat-form-field>
+    </div>
+</ng-container>

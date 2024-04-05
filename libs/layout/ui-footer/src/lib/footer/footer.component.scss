@@ -1,0 +1,17 @@
+@import 'variables';
+.app-footer {
+    height: $footer-height;
+    background: $background-gray;
+    box-sizing: border-box;
+    border-top: $solid-gray-border;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+}
+
+// Realign copyright text
+.app-footer-centered-content {
+    position: relative;
+    left: calc(-1 * $side-nav-width / 2);
+}

@@ -1,0 +1,247 @@
+<div *viocAngularLoading="products">
+    <div *ngIf="form">
+        <div class="section" *viocAngularFeatureFlag="'physicalInventory.edit.countByLocation'">
+            <div class="flex-container header-fields">
+                <vioc-angular-slide-toggle
+                    id="location-slider"
+                    *ngIf="form.getControlValue('status').code === 'OPEN'"
+                    [label]="'Count by Location'"
+                    [toggled]="isCountingByLocation"
+                    [disabled]="!accessMode.isEdit || isUpdating || isClosing || isLoadingProducts"
+                    (changeEvent)="toggleCountByLocation($event)"
+                >
+                </vioc-angular-slide-toggle>
+            </div>
+        </div>
+        <div class="section">
+            <div class="flex-container header-fields">
+                <vioc-angular-filtered-input
+                    #categoryFilter
+                    id="category-filter"
+                    class="flex-item small"
+                    [options]="categories$ | async"
+                    [valueControl]="categoryControl"
+                    [editable]="!isLoadingProducts"
+                    [multiple]="true"
+                    placeHolder="Category"
+                    [compareWith]="describedEquals"
+                    (openChangedEvent)="openChangedEvent($event)"
+                    (selectedOptionEvent)="selectCategoryCodes($event)"
+                >
+                </vioc-angular-filtered-input>
+                <mat-checkbox
+                    id="show-warning"
+                    class="flex-item small"
+                    *ngIf="form.getControlValue('status').code === 'OPEN'"
+                    matInput
+                    [disabled]="isShowWarningDisabled"
+                    [checked]="showWarning"
+                    (change)="filterProducts($event.checked)"
+                >
+                    Show Only Product Warnings
+                </mat-checkbox>
+            </div>
+        </div>
+        <div class="flex-container" *ngIf="isCountingByLocation && form.getControlValue('status').code === 'OPEN'">
+            <mat-form-field id="select-location" class="flex-item">
+                <mat-label>Count Location</mat-label>
+                <mat-select
+                    [formControl]="currentLocation"
+                    [placeholder]="'Count Location'"
+                    [compareWith]="describedEquals"
+                    [disabled]="isLoadingProducts"
+                >
+                    <mat-option *ngFor="let location of locations" [value]="location.code">
+                        {{ location.description }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field id="filter-form-field" class="flex-item">
+                <mat-label>Filter Product</mat-label>
+                <input
+                    #filterProductInput
+                    id="filter-product-input"
+                    matInput
+                    placeholder="Filter Product"
+                    [formControl]="filterProduct"
+                    [disabled]="isLoadingProducts"
+                />
+            </mat-form-field>
+        </div>
+        <div [ngClass]="valueSelected() ? 'table-header selected' : 'hidden'">
+            <div *ngIf="valueSelected()" id="items-selected-text">{{ selection.selected.length }} item(s) selected</div>
+            <div class="right-align" *ngIf="valueSelected()">
+                <button
+                    mat-button
+                    color="primary"
+                    id="close-action"
+                    disableButtonClick
+                    (disableClick)="closeCountsWithQuantityZeroWarning()"
+                    [disabled]="isUpdating || isClosing"
+                >
+                    Close Selection
+                </button>
+            </div>
+        </div>
+        <table
+            mat-table
+            matSort
+            id="products-table"
+            class="content-fit-table"
+            [dataSource]="products"
+            aria-describedby="Product Count Table"
+            *viocAngularLoading="!isLoadingProducts"
+        >
+            <ng-container matColumnDef="select">
+                <th id="select-all-header" mat-header-cell *matHeaderCellDef>
+                    <mat-checkbox
+                        id="select-all-checkbox"
+                        *ngIf="isAllSelectable()"
+                        (change)="$event ? masterToggle() : null"
+                        [checked]="selection.hasValue() && isAllSelected()"
+                        [indeterminate]="selection.hasValue() && !isAllSelected()"
+                        [disabled]="!accessMode.isEdit || isClosing"
+                    >
+                    </mat-checkbox>
+                </th>
+                <td mat-cell *matCellDef="let row; let i = index">
+                    <mat-checkbox
+                        id="checkbox-{{ i }}"
+                        *ngIf="!row.disabled"
+                        (change)="$event ? selection.toggle(row) : null"
+                        [checked]="selection.isSelected(row)"
+                        [disabled]="(!accessMode.isEdit && row.valid) || isClosing"
+                    >
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="productCode">
+                <th mat-header-cell mat-sort-header id="product-code-header" *matHeaderCellDef>Product</th>
+                <td mat-cell id="product-code-{{ i }}" *matCellDef="let row; let i = index">{{
+                    row.getControlValue('product').code
+                }}</td>
+            </ng-container>
+            <ng-container matColumnDef="categoryCode">
+                <th mat-header-cell mat-sort-header id="category-code-header" *matHeaderCellDef>Category</th>
+                <td mat-cell id="category-code-{{ i }}" *matCellDef="let row; let i = index">{{
+                    row.getControlValue('category').code
+                }}</td>
+            </ng-container>
+            <ng-container matColumnDef="uom">
+                <th mat-header-cell mat-sort-header id="uom-header" *matHeaderCellDef>UOM</th>
+                <td mat-cell id="uom-{{ i }}" *matCellDef="let row; let i = index">
+                    <span *ngIf="!getSlideToggleLabel(row) || row.disabled || !calculatorEnabled">{{
+                        row.getControlValue('uom').code
+                    }}</span>
+                    <span
+                        id="calculator-slider"
+                        *ngIf="getSlideToggleLabel(row) && !accessMode.isView && !row.disabled && calculatorEnabled"
+                    >
+                        <vioc-angular-slide-toggle
+                            class="uom-toggle"
+                            [label]="getSlideToggleLabel(row)"
+                            [innerLabel]="getInnerLabel(row)"
+                            [toggled]="getInnerLabel(row) === sliderInnerLabel.volume ? true : false"
+                            (changeEvent)="getVolume($event.checked, row, i)"
+                        >
+                        </vioc-angular-slide-toggle>
+                    </span>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="actualCount">
+                <th mat-header-cell mat-sort-header id="count-header" *matHeaderCellDef>Quantity Counted</th>
+                <td mat-cell id="count-{{ i }}" *matCellDef="let row; let i = index">
+                    <mat-form-field id="count-form-field-{{ i }}" class="count-value">
+                        <vioc-angular-loading-overlay class="count-spinner" [loading]="isLoadingCount[i]">
+                            <input
+                                id="count-input-{{ i }}"
+                                tabindex="{{ i + 1 }}"
+                                matInput
+                                (keyup)="getSlideToggleLabel(row) ? setHeight(row, i) : null"
+                                (change)="updateTotalQuantity(row)"
+                                viocAngularDecimalPlaces
+                                [attr.disabled]="isLoadingCount[i] ? '' : null"
+                                [formControl]="row.getControl('actualCount')"
+                            />
+                        </vioc-angular-loading-overlay>
+                        <mat-error
+                            id="count-errors-{{ i }}"
+                            *viocAngularFormError="row.getControl('actualCount').errors; let error"
+                        >
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="totalQuantity">
+                <th mat-header-cell mat-sort-header id="total-quantity-header" *matHeaderCellDef>Total Quantity</th>
+                <td mat-cell id="totalQuantity-{{ i }}" *matCellDef="let row; let i = index">{{
+                    row.getControlValue('totalQuantity')
+                }}</td>
+            </ng-container>
+            <ng-container matColumnDef="qohCountWhenOpened">
+                <th mat-header-cell mat-sort-header class="tablet-view" id="qohCountWhenOpened-header" *matHeaderCellDef
+                    >Starting QOH</th
+                >
+                <td mat-cell class="tablet-view" id="qohCountWhenOpened-{{ i }}" *matCellDef="let row; let i = index">{{
+                    row.getControlValue('qohCountWhenOpened')
+                }}</td>
+            </ng-container>
+            <ng-container matColumnDef="qohCountWhenClosed">
+                <th mat-header-cell mat-sort-header class="tablet-view" id="qohCountWhenClosed-header" *matHeaderCellDef
+                    >QOH at Close</th
+                >
+                <td mat-cell class="tablet-view" id="qohCountWhenClosed-{{ i }}" *matCellDef="let row; let i = index">{{
+                    row.getControlValue('qohCountWhenClosed')
+                }}</td>
+            </ng-container>
+            <ng-container matColumnDef="variance">
+                <th mat-header-cell mat-sort-header class="tablet-view" id="variance-header" *matHeaderCellDef
+                    >Count Variance</th
+                >
+                <td mat-cell class="tablet-view" id="variance-{{ i }}" *matCellDef="let row; let i = index">{{
+                    row.getControlValue('variance')
+                }}</td>
+            </ng-container>
+            <ng-container matColumnDef="closedOn">
+                <th mat-header-cell mat-sort-header class="tablet-view" id="closed-date-header" *matHeaderCellDef
+                    >Time of Closure</th
+                >
+                <td mat-cell class="tablet-view" id="closed-date-{{ i }}" *matCellDef="let row; let i = index">{{
+                    row.getControlValue('closedOn') | moment: true
+                }}</td>
+            </ng-container>
+            <ng-container matColumnDef="warning">
+                <th mat-header-cell id="warning-header" *matHeaderCellDef>Warning</th>
+                <td mat-cell id="warning-{{ i }}" class="warning-text" *matCellDef="let row; let i = index">
+                    <div *ngFor="let warning of row.getControl('warning')?.value">
+                        {{ warning }}
+                    </div>
+                </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+    </div>
+</div>
+
+<vioc-angular-dialog
+    #closeCountWarningDialog
+    id="close-count-warning-dialog"
+    [name]="'Close Count Warning'"
+    [content]="closeCountWarningContent"
+    [actions]="closeCountWarningActions"
+></vioc-angular-dialog>
+<ng-template #closeCountWarningContent>
+    <div
+        >You are closing more than {{ maxZeroCountClosedPerc }}% of products with a quantity of zero. Click GO BACK to
+        update the quantities or CLOSE to proceed. If you no longer carry a product, please send a request to the VIOC
+        Help Desk to have it removed.</div
+    >
+</ng-template>
+<ng-template #closeCountWarningActions>
+    <button mat-stroked-button id="go-back-dialog-button" (click)="closeCloseCountWarningDialog()">GO BACK</button>
+    <button mat-stroked-button id="close-dialog-button" color="warn" class="close-button" (click)="closeCount()"
+        >CLOSE</button
+    >
+</ng-template>

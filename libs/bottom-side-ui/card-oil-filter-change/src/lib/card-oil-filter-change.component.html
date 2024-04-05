@@ -1,0 +1,107 @@
+<vioc-card
+    [title]="mainTitleConfiguration.label"
+    [titleAlign]="mainTitleConfiguration.align"
+    [titleColor]="mainTitleConfiguration.color"
+    [titleSize]="mainTitleConfiguration.size"
+    class="card_oil_filter_card_change"
+>
+    <div class="card_oil_filter_card_change--filter">
+        <vioc-card
+            [title]="'Oil Filter'"
+            [titleAlign]="contentTitleConfig.align"
+            [titleColor]="contentTitleConfig.color"
+            [titleSize]="contentTitleConfig.size"
+        >
+            <div class="card_oil_filter_card_change--filter--content">
+                <vioc-card-content
+                    *ngFor="let item of oilFilterContent; index as i"
+                    [title]="item?.title"
+                    [titleColor]="contentConfig.titleColor"
+                    [description]="item?.notes"
+                    [size]="contentConfig.contentSize"
+                ></vioc-card-content>
+            </div>
+        </vioc-card>
+    </div>
+    <div class="card_oil_filter_card_change--torque">
+        <vioc-card
+            [title]="'Oil Filter Torque'"
+            [titleAlign]="contentTitleConfig.align"
+            [titleColor]="contentTitleConfig.color"
+            [titleSize]="contentTitleConfig.size"
+            class="card_oil_filter_card_change--torque--child"
+        >
+            <div>
+                <vioc-card-content
+                    [title]="oilFIlterTorqueContent?.title"
+                    [titleColor]="contentConfig.titleColor"
+                    [description]="oilFIlterTorqueContent?.notes"
+                    [size]="contentConfig.contentSize"
+                ></vioc-card-content>
+            </div>
+        </vioc-card>
+        <vioc-card
+            [title]="'Engine Oil Drain Plug Torque'"
+            [titleAlign]="contentTitleConfig.align"
+            [titleColor]="contentTitleConfig.color"
+            [titleSize]="contentTitleConfig.size"
+            class="card_oil_filter_card_change--torque--child"
+        >
+            <div>
+                <vioc-card-content
+                    [title]="plugTorqueContent?.title"
+                    [titleColor]="contentConfig.titleColor"
+                    [description]="plugTorqueContent?.notes"
+                    [size]="contentConfig.contentSize"
+                ></vioc-card-content>
+            </div>
+        </vioc-card>
+    </div>
+    <div class="card_oil_filter_card_change--product">
+        <vioc-card
+            [title]="'Drain Plug Prod Code'"
+            [titleAlign]="contentTitleConfig.align"
+            [titleColor]="contentTitleConfig.color"
+            [titleSize]="contentTitleConfig.size"
+            class="card_oil_filter_card_change--product--child"
+        >
+            <div>
+                <vioc-card-content
+                    [title]="oilChangeContent?.drainPlugCode"
+                    [titleColor]="contentConfig.titleColor"
+                    [size]="contentConfig.contentSize"
+                ></vioc-card-content>
+            </div>
+        </vioc-card>
+        <vioc-card
+            [title]="'Product Code'"
+            [titleAlign]="contentTitleConfig.align"
+            [titleColor]="contentTitleConfig.color"
+            [titleSize]="contentTitleConfig.size"
+            class="card_oil_filter_card_change--product--child"
+        >
+            <div>
+                <vioc-card-content
+                    [title]="oilChangeContent?.productCode"
+                    [titleColor]="contentConfig.titleColor"
+                    [size]="contentConfig.contentSize"
+                ></vioc-card-content>
+            </div>
+        </vioc-card>
+        <vioc-card
+            [title]="'Oil Capacity Qty'"
+            [titleAlign]="contentTitleConfig.align"
+            [titleColor]="contentTitleConfig.color"
+            [titleSize]="contentTitleConfig.size"
+            class="card_oil_filter_card_change--product--child"
+        >
+            <div>
+                <vioc-card-content
+                    [title]="oilChangeContent?.quantity"
+                    [titleColor]="contentConfig.titleColor"
+                    [size]="contentConfig.contentSize"
+                ></vioc-card-content>
+            </div>
+        </vioc-card>
+    </div>
+</vioc-card>

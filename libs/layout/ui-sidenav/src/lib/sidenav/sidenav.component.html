@@ -1,0 +1,17 @@
+<mat-nav-list>
+    <div class="nav-menu logo">
+        <a id="vui-go-home-link" (click)="goHome.emit()">
+            <img src="{{ homeLogo }}" alt="Logo" />
+        </a>
+    </div>
+    <vioc-angular-nav-search [menu]="menu" (searchResultSelected)="navigate.emit($event)"> </vioc-angular-nav-search>
+    <div class="nav-menu">
+        <div *ngFor="let rootMenuItem of menu | filterSearchableOnly" class="nav-header">
+            <vioc-angular-subnav
+                [menuItem]="rootMenuItem"
+                [currentPage]="isCurrentPage(rootMenuItem)"
+                (navigate)="navigate.emit($event)"
+            ></vioc-angular-subnav>
+        </div>
+    </div>
+</mat-nav-list>

@@ -1,0 +1,17 @@
+{
+    "name": "central-ui-organization-feature-company-holiday",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/central-ui/organization/feature-company-holiday/src",
+    "projectType": "library",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/central-ui/organization/feature-company-holiday"],
+            "options": {
+                "jestConfig": "libs/central-ui/organization/feature-company-holiday/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": ["scope:central-ui", "type:feature"]
+}

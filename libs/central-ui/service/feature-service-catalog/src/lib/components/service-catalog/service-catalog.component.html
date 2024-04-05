@@ -1,0 +1,210 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="add-like-action"
+                    *ngIf="showAddLike"
+                    [disabled]="form.dirty || form.invalid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="addLike()"
+                    >ADD LIKE</button
+                >
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div id="text" class="section">
+                <span class="header">Service Information</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Service Code</mat-label>
+                        <input
+                            id="code"
+                            matInput
+                            formControlName="code"
+                            placeholder="Service Code"
+                            type="text"
+                            required
+                        />
+                        <mat-error
+                            *viocAngularFormError="
+                                form.get('code').errors;
+                                customErrorMapping: customErrorMapping;
+                                let error
+                            "
+                        >
+                            {{ error }}</mat-error
+                        >
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Category</mat-label>
+                        <mat-select
+                            id="category-select"
+                            matInput
+                            formControlName="serviceCategory"
+                            placeholder="Category"
+                            [compareWith]="describedEquals"
+                            required
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let cat of serviceCategories$ | async" [value]="cat"
+                                >{{ cat.code }} -
+                                {{ cat.description }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *viocAngularFormError="form.get('serviceCategory').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-checkbox class="flex-item small" id="active" matInput formControlName="active"
+                        >Active
+                    </mat-checkbox>
+                    <mat-checkbox
+                        class="flex-item small"
+                        id="supportsECommerce"
+                        matInput
+                        formControlName="supportsECommerce"
+                        >eCommerce Supported</mat-checkbox
+                    >
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Description</mat-label>
+                        <input
+                            id="description"
+                            matInput
+                            formControlName="description"
+                            placeholder="Description"
+                            type="text"
+                            required
+                        />
+                        <mat-error *viocAngularFormError="form.get('description').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <div class="spacer"></div>
+                    <mat-checkbox
+                        class="flex-item small"
+                        id="requiresApproval"
+                        matInput
+                        formControlName="requiresApproval"
+                    >
+                        Requires Approval
+                    </mat-checkbox>
+                </div>
+            </div>
+
+            <div class="section">
+                <span class="header">Supported Invoice Types</span>
+                <div class="invoice-types">
+                    <mat-checkbox id="supportsRegularInvoice" matInput formControlName="supportsRegularInvoice"
+                        >Regular
+                    </mat-checkbox>
+                    <mat-checkbox id="supportsQuickInvoice" matInput formControlName="supportsQuickInvoice"
+                        >Quick Invoice
+                    </mat-checkbox>
+                    <mat-checkbox id="supportsQuickSale" matInput formControlName="supportsQuickSale"
+                        >Quick Sale
+                    </mat-checkbox>
+                    <mat-checkbox id="supportsRefillInvoice" matInput formControlName="supportsRefillInvoice"
+                        >Free Fluid Refill
+                    </mat-checkbox>
+                    <mat-checkbox id="supportsTireCheckInvoice" matInput formControlName="supportsTireCheckInvoice"
+                        >Tire Check Invoice
+                    </mat-checkbox>
+                </div>
+            </div>
+
+            <div class="section" *ngIf="serviceProductsFormArray.controls.length || serviceProductsAcessible">
+                <span class="header">Products for this service</span>
+                <div formArrayName="serviceProducts">
+                    <ng-container *viocAngularLoading="productCategories$ | async; class: 'section'; let prodCats">
+                        <div
+                            class="flex-container"
+                            *ngFor="let sp of serviceProductsFormArray.controls; let i = index"
+                            [formGroup]="sp"
+                        >
+                            <vioc-angular-add-remove-button
+                                id="rowAddRemoveButton"
+                                *ngIf="serviceProductsAcessible"
+                                [addButtonDisplayed]="serviceProductsFormArray.controls.length - 1 == i"
+                                [removeButtonDisplayed]="true"
+                                (addItem)="addProduct()"
+                                (removeItem)="removeProduct(i)"
+                            ></vioc-angular-add-remove-button>
+                            <mat-form-field class="flex-item large">
+                                <mat-label>Category</mat-label>
+                                <mat-select
+                                    matInput
+                                    formControlName="productCategory"
+                                    placeholder="Category"
+                                    [compareWith]="describedEquals"
+                                    required
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let cat of prodCats" [value]="cat"
+                                        >{{ cat.code }} -
+                                        {{ cat.description }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="sp.get('productCategory').errors; let error">
+                                    {{ error }}</mat-error
+                                >
+                            </mat-form-field>
+                            <mat-form-field class="flex-item">
+                                <mat-label>Default Quantity</mat-label>
+                                <input
+                                    id="defaultQuantity"
+                                    matInput
+                                    formControlName="defaultQuantity"
+                                    placeholder="Default Quantity"
+                                    type="number"
+                                />
+                                <mat-error *viocAngularFormError="sp.get('defaultQuantity').errors; let error"
+                                    >{{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </ng-container>
+                    <div
+                        class="flex-container"
+                        *ngIf="serviceProductsAcessible && serviceProductsFormArray.controls.length == 0"
+                    >
+                        <vioc-angular-add-remove-button
+                            id="defaultAddRemoveButton"
+                            [addButtonDisplayed]="true"
+                            [removeButtonDisplayed]="false"
+                            (addItem)="addProduct()"
+                        ></vioc-angular-add-remove-button>
+                        <div class="spacer"></div>
+                        <div class="spacer"></div>
+                        <div class="spacer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>

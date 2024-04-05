@@ -1,0 +1,259 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" (keydown.enter)="$event.preventDefault()" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="openAlerts(apply)"
+                    >APPLY</button
+                >
+                <button
+                    mat-raised-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="!form.valid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="openAlerts(save)"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <div class="flex-container">
+                    <mat-form-field class="flex-item alert-name-input">
+                        <mat-label>Alert Name</mat-label>
+                        <input matInput id="alert-name" required formControlName="name" placeholder="Alert Name" />
+                        <mat-error *viocAngularFormError="form.getControl('name').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-checkbox matInput formControlName="active">Active</mat-checkbox>
+                </div>
+            </div>
+            <div class="section">
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Comments</mat-label>
+                        <input
+                            matInput
+                            id="alert-comments"
+                            required
+                            formControlName="comments"
+                            placeholder="Comments"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('comments').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="section">
+                <div class="flex-container">
+                    <div
+                        class="selection-list"
+                        *viocAngularLoading="activeAlertScreens$ | async; let activeAlertScreens"
+                    >
+                        <div class="header">Active Alerts</div>
+                        <p> Displays in a pop-up the first time the screen is visited </p>
+                        <div class="flex-item item-list">
+                            <mat-selection-list
+                                #selectedActiveAlertScreens
+                                id="active-alert-screens"
+                                [disabled]="accessMode.isView"
+                            >
+                                <mat-list-option
+                                    *ngFor="let activeAlert of activeAlertScreens"
+                                    [checkboxPosition]="'before'"
+                                    [value]="activeAlert"
+                                    [selected]="isActiveAlertSelected(activeAlert)"
+                                >
+                                    {{ activeAlert.description }}
+                                </mat-list-option>
+                            </mat-selection-list>
+                        </div>
+                    </div>
+                    <div
+                        class="selection-list"
+                        *viocAngularLoading="passiveAlertScreens$ | async; let passiveAlertScreens"
+                    >
+                        <div class="header">Passive Alerts</div>
+                        <p> Displays as a link on the screen which must be clicked </p>
+                        <div class="flex-item item-list">
+                            <mat-selection-list
+                                #selectedPassiveAlertScreens
+                                id="passive-alert-screens"
+                                [disabled]="accessMode.isView"
+                            >
+                                <mat-list-option
+                                    *ngFor="let passiveAlert of passiveAlertScreens"
+                                    [checkboxPosition]="'before'"
+                                    [value]="passiveAlert"
+                                    [selected]="isPassiveAlertSelected(passiveAlert)"
+                                >
+                                    {{ passiveAlert.description }}
+                                </mat-list-option>
+                            </mat-selection-list>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <vioc-angular-document-selection
+                id="alert-document-selection"
+                [documentFile]="model.documentFile"
+                [externalLink]="model.externalLink"
+                [editable]="!accessMode.isView"
+                (documentFileChange)="onDocumentFileChange($event)"
+                (externalLinkChange)="onExternalLinkChange($event)"
+            ></vioc-angular-document-selection>
+            <div id="alert-vehicle-details" class="section" *ngIf="!accessMode.isView || vehiclesControlArray.length">
+                <div class="header">
+                    Vehicle Details
+                    <vioc-angular-info-button
+                        id="vehicle-detail-filter-info"
+                        *ngIf="filterVehicleDetails"
+                        info="There are {{
+                            vehiclesControlArray.length
+                        }} vehicle mappings. A filter is being applied to reduce page load."
+                    ></vioc-angular-info-button>
+                </div>
+                <vioc-angular-technical-vehicle-detail-selection
+                    [vehicleDetails]="vehiclesControlArray"
+                    [editable]="!accessMode.isView"
+                    [filter]="filterVehicleDetails"
+                ></vioc-angular-technical-vehicle-detail-selection>
+            </div>
+            <!-- Product Add Section -->
+            <div class="section" id="alert-product-details" *ngIf="addOrEditProductEnabled">
+                <span class="header">Product Details</span>
+                <div class="flex-container" *ngIf="!accessMode.isView">
+                    <button
+                        id="product-search"
+                        mat-icon-button
+                        color="primary"
+                        matTooltip="Search for product to add"
+                        [disabled]="productSelected"
+                        (click)="openSearchDialog()"
+                    >
+                        <mat-icon>search</mat-icon>
+                    </button>
+                    <mat-form-field id="product-add-form-field">
+                        <mat-label>Product Code</mat-label>
+                        <input
+                            id="product-code-input"
+                            matInput
+                            type="text"
+                            [formControl]="productCodeControl"
+                            placeholder="Product Code"
+                            (keydown.enter)="addProductFromInput()"
+                        />
+                    </mat-form-field>
+                    <button
+                        id="product-go"
+                        mat-icon-button
+                        color="primary"
+                        matTooltip="Add the entered product"
+                        [disabled]="!productCodeControl.value || productSelected"
+                        (click)="addProductFromInput()"
+                    >
+                        <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                </div>
+                <ng-container *ngIf="productSelected">
+                    <div>
+                        <!-- Show Product Details -->
+                        <div class="flex-container">
+                            <vioc-angular-add-remove-button
+                                id="remove-button"
+                                [removeButtonDisplayed]="!accessMode.isView"
+                                [addButtonDisplayed]="false"
+                                (removeItem)="removeProduct()"
+                            >
+                            </vioc-angular-add-remove-button>
+                            <mat-form-field class="flex-item">
+                                <mat-label>Product Code</mat-label>
+                                <input
+                                    matInput
+                                    id="product-code"
+                                    required
+                                    [value]="productCode"
+                                    type="text"
+                                    [disabled]="true"
+                                    placeholder="Product Code"
+                                />
+                            </mat-form-field>
+                            <mat-form-field class="flex-item">
+                                <mat-label>Product Description</mat-label>
+                                <input
+                                    matInput
+                                    id="product-description"
+                                    required
+                                    type="text"
+                                    [value]="productDescription"
+                                    [disabled]="true"
+                                    placeholder="Product Description"
+                                />
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </form>
+    <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+</vioc-angular-loading-overlay>
+<vioc-angular-dialog
+    #addDialog
+    id="add-dialog"
+    [name]="'Alert Info'"
+    [content]="addContent"
+    [actions]="alertAddActions"
+></vioc-angular-dialog>
+
+<ng-template #addContent>
+    <div id="alert-confirmation"
+        >This Alert will be attached to every vehicle in the car park. Is this the intended result?
+    </div>
+</ng-template>
+<ng-template #alertAddActions>
+    <button mat-stroked-button id="alert-add-cancel-button" (click)="closeAlertAddDialog()">GO BACK</button>
+    <button
+        mat-raised-button
+        id="alert-add-continue-button"
+        color="primary"
+        class="continue-button"
+        disableButtonClick
+        (disableClick)="closeAlertAddDialog(); alertDialogCallback.call(this)"
+        >CONTINUE</button
+    >
+</ng-template>
+<vioc-angular-dialog
+    #searchDialog
+    id="search-add-product"
+    [name]="'Search product'"
+    [content]="content"
+    [actions]="actions"
+></vioc-angular-dialog>
+<ng-template #content>
+    <vioc-angular-product-selection
+        id="product-selection"
+        [control]="productSelectionControl"
+        [searchFn]="searchProductFn"
+        [singleSelection]="true"
+    ></vioc-angular-product-selection>
+</ng-template>
+<ng-template #actions>
+    <button id="cancel-search-button" mat-stroked-button (click)="closeSearchDialog()">CANCEL</button>
+    <button
+        id="add-product-button"
+        mat-raised-button
+        color="primary"
+        [disabled]="!isSelected()"
+        (click)="addProductFromSearch()"
+        >ADD</button
+    >
+</ng-template>

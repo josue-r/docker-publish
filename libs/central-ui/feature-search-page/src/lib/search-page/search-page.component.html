@@ -1,0 +1,32 @@
+<vioc-angular-search
+    #search
+    [page]="page"
+    [isLoading]="isLoading"
+    [columns]="columns"
+    [searchFn]="searchFn"
+    [entityType]="entityType"
+    [formOptions]="gridFormOptions"
+    [gridModeEnabled]="gridAccessible"
+    [saveFn]="saveFn"
+    [actionsTemplate]="actionsTemplate"
+    [selectionActionsTemplate]="usableSelectionActions"
+    [menuItemsTemplate]="menuItemsTemplate"
+    (rowSelect)="open($event)"
+>
+</vioc-angular-search>
+<ng-template #selectionItems>
+    <ng-container *ngTemplateOutlet="selectionActionsTemplate"></ng-container>
+    <button
+        mat-icon-button
+        color="primary"
+        id="selection-datasync"
+        *ngIf="dataSyncable && hasEditAccess && dataSyncFeatureFlagEnabled"
+        class="action-button"
+        matTooltip="Datasync"
+        matTooltipPosition="after"
+        disableButtonClick
+        (disableClick)="dataSync()"
+    >
+        <mat-icon>system_update_alt</mat-icon></button
+    >
+</ng-template>

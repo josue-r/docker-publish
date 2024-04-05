@@ -1,0 +1,175 @@
+<!--When user clicks enter on the page, browser will try to perform the first submit action it gets(e.g. If first
+    button on that page is cancel and user performs enter, it'll try to perform the action for cancel).To stop
+    this behavior, use preventDefault and enabled it on the product code input by using keydown.enter event
+    if product code is focused. -->
+<form *viocAngularLoading="form" (keydown.enter)="$event.preventDefault()" [formGroup]="form">
+    <div class="page">
+        <vioc-angular-loading-overlay [loading]="isLoading">
+            <vioc-angular-action-bar>
+                <button
+                    mat-raised-button
+                    id="finalize-action"
+                    *ngIf="accessMode.isAdd"
+                    [disabled]="form.invalid"
+                    color="primary"
+                    (click)="openFinalizeAdjustmentDialog()"
+                    >FINALIZE ADJUSTMENT</button
+                >
+            </vioc-angular-action-bar>
+
+            <!-- Dropdown from stores -->
+            <div class="section" *ngIf="accessMode.isAdd">
+                <div class="header">Product Adjustment Information</div>
+
+                <div class="flex-container" id="store-dropdown">
+                    <vioc-angular-filtered-input
+                        id="store-input"
+                        class="flex-item"
+                        [options]="(stores$ | async)?.resources"
+                        [valueControl]="form.getControl('store')"
+                        [editable]="true"
+                        placeHolder="Store"
+                        [compareWith]="describedEquals"
+                        [required]="true"
+                    >
+                    </vioc-angular-filtered-input>
+                </div>
+            </div>
+
+            <!-- View mode -->
+            <div class="section" *ngIf="!accessMode.isAdd">
+                <div class="header">Product Adjustment Information</div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Adjustment Number</mat-label>
+                        <input
+                            id="adjustmentid-input"
+                            matInput
+                            [disabled]="true"
+                            [value]="form.getControlValue('id')"
+                            placeholder="Adjustment Number"
+                            type="text"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Store</mat-label>
+                        <input
+                            id="store-input"
+                            matInput
+                            [value]="form.getControlValue('store').code"
+                            placeholder="Store"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Status</mat-label>
+                        <input
+                            id="status-input"
+                            matInput
+                            [value]="form.getControlValue('status').description"
+                            placeholder="Status"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="section" *ngIf="!accessMode.isAdd">
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Created Date</mat-label>
+                        <input
+                            id="created-date-input"
+                            matInput
+                            [value]="form.getControlValue('createdDate') | moment"
+                            placeholder="Created Date"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Created By</mat-label>
+                        <input
+                            id="created-by-input"
+                            matInput
+                            [value]="form.getControlValue('createdByEmployee').name"
+                            placeholder="Created By"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <div class="spacer"></div>
+                    <div class="spacer"></div>
+                </div>
+            </div>
+            <div class="section">
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Comments</mat-label>
+                        <input
+                            id="comments-input"
+                            matInput
+                            formControlName="comments"
+                            placeholder="Comments"
+                            type="text"
+                            [value]="form.getControlValue('comments')"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('comments').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="spacer"></div>
+                </div>
+            </div>
+            <div class="section">
+                <span class="header">Products</span>
+                <vioc-angular-print-button *ngIf="!accessMode.isAdd"></vioc-angular-print-button>
+            </div>
+            <vioc-angular-product-adjustment-products
+                [form]="form.getArray('adjustmentProducts')"
+                [disableSelection]="accessMode.isView"
+                [status]="form.getControlValue('status')?.code"
+                [reasonType]="reasonType$ | async"
+                [accessMode]="accessMode"
+                (removeProducts)="onRemoveProducts($event)"
+            ></vioc-angular-product-adjustment-products>
+            <vioc-angular-product-add-input
+                *ngIf="!accessMode.isView"
+                id="product-add-input"
+                [addDisabled]="isLoading || !storesSelected"
+                [existingProductCodes]="existingProductCodes"
+                [searchFn]="searchProductsFn"
+                (products)="addRequestedProducts($event)"
+            >
+            </vioc-angular-product-add-input>
+        </vioc-angular-loading-overlay>
+    </div>
+    <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+</form>
+
+<vioc-angular-dialog
+    #finalizeAdjustmentDialog
+    id="finalize-adjustment-dialog"
+    [name]="'Finalize Adjustment'"
+    [content]="accessMode.isAdd ? finalizeAddContent : finalizeContent"
+    [actions]="finalizeActions"
+></vioc-angular-dialog>
+<ng-template #finalizeContent>
+    <div id="finalize-confirmation">Are you sure you want to finalize the adjustment? </div>
+</ng-template>
+<ng-template #finalizeAddContent>
+    <div id="finalize-confirmation">Are you sure you want to finalize the adjustment?</div>
+</ng-template>
+<ng-template #finalizeActions>
+    <button mat-stroked-button id="finalize-cancel-button" (click)="closeFinalizeAdjustmentDialog()">GO BACK</button>
+    <button
+        mat-raised-button
+        id="finalize-continue-button"
+        color="primary"
+        class="continue-button"
+        disableButtonClick
+        (disableClick)="finalize()"
+        >FINALIZE ADJUSTMENT</button
+    >
+</ng-template>

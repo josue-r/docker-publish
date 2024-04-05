@@ -1,0 +1,24 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'ServiceCategory'"
+    [searchPageFacade]="serviceCategoryFacade"
+    [columns]="columns"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="toCode"
+    [gridModeEnabled]="gridModeEnabled"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <ng-container *viocAngularFeatureFlag="'serviceCategory.search.add'">
+            <button
+                mat-button
+                color="primary"
+                id="add-button"
+                *ngIf="searchPage.hasAddAccess"
+                class="action-button"
+                [routerLink]="['../add']"
+                >Add Service Category</button
+            >
+        </ng-container>
+    </ng-template>
+</vioc-angular-search-page>

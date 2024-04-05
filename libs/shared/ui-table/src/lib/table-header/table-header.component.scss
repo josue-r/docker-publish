@@ -1,0 +1,32 @@
+@import 'variables';
+
+.table-header {
+    height: 64px;
+    padding-left: 24px;
+    padding-right: 14px;
+    display: flex;
+    align-items: center;
+    background-color: $content-background;
+
+    .right-align {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+    }
+
+    &.selected {
+        background-color: $blue-background;
+    }
+}
+
+::ng-deep {
+    .table-menu.mat-mdc-menu-panel {
+        width: 310px;
+        max-width: 310px;
+    }
+
+    /** Fixing the alignment of icon buttons as they are rendering off center */
+    .mat-mdc-icon-button .mat-icon {
+        line-height: 20px;
+    }
+}

@@ -1,0 +1,357 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="form.enabled"
+                    [disabled]="form.invalid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-stroked-button
+                    id="save-action"
+                    *ngIf="form.enabled"
+                    [disabled]="form.invalid"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="save()"
+                    >SAVE</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <span class="header">Store Information</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Store Number</mat-label>
+                        <input
+                            id="storeCode"
+                            matInput
+                            required
+                            formControlName="code"
+                            placeholder="Store Number"
+                            type="text"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('code').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Store Name</mat-label>
+                        <input
+                            id="storeName"
+                            matInput
+                            required
+                            formControlName="description"
+                            placeholder="Store Name"
+                            type="text"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('description').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <div class="flex-container">
+                        <mat-checkbox class="flex-item small" id="active" matInput formControlName="active"
+                            >Active</mat-checkbox
+                        >
+                    </div>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Date Opened</mat-label>
+                        <input
+                            id="storeOpenDate"
+                            matInput
+                            required
+                            [value]="form.getControlValue('storeOpenDate') | date"
+                            placeholder="Date Opened"
+                            type="text"
+                            [disabled]="true"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('storeOpenDate').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Company</mat-label>
+                        <input
+                            id="company"
+                            matInput
+                            required
+                            placeholder="Company"
+                            type="text"
+                            [value]="companyCodeAndDescription"
+                            [disabled]="true"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('company').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Region</mat-label>
+                        <input
+                            id="region"
+                            matInput
+                            required
+                            placeholder="Region"
+                            type="text"
+                            [value]="regionCodeAndDescription"
+                            [disabled]="true"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('region').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Market</mat-label>
+                        <input
+                            id="market"
+                            matInput
+                            required
+                            placeholder="Market"
+                            type="text"
+                            [value]="marketCodeAndDescription"
+                            [disabled]="true"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('market').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Area</mat-label>
+                        <input
+                            id="area"
+                            matInput
+                            required
+                            placeholder="Area"
+                            type="text"
+                            [value]="areaCodeAndDescription"
+                            [disabled]="true"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('area').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Store Manager</mat-label>
+                        <input
+                            id="storeManager"
+                            matInput
+                            required
+                            [value]="storeManager"
+                            [disabled]="true"
+                            placeholder="Store Manager"
+                            type="text"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Store Manager ID</mat-label>
+                        <input
+                            id="storeManagerId"
+                            matInput
+                            required
+                            [value]="storeManagerId"
+                            [disabled]="true"
+                            placeholder="Store Manager ID"
+                            type="text"
+                        />
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Classification</mat-label>
+                        <mat-select
+                            id="classification"
+                            matInput
+                            formControlName="classification"
+                            placeholder="Classification"
+                            [compareWith]="describedEquals"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let classification of classification$ | async" [value]="classification">
+                                {{ classification.description }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *viocAngularFormError="form.getControl('classification').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-checkbox
+                        class="flex-item small"
+                        id="sameStoreReporting"
+                        matInput
+                        formControlName="sameStoreReporting"
+                        >Same Store
+                    </mat-checkbox>
+                </div>
+            </div>
+            <div class="section">
+                <span class="header">Location/Contact Information</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Street</mat-label>
+                        <input
+                            id="street"
+                            matInput
+                            required
+                            [value]="street"
+                            [disabled]="true"
+                            placeholder="Street"
+                            type="text"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Apt/Suite</mat-label>
+                        <input id="apt" matInput [value]="apt" [disabled]="true" placeholder="Apt/Suite" type="text" />
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>City</mat-label>
+                        <input
+                            id="city"
+                            matInput
+                            required
+                            [value]="city"
+                            [disabled]="true"
+                            placeholder="City"
+                            type="text"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>State</mat-label>
+                        <input
+                            id="state"
+                            matInput
+                            required
+                            [value]="state"
+                            [disabled]="true"
+                            placeholder="State"
+                            type="text"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Zip</mat-label>
+                        <input
+                            id="zip"
+                            matInput
+                            required
+                            [value]="zip"
+                            [disabled]="true"
+                            placeholder="Zip"
+                            type="text"
+                        />
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Phone</mat-label>
+                        <input id="phone" matInput required formControlName="phone" placeholder="Phone" type="text" />
+                        <mat-error *viocAngularFormError="form.getControl('phone').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Fax</mat-label>
+                        <input id="fax" matInput formControlName="fax" placeholder="Fax" type="text" />
+                        <mat-error *viocAngularFormError="form.getControl('fax').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Emergency Phone</mat-label>
+                        <input
+                            id="emergencyPhone"
+                            matInput
+                            formControlName="emergencyPhone"
+                            placeholder="Emergency Phone"
+                            type="text"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('emergencyPhone').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Latitude</mat-label>
+                        <input
+                            id="latitude"
+                            matInput
+                            viocAngularDecimalPlaces
+                            decimalPlaces="5"
+                            formControlName="latitude"
+                            placeholder="Latitude"
+                            type="decimal"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('latitude').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Longitude</mat-label>
+                        <input
+                            id="longitude"
+                            matInput
+                            viocAngularDecimalPlaces
+                            decimalPlaces="5"
+                            formControlName="longitude"
+                            placeholder="Longitude"
+                            type="decimal"
+                        />
+                        <mat-error *viocAngularFormError="form.getControl('longitude').errors; let error">{{
+                            error
+                        }}</mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="location directions">
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item">
+                            <mat-label>Location Directions</mat-label>
+                            <textarea
+                                id="locationDirections"
+                                matInput
+                                cdkTextareaAutosize
+                                #autosize="cdkTextareaAutosize"
+                                formControlName="locationDirections"
+                                placeholder="Location Directions"
+                                type="text"
+                            ></textarea>
+                            <mat-error
+                                *viocAngularFormError="form.getControl('locationDirections').errors; let error"
+                                >{{ error }}</mat-error
+                            >
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div class="communities served">
+                    <div class="flex-container">
+                        <mat-form-field class="flex-item">
+                            <mat-label>Communities Served</mat-label>
+                            <textarea
+                                id="communitiesServed"
+                                matInput
+                                cdkTextareaAutosize
+                                formControlName="communitiesServed"
+                                placeholder="Communities Served"
+                                type="text"
+                            ></textarea>
+                            <mat-error *viocAngularFormError="form.getControl('communitiesServed').errors; let error">{{
+                                error
+                            }}</mat-error>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <vioc-angular-audit-trail [audited]="model"> </vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>

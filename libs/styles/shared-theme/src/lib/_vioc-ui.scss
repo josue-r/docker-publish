@@ -1,0 +1,178 @@
+// global vioc-ui styles
+@import '~material-design-icons/iconfont/material-icons.css';
+@import 'variables';
+
+body {
+    font-family: Roboto, Arial, sans-serif;
+    margin: 0;
+}
+
+.fill-remaining-space {
+    flex: 1 1 auto;
+}
+
+.content {
+    background: white;
+
+    .edit-form,
+    .actions {
+        padding: 8px;
+    }
+}
+
+.mdc-button,
+.mdc-icon-button {
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+.draggable-list {
+    .item-description {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .default-dropzone {
+        display: flex;
+        flex-direction: column;
+
+        div {
+            flex: 1 1 auto;
+        }
+    }
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.removed {
+    display: none !important;
+}
+
+.primary-theme-text {
+    color: $blue;
+}
+
+.action-button {
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: normal;
+}
+
+.mdc-button {
+    letter-spacing: normal;
+}
+
+.action-button:not(:first-child) {
+    margin-left: 8px;
+}
+
+.mat-snack-bar-container.error-snackbar {
+    padding: 0px;
+    width: 568px;
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+// allows the main page to center and adjust to the size of the content
+.main-page {
+    // min page width is predetermined by a variable and is adjusted by side nav and padding
+    min-width: calc(#{$screen-min-width} - #{$side-nav-width} - 16px);
+    margin: auto;
+    width: fit-content;
+    max-width: calc(98vw - #{$side-nav-width});
+}
+
+// limits the container size to the width of the screen minus side bar, allows for overflow
+.overflow-container {
+    overflow-x: auto;
+}
+
+.content-fit-table {
+    white-space: nowrap;
+    min-width: 100%;
+
+    td.mat-cell {
+        padding-right: 10px;
+    }
+
+    th.mat-header-cell {
+        padding-right: 10px;
+    }
+
+    .mat-error {
+        white-space: normal;
+    }
+}
+
+// this is for table and grid component but only worked when in this file, not sure why
+.mat-sort-header-button {
+    text-align: left;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.mat-hint.warning {
+    color: $warn;
+}
+
+// Initially intended to use as a button spacer but may have other uses
+span.horizontal-spacer.small {
+    width: 20px;
+}
+
+@media print {
+    /* Using !important here to ensure these rules are followed when printing */
+
+    .not-printable {
+        display: none !important;
+    }
+    /* Removing preserved sidebar spacing */
+    .main-content {
+        margin: 0px !important;
+    }
+    /* Prevent overflow-container scrollbars from showing up */
+    .overflow-container {
+        overflow: visible !important;
+    }
+    /* Reduce printed table cell size by limiting column width and text size */
+    td {
+        font-size: 12px !important;
+        max-width: 180px !important;
+        text-overflow: ellipsis !important;
+        overflow: hidden !important;
+    }
+
+    /* Allow printing of the entire page even if it expands past the viewable content */
+    .mat-drawer-content {
+        height: auto !important;
+    }
+    .mat-drawer-container {
+        overflow: inherit !important;
+    }
+}
+
+@media screen and (max-width: 1180px) {
+    /* Using !important here to ensure these rules are followed when in tablet mode */
+
+    .tablet-view {
+        display: none !important;
+    }
+
+    /* Prevent overflow-container from being larger than the page */
+    .overflow-container {
+        overflow-x: hidden !important;
+    }
+
+    /* Prevent search lines from being on more than one line */
+    vioc-angular-search-line {
+        float: left !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+    }
+}

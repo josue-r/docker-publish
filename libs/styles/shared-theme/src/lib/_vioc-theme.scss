@@ -1,0 +1,134 @@
+@use '@angular/material' as mat;
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+$valvoline-blue-palette: (
+    50: #e0f3fa,
+    100: #b3e1f4,
+    200: #80ceec,
+    300: #4dbae4,
+    400: #26abdf,
+    500: #009cd9,
+    600: #0094d5,
+    700: #008acf,
+    800: #0080ca,
+    900: #006ec0,
+    A100: #e9f4ff,
+    A200: #b6dcff,
+    A400: #83c3ff,
+    A700: #69b7ff,
+    contrast: (
+        50: #000000,
+        100: #000000,
+        200: #000000,
+        300: #000000,
+        400: #000000,
+        500: #ffffff,
+        600: #ffffff,
+        700: #ffffff,
+        800: #ffffff,
+        900: #ffffff,
+        A100: #000000,
+        A200: #000000,
+        A400: #000000,
+        A700: #000000,
+    ),
+);
+
+$valvoline-med-blue-palette: (
+    50: #e1ecf2,
+    100: #b5cfdd,
+    200: #84afc7,
+    300: #528eb1,
+    400: #2d76a0,
+    500: #085e8f,
+    600: #075687,
+    700: #064c7c,
+    800: #044272,
+    900: #023160,
+    A100: #90bfff,
+    A200: #5da2ff,
+    A400: #2a85ff,
+    A700: #1176ff,
+    contrast: (
+        50: #000000,
+        100: #000000,
+        200: #000000,
+        300: #000000,
+        400: #ffffff,
+        500: #ffffff,
+        600: #ffffff,
+        700: #ffffff,
+        800: #ffffff,
+        900: #ffffff,
+        A100: #000000,
+        A200: #000000,
+        A400: #ffffff,
+        A700: #ffffff,
+    ),
+);
+
+$valvoline-red-palette: (
+    50: #fbe5e4,
+    100: #f6bebb,
+    200: #f0938e,
+    300: #ea6760,
+    400: #e6473e,
+    500: #e1261c,
+    600: #dd2219,
+    700: #d91c14,
+    800: #d51711,
+    900: #cd0d09,
+    A100: #fff7f7,
+    A200: #ffc5c4,
+    A400: #ff9291,
+    A700: #ff7978,
+    contrast: (
+        50: #000000,
+        100: #000000,
+        200: #000000,
+        300: #000000,
+        400: #ffffff,
+        500: #ffffff,
+        600: #ffffff,
+        700: #ffffff,
+        800: #ffffff,
+        900: #ffffff,
+        A100: #000000,
+        A200: #000000,
+        A400: #000000,
+        A700: #000000,
+    ),
+);
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://www.google.com/design/spec/style/color.html
+$valvoline-app-primary: mat.define-palette($valvoline-blue-palette);
+$valvoline-app-accent: mat.define-palette($valvoline-med-blue-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$valvoline-app-warn: mat.define-palette($valvoline-red-palette);
+
+$valvoline-app-typography: mat.define-typography-config(
+    $font-family: 'Roboto, Arial, sans-serif',
+);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$valvoline-app-theme: mat.define-light-theme(
+    (
+        color: (
+            primary: $valvoline-app-primary,
+            accent: $valvoline-app-accent,
+            warn: $valvoline-app-warn,
+        ),
+        typography: $valvoline-app-typography,
+    )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($valvoline-app-theme);

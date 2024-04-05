@@ -1,0 +1,16 @@
+{
+    "name": "central-ui-inventory-data-access-non-inventory-item",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/central-ui/inventory/data-access-non-inventory-item/src",
+    "projectType": "library",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/central-ui/inventory/data-access-non-inventory-item"],
+            "options": {
+                "jestConfig": "libs/central-ui/inventory/data-access-non-inventory-item/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    }
+}

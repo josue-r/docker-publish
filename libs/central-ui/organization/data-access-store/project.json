@@ -1,0 +1,17 @@
+{
+    "name": "central-ui-organization-data-access-store",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "sourceRoot": "libs/central-ui/organization/data-access-store/src",
+    "projectType": "library",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "outputs": ["{workspaceRoot}/coverage/libs/central-ui/organization/data-access-store"],
+            "options": {
+                "jestConfig": "libs/central-ui/organization/data-access-store/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "tags": ["scope:central-ui", "type:data-access"]
+}

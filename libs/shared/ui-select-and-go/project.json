@@ -1,0 +1,22 @@
+{
+    "name": "shared-ui-select-and-go",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/shared/ui-select-and-go/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/shared/ui-select-and-go/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "generators": {
+        "@schematics/angular:component": {
+            "style": "sass"
+        }
+    },
+    "tags": ["scope:shared", "type:ui"]
+}

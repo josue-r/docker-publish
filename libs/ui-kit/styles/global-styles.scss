@@ -1,0 +1,152 @@
+// styles.scss
+@import 'global-variables';
+
+body {
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 140%;
+}
+
+.header-1 {
+    font-size: 64px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -1.28px;
+}
+
+.header-2 {
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.8px;
+}
+
+.header-3 {
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.64px;
+}
+
+.header-4 {
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: -0.64px;
+}
+
+.subtitle {
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.subtitle-2 {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.body {
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 25.2px */
+}
+
+.body-2 {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 25.2px */
+}
+
+.body-3 {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%; /* 25.2px */
+}
+
+.bold {
+    font-weight: 700;
+    line-height: normal;
+}
+
+.small-text {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 140%; /* 22.4px */
+}
+
+.pre-title {
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.pre-title-small {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.48px;
+    text-transform: uppercase;
+}
+
+.button-text {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.64px;
+    text-transform: uppercase;
+}
+
+.button-text-small {
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.48px;
+    text-transform: uppercase;
+}
+
+.link-text {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-decoration-line: underline;
+    color: $blue-3;
+}
+
+// Elevator
+.elevation-01 {
+    background: $white;
+    box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.12), 0px 1px XS 0px #d8d6da, 0px XS 1px -1px rgba(0, 0, 0, 0.2);
+}
+
+.elevation-02 {
+    background: $white;
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.12), 0px 0px 4px 0px rgba(216, 214, 218, 0.14),
+        0px 0px 3px -2px rgba(0, 0, 0, 0.2);
+}
+
+.elevation-03 {
+    background: $white;
+    box-shadow: 0px 0px 14px 0px rgba(0, 0, 0, 0.12), 0px 0px 8px 0px rgba(216, 214, 218, 0.14),
+        0px 0px 5px -1px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,15 @@
+import { <%= classify(domain) %>Api } from './<%= dasherize(domain) %>.api';
+
+describe('<%= classify(domain) %>Api', () => {
+    const api = new <%= classify(domain) %>Api(null, { http: null });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('should create an instance', () => {
+        expect(api).toBeTruthy();
+    });
+
+    it.todo('should have custom methods implemented');
+});

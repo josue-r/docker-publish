@@ -1,0 +1,29 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'<%=classify(domain)%>'"
+    [searchPageFacade]="<%=camelize(domain)%>Facade"
+    [columns]="columns"
+    [routePathVariables]="viewEditRoutePathVariables"
+    [gridFormOptions]="gridFormOptions"
+    [selectionActionsTemplate]="selectionActions"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <!-- TODO: Enable add functionality. The below code should be good for a standard add -->
+        <!-- 
+        <ng-container *viocAngularFeatureFlag="'<%=camelize(domain)%>.search.add'">
+            <button
+                mat-button
+                color="primary"
+                id="add-button"
+                *ngIf="searchPage.hasAddAccess"
+                class="action-button"
+                [routerLink]="['../add']"
+                >Add <%=startCase(domain)%></button
+            >
+        </ng-container>
+        -->
+    </ng-template>
+    <ng-template #selectionActions>
+    </ng-template>
+</vioc-angular-search-page>

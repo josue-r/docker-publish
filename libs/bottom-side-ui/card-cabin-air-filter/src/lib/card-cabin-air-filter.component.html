@@ -1,0 +1,21 @@
+<vioc-card
+    [title]="titleConfiguration.label"
+    [titleAlign]="titleConfiguration.align"
+    [titleColor]="titleConfiguration.color"
+    [titleSize]="titleConfiguration.size"
+>
+    <div class="card-cabin-air-filter-content">
+        <ng-container *ngIf="cabinAirFilterWithNotes$ | async as cabinAirFilterWithNotes; else isError">
+            <vioc-card-content
+                *ngFor="let cabinAirFilter of cabinAirFilterWithNotes; let i = index"
+                [title]="cabinAirFilter.part"
+                [titleColor]="contentConfiguration.titleColor"
+                [description]="noteValues[i]"
+                [size]="contentConfiguration.size"
+            ></vioc-card-content>
+        </ng-container>
+        <ng-template #isError>
+            <vioc-content-error [description]="apiErrorMessage" [size]="contentConfiguration.size"></vioc-content-error>
+        </ng-template>
+    </div>
+</vioc-card>

@@ -1,0 +1,156 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <!--When user clicks enter on the page, browser will try to perform the first submit action it gets(e.g. If first
+            button on that page is cancel and user performs enter, it'll try to perform the action for cancel).To stop
+            this behavior, use preventDefault and enabled it on the product code input by using keydown.enter event
+            if product code is focused. -->
+    <form *viocAngularLoading="form" [formGroup]="form" (keydown.enter)="$event.preventDefault()">
+        <div class="page">
+            <vioc-angular-action-bar>
+                <button
+                    mat-stroked-button
+                    id="apply-action"
+                    *ngIf="isEditButtonsDisplayed"
+                    [disabled]="form.invalid || !form.dirty"
+                    color="primary"
+                    disableButtonClick
+                    (disableClick)="apply()"
+                    >APPLY</button
+                >
+                <button
+                    mat-stroked-button
+                    id="stop-action"
+                    *ngIf="isEditButtonsDisplayed && !isCountingByLocation"
+                    color="warn"
+                    (click)="openStopCountDialog()"
+                    >STOP COUNT</button
+                >
+            </vioc-angular-action-bar>
+            <div class="section">
+                <div class="flex-container header-fields">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Store</mat-label>
+                        <input
+                            id="store-input"
+                            matInput
+                            [value]="form.getControlValue('store').code"
+                            placeholder="Store"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Frequency</mat-label>
+                        <input
+                            id="frequency-input"
+                            matInput
+                            [value]="form.getControlValue('frequency').description"
+                            placeholder="Frequency"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Count Number</mat-label>
+                        <input
+                            id="count-number-input"
+                            matInput
+                            [value]="form.getControlValue('id')"
+                            placeholder="Count Number"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Status</mat-label>
+                        <input
+                            id="status-input"
+                            matInput
+                            [value]="form.getControlValue('status').description"
+                            placeholder="Status"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="section">
+                <div class="flex-container audit-fields">
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Created Date</mat-label>
+                        <input
+                            id="created-date-input"
+                            matInput
+                            [value]="form.getControlValue('createdOn') | moment"
+                            placeholder="Created Date"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small" *ngIf="form.getControlValue('status').code === 'FINALIZED'">
+                        <mat-label>Finalized Date</mat-label>
+                        <input
+                            id="finalized-date-input"
+                            matInput
+                            [value]="form.getControlValue('finalizedOn') | moment"
+                            placeholder="Finalized Date"
+                            type="text"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="section">
+                <div class="header">
+                    Counts
+                    <button
+                        mat-icon-button
+                        id="pdf-print-button"
+                        color="primary"
+                        class="print-button not-printable"
+                        matTooltip="Print Product Count"
+                        matTooltipPosition="after"
+                        (click)="getPDF()"
+                    >
+                        <mat-icon>print</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <vioc-angular-physical-inventory-products
+                #productCounts
+                id="product-table"
+                [form]="form"
+                [accessMode]="accessMode"
+                [initiateCategorySearch]="initiateCategorySearch"
+                [isCountingByLocation]="isCountingByLocation"
+                [selectedValueIndex]="selectedValueIndex"
+                (switchedToChangeByLocation)="switchedToChangeByLocation($event)"
+                (selectedValueIndexOutput)="setSelectedValue($event)"
+            >
+            </vioc-angular-physical-inventory-products>
+        </div>
+    </form>
+</vioc-angular-loading-overlay>
+<vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+
+<vioc-angular-dialog
+    #stopCountDialog
+    id="stop-count-dialog"
+    [name]="'Stop Count'"
+    [content]="stopContent"
+    [actions]="stopActions"
+></vioc-angular-dialog>
+<ng-template #stopContent>
+    <div>Are you sure you want to stop the count? Edits cannot be made after clicking Stop.</div>
+</ng-template>
+<ng-template #stopActions>
+    <button mat-stroked-button id="stop-cancel-button" (click)="closeStopCountDialog()">GO BACK</button>
+    <button
+        mat-stroked-button
+        id="stop-continue-button"
+        color="warn"
+        class="continue-button"
+        disableButtonClick
+        (disableClick)="stopCount()"
+        >STOP COUNT</button
+    >
+</ng-template>

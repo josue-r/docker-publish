@@ -1,0 +1,315 @@
+{
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": ".",
+        "declaration": false,
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "importHelpers": true,
+        "lib": ["es2017", "dom"],
+        "module": "esnext",
+        "moduleResolution": "node",
+        "paths": {
+            "@vioc-angular/bottom-side-ui/card-air-filter": ["libs/bottom-side-ui/card-air-filter/src/index.ts"],
+            "@vioc-angular/bottom-side-ui/card-cabin-air-filter": [
+                "libs/bottom-side-ui/card-cabin-air-filter/src/index.ts"
+            ],
+            "@vioc-angular/bottom-side-ui/card-oil-filter": ["libs/bottom-side-ui/card-oil-filter/src/index.ts"],
+            "@vioc-angular/bottom-side-ui/card-oil-filter-change": [
+                "libs/bottom-side-ui/card-oil-filter-change/src/index.ts"
+            ],
+            "@vioc-angular/bottom-side-ui/config/app-status": ["libs/bottom-side-ui/config/app-status/src/index.ts"],
+            "@vioc-angular/bottom-side-ui/config/data-access-vehicle-specifications": [
+                "libs/bottom-side-ui/config/data-access-vehicle-specifications/src/index.ts"
+            ],
+            "@vioc-angular/bottom-side-ui/config/data-access-working-bay": [
+                "libs/bottom-side-ui/config/data-access-working-bay/src/index.ts"
+            ],
+            "@vioc-angular/bottom-side-ui/header": ["libs/bottom-side-ui/header/src/index.ts"],
+            "@vioc-angular/central-ui/config/data-access-common-code": [
+                "libs/central-ui/config/data-access-common-code/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/config/data-access-parameter": [
+                "libs/central-ui/config/data-access-parameter/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/config/feature-common-code": [
+                "libs/central-ui/config/feature-common-code/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/customer/data-access-invoice": [
+                "libs/central-ui/customer/data-access-invoice/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/customer/feature-invoice": [
+                "libs/central-ui/customer/feature-invoice/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/dashboard/feature-dashboard": [
+                "libs/central-ui/dashboard/feature-dashboard/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/data-access-menu": ["libs/central-ui/data-access-menu/src/index.ts"],
+            "@vioc-angular/central-ui/discount/data-access-discount": [
+                "libs/central-ui/discount/data-access-discount/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/discount/data-access-offer-content": [
+                "libs/central-ui/discount/data-access-offer-content/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/discount/data-access-offers": [
+                "libs/central-ui/discount/data-access-offers/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/discount/feature-discounts": [
+                "libs/central-ui/discount/feature-discounts/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/discount/feature-offer-content": [
+                "libs/central-ui/discount/feature-offer-content/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/discount/feature-offers": [
+                "libs/central-ui/discount/feature-offers/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/feature-about": ["libs/central-ui/feature-about/src/index.ts"],
+            "@vioc-angular/central-ui/feature-global-error-handler": [
+                "libs/central-ui/feature-global-error-handler/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/feature-search-page": ["libs/central-ui/feature-search-page/src/index.ts"],
+            "@vioc-angular/central-ui/inventory/data-access-defective-product": [
+                "libs/central-ui/inventory/data-access-defective-product/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/data-access-inventory-order": [
+                "libs/central-ui/inventory/data-access-inventory-order/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/data-access-inventory-transfer": [
+                "libs/central-ui/inventory/data-access-inventory-transfer/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/data-access-non-inventory-item": [
+                "libs/central-ui/inventory/data-access-non-inventory-item/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/data-access-non-inventory-order": [
+                "libs/central-ui/inventory/data-access-non-inventory-order/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/data-access-physical-inventory": [
+                "libs/central-ui/inventory/data-access-physical-inventory/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/data-access-product-adjustment": [
+                "libs/central-ui/inventory/data-access-product-adjustment/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/data-access-receipt-of-material": [
+                "libs/central-ui/inventory/data-access-receipt-of-material/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/data-access-vendor": [
+                "libs/central-ui/inventory/data-access-vendor/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/feature-defective-product": [
+                "libs/central-ui/inventory/feature-defective-product/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/feature-inventory-order": [
+                "libs/central-ui/inventory/feature-inventory-order/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/feature-inventory-status": [
+                "libs/central-ui/inventory/feature-inventory-status/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/feature-inventory-transfer": [
+                "libs/central-ui/inventory/feature-inventory-transfer/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/feature-non-inventory-order": [
+                "libs/central-ui/inventory/feature-non-inventory-order/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/feature-physical-inventory": [
+                "libs/central-ui/inventory/feature-physical-inventory/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/feature-product-adjustment": [
+                "libs/central-ui/inventory/feature-product-adjustment/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/inventory/feature-receipt-of-material": [
+                "libs/central-ui/inventory/feature-receipt-of-material/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/organization/company/data-access-company-export": [
+                "libs/central-ui/organization/company/data-access-company-export/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/organization/data-access-company-holiday": [
+                "libs/central-ui/organization/data-access-company-holiday/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/organization/data-access-resources": [
+                "libs/central-ui/organization/data-access-resources/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/organization/data-access-store": [
+                "libs/central-ui/organization/data-access-store/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/organization/feature-company-holiday": [
+                "libs/central-ui/organization/feature-company-holiday/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/organization/feature-shared-store-selection": [
+                "libs/central-ui/organization/feature-shared-store-selection/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/organization/feature-store": [
+                "libs/central-ui/organization/feature-store/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/data-access-company-product": [
+                "libs/central-ui/product/data-access-company-product/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/data-access-product": [
+                "libs/central-ui/product/data-access-product/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/data-access-product-category": [
+                "libs/central-ui/product/data-access-product-category/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/data-access-store-product": [
+                "libs/central-ui/product/data-access-store-product/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/feature-company-product": [
+                "libs/central-ui/product/feature-company-product/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/feature-product-catalog": [
+                "libs/central-ui/product/feature-product-catalog/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/feature-product-category": [
+                "libs/central-ui/product/feature-product-category/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/feature-shared-product-add-input": [
+                "libs/central-ui/product/feature-shared-product-add-input/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/feature-shared-product-selection": [
+                "libs/central-ui/product/feature-shared-product-selection/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/feature-shared-product-category-selection": [
+                "libs/central-ui/product/feature-shared-product-category-selection/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/feature-shared-store-product-selection": [
+                "libs/central-ui/product/feature-shared-store-product-selection/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/product/feature-store-product": [
+                "libs/central-ui/product/feature-store-product/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/data-access-car-fax-mapping": [
+                "libs/central-ui/service/data-access-car-fax-mapping/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/data-access-car-system": [
+                "libs/central-ui/service/data-access-car-system/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/data-access-company-service": [
+                "libs/central-ui/service/data-access-company-service/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/data-access-service": [
+                "libs/central-ui/service/data-access-service/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/data-access-service-category": [
+                "libs/central-ui/service/data-access-service-category/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/data-access-store-service": [
+                "libs/central-ui/service/data-access-store-service/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/feature-company-service": [
+                "libs/central-ui/service/feature-company-service/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/feature-service-catalog": [
+                "libs/central-ui/service/feature-service-catalog/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/feature-service-category": [
+                "libs/central-ui/service/feature-service-category/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/feature-shared-service-selection": [
+                "libs/central-ui/service/feature-shared-service-selection/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/feature-shared-service-category-selection": [
+                "libs/central-ui/service/feature-shared-service-category-selection/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/service/feature-store-service": [
+                "libs/central-ui/service/feature-store-service/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/technical/common-technical": [
+                "libs/central-ui/technical/common-technical/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/technical/data-access-aces": [
+                "libs/central-ui/technical/data-access-aces/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/technical/data-access-technical-alert": [
+                "libs/central-ui/technical/data-access-technical-alert/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/technical/data-access-tsb": [
+                "libs/central-ui/technical/data-access-tsb/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/technical/feature-shared-document-selection": [
+                "libs/central-ui/technical/feature-shared-document-selection/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/technical/feature-technical-alert": [
+                "libs/central-ui/technical/feature-technical-alert/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/technical/feature-tsb": ["libs/central-ui/technical/feature-tsb/src/index.ts"],
+            "@vioc-angular/central-ui/ui-mass-deactivate-dialog": [
+                "libs/central-ui/ui-mass-deactivate-dialog/src/index.ts"
+            ],
+            "@vioc-angular/central-ui/ui-modules": ["libs/central-ui/ui-modules/src/index.ts"],
+            "@vioc-angular/central-ui/util-component": ["libs/central-ui/util-component/src/index.ts"],
+            "@vioc-angular/central-ui/util-message": ["libs/central-ui/util-message/src/index.ts"],
+            "@vioc-angular/central-ui/util-router": ["libs/central-ui/util-router/src/index.ts"],
+            "@vioc-angular/layout/ui-footer": ["libs/layout/ui-footer/src/index.ts"],
+            "@vioc-angular/layout/ui-header": ["libs/layout/ui-header/src/index.ts"],
+            "@vioc-angular/layout/ui-sidenav": ["libs/layout/ui-sidenav/src/index.ts"],
+            "@vioc-angular/security/data-access-security": ["libs/security/data-access-security/src/index.ts"],
+            "@vioc-angular/security/feature-forbidden": ["libs/security/feature-forbidden/src/index.ts"],
+            "@vioc-angular/security/feature-login": ["libs/security/feature-login/src/index.ts"],
+            "@vioc-angular/security/feature-logout-when-idle": ["libs/security/feature-logout-when-idle/src/index.ts"],
+            "@vioc-angular/security/util-authentication": ["libs/security/util-authentication/src/index.ts"],
+            "@vioc-angular/security/util-authorization": ["libs/security/util-authorization/src/index.ts"],
+            "@vioc-angular/shared/common-api-models": ["libs/shared/common-api-models/src/index.ts"],
+            "@vioc-angular/shared/common-event-models": ["libs/shared/common-event-models/src/index.ts"],
+            "@vioc-angular/shared/common-feature-flag": ["libs/shared/common-feature-flag/src/index.ts"],
+            "@vioc-angular/shared/common-functionality": ["libs/shared/common-functionality/src/index.ts"],
+            "@vioc-angular/shared/common-logging": ["libs/shared/common-logging/src/index.ts"],
+            "@vioc-angular/shared/common-websocket": ["libs/shared/common-websocket/src/index.ts"],
+            "@vioc-angular/shared/data-access-dropdown-column": [
+                "libs/shared/data-access-dropdown-column/src/index.ts"
+            ],
+            "@vioc-angular/shared/data-access-feature-flag": ["libs/shared/data-access-feature-flag/src/index.ts"],
+            "@vioc-angular/shared/data-access-message": ["libs/shared/data-access-message/src/index.ts"],
+            "@vioc-angular/shared/data-access-router-history": ["libs/shared/data-access-router-history/src/index.ts"],
+            "@vioc-angular/shared/data-access-search": ["libs/shared/data-access-search/src/index.ts"],
+            "@vioc-angular/shared/feature-dropdown-column": ["libs/shared/feature-dropdown-column/src/index.ts"],
+            "@vioc-angular/shared/feature-error": ["libs/shared/feature-error/src/index.ts"],
+            "@vioc-angular/shared/feature-feature-flag": ["libs/shared/feature-feature-flag/src/index.ts"],
+            "@vioc-angular/shared/feature-mass-update": ["libs/shared/feature-mass-update/src/index.ts"],
+            "@vioc-angular/shared/feature-search": ["libs/shared/feature-search/src/index.ts"],
+            "@vioc-angular/shared/ui-action-bar": ["libs/shared/ui-action-bar/src/index.ts"],
+            "@vioc-angular/shared/ui-add-remove-button": ["libs/shared/ui-add-remove-button/src/index.ts"],
+            "@vioc-angular/shared/ui-audit": ["libs/shared/ui-audit/src/index.ts"],
+            "@vioc-angular/shared/ui-button": ["libs/shared/ui-button/src/index.ts"],
+            "@vioc-angular/shared/ui-currency-prefix": ["libs/shared/ui-currency-prefix/src/index.ts"],
+            "@vioc-angular/shared/ui-date-range-input": ["libs/shared/ui-date-range-input/src/index.ts"],
+            "@vioc-angular/shared/ui-dialog": ["libs/shared/ui-dialog/src/index.ts"],
+            "@vioc-angular/shared/ui-drop-list": ["libs/shared/ui-drop-list/src/index.ts"],
+            "@vioc-angular/shared/ui-file-upload": ["libs/shared/ui-file-upload/src/index.ts"],
+            "@vioc-angular/shared/ui-filtered-input": ["libs/shared/ui-filtered-input/src/index.ts"],
+            "@vioc-angular/shared/ui-grid": ["libs/shared/ui-grid/src/index.ts"],
+            "@vioc-angular/shared/ui-info-button": ["libs/shared/ui-info-button/src/index.ts"],
+            "@vioc-angular/shared/ui-loading": ["libs/shared/ui-loading/src/index.ts"],
+            "@vioc-angular/shared/ui-manage-column": ["libs/shared/ui-manage-column/src/index.ts"],
+            "@vioc-angular/shared/ui-message": ["libs/shared/ui-message/src/index.ts"],
+            "@vioc-angular/shared/ui-paginator": ["libs/shared/ui-paginator/src/index.ts"],
+            "@vioc-angular/shared/ui-select-and-go": ["libs/shared/ui-select-and-go/src/index.ts"],
+            "@vioc-angular/shared/ui-slide-toggle": ["libs/shared/ui-slide-toggle/src/index.ts"],
+            "@vioc-angular/shared/ui-stepper-navigation": ["libs/shared/ui-stepper-navigation/src/index.ts"],
+            "@vioc-angular/shared/ui-table": ["libs/shared/ui-table/src/index.ts"],
+            "@vioc-angular/shared/util-api": ["libs/shared/util-api/src/index.ts"],
+            "@vioc-angular/shared/util-assets": ["libs/shared/util-assets/src/index.ts"],
+            "@vioc-angular/shared/util-column": ["libs/shared/util-column/src/index.ts"],
+            "@vioc-angular/shared/util-data-modifying": ["libs/shared/util-data-modifying/src/index.ts"],
+            "@vioc-angular/shared/util-form": ["libs/shared/util-form/src/index.ts"],
+            "@vioc-angular/shared/util-google-analytics": ["libs/shared/util-google-analytics/src/index.ts"],
+            "@vioc-angular/shared/util-state": ["libs/shared/util-state/src/index.ts"],
+            "@vioc-angular/test/util-test": ["libs/test/util-test/src/index.ts"],
+            "@vioc-angular/ui-kit/atoms/badge": ["libs/ui-kit/atoms/badge/src/index.ts"],
+            "@vioc-angular/ui-kit/atoms/button": ["libs/ui-kit/atoms/button/src/index.ts"],
+            "@vioc-angular/ui-kit/atoms/card-content": ["libs/ui-kit/atoms/card-content/src/index.ts"],
+            "@vioc-angular/ui-kit/atoms/card-title": ["libs/ui-kit/atoms/card-title/src/index.ts"],
+            "@vioc-angular/ui-kit/atoms/content-error": ["libs/ui-kit/atoms/content-error/src/index.ts"],
+            "@vioc-angular/ui-kit/atoms/divider": ["libs/ui-kit/atoms/divider/src/index.ts"],
+            "@vioc-angular/ui-kit/atoms/simple-table": ["libs/ui-kit/atoms/simple-table/src/index.ts"],
+            "@vioc-angular/ui-kit/atoms/status": ["libs/ui-kit/atoms/status/src/index.ts"],
+            "@vioc-angular/ui-kit/molecules/card": ["libs/ui-kit/molecules/card/src/index.ts"],
+            "@vioc-angular/ui-kit/storybook": ["libs/ui-kit/storybook/src/index.ts"]
+        },
+        "rootDir": ".",
+        "skipDefaultLibCheck": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "target": "es2015",
+        "typeRoots": ["node_modules/@types"]
+    },
+    "exclude": ["node_modules", "tmp", "**/*.mock.ts", "**/util-test/**/*.ts"]
+}

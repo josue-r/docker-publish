@@ -1,0 +1,26 @@
+import { Injectable } from '@angular/core';
+import { Described } from '@vioc-angular/shared/common-functionality';
+import { CachedState } from '@vioc-angular/shared/util-state';
+import { <%= classify(domain) %>, <%= classify(domain) %>Id } from '../model/<%= dasherize(domain) %>.model';
+
+@Injectable({ providedIn: 'root' })
+export class <%= classify(domain) %>State {
+
+//
+// TODO: Implement caching as required and other state methods
+//
+//  Example:
+//  private readonly findActiveByTypeCache = new CachedState<Described[]>({ evictionStrategy: 'lru', maxSize: 20 });
+//
+//  /** Returns the cached active objects for the specified type or undefined if not cached */
+//  findActiveByType(type: string): Observable<Described[]> | undefined {
+//      return this.findActiveByTypeCache.get(type);
+//  }
+//
+//  /**
+//   * Caches the passed objects for the spefified type.
+//   */
+//  cacheActiveByType(type: string, commonCodes: Observable<Described[]>): Observable<Described[]> {
+//      return this.findActiveByTypeCache.put(type, commonCodes);
+//  }
+}

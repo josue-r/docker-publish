@@ -1,0 +1,44 @@
+<vioc-angular-search-page
+    #searchPage
+    [entityType]="'Product'"
+    [searchPageFacade]="productFacade"
+    [columns]="columns"
+    [defaultSorts]="defaultSorts"
+    [routePathVariables]="toCode"
+    [gridFormOptions]="gridFormOptions"
+    [selectionActionsTemplate]="selectionActions"
+    [actionsTemplate]="actions"
+>
+    <ng-template #actions>
+        <button
+            mat-button
+            color="primary"
+            id="add-button"
+            *ngIf="searchPage.hasAddAccess"
+            class="action-button"
+            [routerLink]="['../add']"
+            >Add Product</button
+        >
+    </ng-template>
+    <ng-template #selectionActions>
+        <button
+            mat-button
+            color="primary"
+            *ngIf="searchPage.hasEditAccess"
+            class="action-button"
+            disableButtonClick
+            (disableClick)="activate()"
+            >Activate</button
+        >
+        <button
+            mat-button
+            color="primary"
+            *ngIf="searchPage.hasEditAccess"
+            class="action-button"
+            disableButtonClick
+            (disableClick)="loadUsage()"
+            >Deactivate</button
+        >
+    </ng-template>
+    <vioc-angular-mass-deactivate-dialog (deactivate)="deactivate($event)"></vioc-angular-mass-deactivate-dialog>
+</vioc-angular-search-page>

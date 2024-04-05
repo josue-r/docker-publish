@@ -1,0 +1,68 @@
+<vioc-angular-dialog
+    [name]="'Deactivate'"
+    [content]="content"
+    [actions]="actions"
+    #deactivatedialog
+></vioc-angular-dialog>
+<ng-template #content>
+    <div *viocAngularLoading="!isLoading; class: 'section'">
+        <div mat-dialog-content class="deactivation-content">
+            <div *ngIf="selection.hasValue()" class="primary-theme-text selection-counter">
+                {{ selection.selected.length }} items selected
+            </div>
+            <mat-table [dataSource]="resources" class="deactivation-table">
+                <ng-container matColumnDef="select">
+                    <mat-header-cell *matHeaderCellDef>
+                        <mat-checkbox
+                            id="master-toggle"
+                            (change)="$event ? masterToggle() : null"
+                            [checked]="isAllSelected()"
+                        >
+                        </mat-checkbox>
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let row" (click)="$event.stopPropagation()">
+                        <mat-checkbox
+                            (change)="$event ? selection.toggle(row) : null"
+                            [checked]="selection.isSelected(row)"
+                        >
+                        </mat-checkbox>
+                    </mat-cell>
+                </ng-container>
+                <ng-container matColumnDef="code" class="default">
+                    <mat-header-cell *matHeaderCellDef>Code</mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{ row.description }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="companies" class="default">
+                    <mat-header-cell *matHeaderCellDef>Company Active Records</mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{ row.companyResourceCount }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="stores" class="default">
+                    <mat-header-cell *matHeaderCellDef>Store Active Records</mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{ row.storeResourceCount }}</mat-cell>
+                </ng-container>
+
+                <ng-container matColumnDef="implication" class="implication">
+                    <mat-header-cell *matHeaderCellDef>Implications</mat-header-cell>
+                    <mat-cell *matCellDef="let row">{{ implication(row) }}</mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+            </mat-table>
+        </div>
+    </div>
+</ng-template>
+<ng-template #actions>
+    <button mat-stroked-button id="cancel-confirm-button" class="action-button" (click)="cancel()">Cancel</button>
+    <button
+        mat-raised-button
+        color="primary"
+        id="deactivate-selected-button"
+        class="action-button"
+        [disabled]="!selection.hasValue()"
+        (click)="deactivateSelected()"
+    >
+        Deactivate Selected
+    </button>
+</ng-template>

@@ -1,0 +1,30 @@
+@import 'variables';
+
+.items-list {
+    flex-grow: 1;
+    padding: 0 16px;
+    min-width: 230px;
+    max-width: 330px;
+
+    .draggable-list {
+        padding: 10px 0;
+        border: $solid-gray-border;
+        min-height: 150px;
+        max-height: 400px;
+        overflow: auto;
+
+        .item {
+            display: flex;
+            align-items: center;
+            padding: 2px 16px;
+
+            &:hover {
+                color: #009cd9;
+            }
+
+            &.selected {
+                background: $background-gray;
+            }
+        }
+    }
+}

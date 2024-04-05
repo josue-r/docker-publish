@@ -1,0 +1,53 @@
+@import 'variables';
+
+.manage-columns {
+    min-width: 600px;
+    max-width: 800px;
+    display: flex;
+
+    .column-actions {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-top: 1.5rem;
+
+        button {
+            display: block;
+        }
+    }
+
+    .reorder-column-list {
+        display: flex;
+        align-items: center;
+    }
+
+    .column-group-panel ::ng-deep {
+        box-shadow: none;
+        background: none;
+
+        .column-group-panel-header ::ng-deep {
+            height: fit-content !important;
+            font-size: initial;
+            font-weight: initial;
+            padding: 0px;
+
+            .mat-expansion-panel-header-title {
+                align-items: center;
+            }
+
+            .mat-expansion-indicator {
+                margin: 0 5px 0 0;
+            }
+        }
+
+        .mat-expansion-panel-body {
+            padding: 0 24px 0px;
+        }
+
+        div.draggable-list {
+            border: none;
+            min-height: initial;
+            padding: 0px;
+        }
+    }
+}

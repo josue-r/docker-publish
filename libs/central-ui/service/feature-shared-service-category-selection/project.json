@@ -1,0 +1,21 @@
+{
+    "name": "central-ui-service-feature-shared-service-category-selection",
+    "$schema": "../../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/central-ui/service/feature-shared-service-category-selection/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/central-ui/service/feature-shared-service-category-selection/jest.config.ts"
+            }
+        }
+    },
+    "generators": {
+        "@nx/angular:component": {
+            "styleext": "sass"
+        }
+    },
+    "tags": ["scope:central-ui", "type:feature-shared"]
+}

@@ -1,0 +1,8 @@
+<mat-toolbar color="primary" class="app-toolbar" [ngStyle]="styles">
+    <span class="page-title">{{ title }}</span>
+    <span class="fill-remaining-space"></span>
+    <ng-container [ngTemplateOutlet]="appMenu"></ng-container>
+</mat-toolbar>
+<span class="app-logo">
+    <ng-container [ngTemplateOutlet]="appLogo"></ng-container>
+</span>

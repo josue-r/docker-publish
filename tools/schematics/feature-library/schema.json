@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/schema",
+    "id": "feature-library",
+    "type": "object",
+    "properties": {
+        "group": {
+            "type": "string",
+            "description": "A group name that contains multiple unique domains. For example, the 'product' group would contain the 'store-product' and 'product-catalog' domains, among others",
+            "x-prompt": "What is the group?  For example, if you are creating a 'feature-store-product', the group would be 'product'"
+        },
+        "domain": {
+            "type": "string",
+            "description": "The unique domain that this data access library will focus on",
+            "x-prompt": "What is the domain?  For example, if you are creating a 'feature-store-product', the domain would be 'store-product'"
+        }
+    },
+    "required": []
+}

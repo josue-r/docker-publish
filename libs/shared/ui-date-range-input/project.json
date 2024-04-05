@@ -1,0 +1,22 @@
+{
+    "name": "shared-ui-date-range-input",
+    "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+    "projectType": "library",
+    "sourceRoot": "libs/shared/ui-date-range-input/src",
+    "prefix": "vioc-angular",
+    "targets": {
+        "test": {
+            "executor": "@nx/jest:jest",
+            "options": {
+                "jestConfig": "libs/shared/ui-date-range-input/jest.config.ts",
+                "passWithNoTests": true
+            }
+        }
+    },
+    "generators": {
+        "@nx/angular:component": {
+            "style": "sass"
+        }
+    },
+    "tags": ["scope:shared", "type:ui"]
+}

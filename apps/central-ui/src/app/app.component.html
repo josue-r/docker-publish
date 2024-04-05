@@ -1,0 +1,59 @@
+<ng-template #pageContents let-isAuthenticated>
+    <mat-sidenav-container class="sidenav-container">
+        <mat-sidenav
+            class="app-sidenav not-printable"
+            #snav
+            [mode]="'side'"
+            [fixedInViewport]="true"
+            opened="true"
+            [disableClose]="true"
+            *ngIf="isAuthenticated"
+        >
+            <vioc-angular-sidenav
+                [activeMenu]="activeMenu$ | async"
+                [menu]="menu$ | async"
+                [homeLogo]="homeLogo"
+                (navigate)="navigate($event)"
+                (goHome)="goHome()"
+                *ngIf="isAuthenticated"
+            ></vioc-angular-sidenav>
+        </mat-sidenav>
+        <mat-sidenav-content class="main-content">
+            <vioc-angular-header
+                class="app-header not-printable"
+                [styles]="headerStyles"
+                [appMenu]="appMenu"
+                [appLogo]="appLogo"
+                [title]="title$ | async"
+                *ngIf="isAuthenticated"
+            ></vioc-angular-header>
+            <main class="main-page">
+                <router-outlet></router-outlet>
+                <div id="watermark">{{ watermark }}</div>
+            </main>
+            <vioc-angular-footer *ngIf="isAuthenticated" [version]="version"></vioc-angular-footer>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</ng-template>
+<div class="page-container">
+    <ng-container *ngTemplateOutlet="pageContents; context: { $implicit: authenticated | async }"></ng-container>
+</div>
+<ng-template #appMenu>
+    <button id="about-button" mat-button class="header-item" (click)="showAbout()">
+        <span>About</span>
+    </button>
+    <button mat-button [matMenuTriggerFor]="headerMenu" class="header-item">
+        <span id="user-name">{{ (user | async)?.name }}</span>
+        <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #headerMenu="matMenu" [overlapTrigger]="false">
+        <button id="vui-logout-menu" mat-menu-item (click)="logout()"> Logout </button>
+    </mat-menu>
+</ng-template>
+
+<ng-template #appLogo>
+    <img src="{{ appLogoImage }}" alt="App Name" (click)="goHome()" class="app-logo" />
+</ng-template>
+<vioc-angular-messages></vioc-angular-messages>
+<vioc-angular-logout-when-idle></vioc-angular-logout-when-idle>
+<vioc-angular-about-dialog></vioc-angular-about-dialog>

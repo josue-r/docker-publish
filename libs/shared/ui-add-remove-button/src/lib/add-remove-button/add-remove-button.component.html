@@ -1,0 +1,24 @@
+<div class="add-remove-button-container">
+    <button
+        [id]="removeButtonId"
+        class="remove-button"
+        [ngClass]="{ hidden: !removeButtonDisplayed }"
+        mat-icon-button
+        (click)="removeButtonClicked()"
+        type="button"
+    >
+        <mat-icon>cancel</mat-icon>
+    </button>
+    <button
+        [id]="addButtonId"
+        class="add-button"
+        [ngClass]="{ hidden: !addButtonDisplayed }"
+        mat-icon-button
+        (click)="addButtonClicked()"
+        type="button"
+        [disabled]="addButtonDisabled"
+        color="primary"
+    >
+        <mat-icon>add_circle</mat-icon>
+    </button>
+</div>

@@ -1,0 +1,125 @@
+@import 'variables.scss';
+
+.nav-search-focused {
+    position: relative;
+    border-bottom: $solid-gray-border;
+    height: 72px;
+    border-top: 1px solid transparent;
+    text-align: center;
+    width: 240px;
+    border-right: $solid-gray-border;
+    color: $blue;
+    background: #fff;
+
+    /* Adding a top border only to the extended portion to prevent the border from doubling up. */
+    &::after {
+        position: absolute;
+        left: $side-nav-width;
+        right: 0;
+        top: -2px;
+        border-top: $solid-gray-border;
+        content: '';
+    }
+
+    input {
+        text-indent: 30px;
+        margin: 8px 30px 3px;
+        box-sizing: border-box;
+        outline: none;
+        font-size: 14px;
+        padding: 8px;
+        background-color: transparent;
+        color: rgba(0, 0, 0, 0.87);
+        width: 180px;
+        border: 2px solid $blue;
+        border-radius: 10em;
+    }
+
+    .nav-title-wrapper {
+        width: $side-nav-width;
+        .nav-title {
+            color: $blue;
+        }
+    }
+
+    .mat-icon {
+        position: absolute;
+        top: 10px;
+        left: 36px;
+        font-size: 32px;
+        height: 33px;
+        width: 33px;
+    }
+}
+
+.sub-nav-toggler {
+    color: $body-copy;
+    height: 73px;
+    border-bottom: $solid-gray-border;
+
+    &:hover {
+        .nav-icon,
+        .nav-title {
+            color: $blue;
+            letter-spacing: normal;
+        }
+    }
+
+    ::ng-deep .mdc-list-item__content {
+        /* TODO: ng-deep is deprecated, but there's no replacement as of yet */
+        display: block;
+        text-align: center;
+        padding-top: 5px;
+
+        .nav-icon {
+            margin: 0 auto;
+            width: 45px;
+            height: 45px;
+            color: $body-copy;
+
+            .mat-icon {
+                font-size: 32px;
+                width: 32px;
+                height: 32px;
+                line-height: 1.4;
+                overflow: visible;
+            }
+        }
+
+        .current-page {
+            .nav-icon {
+                background: $blue;
+                border-radius: 50%;
+                color: white;
+            }
+            .nav-title {
+                color: $blue;
+            }
+        }
+
+        .nav-title-wrapper {
+            width: 100%;
+        }
+    }
+}
+
+.nav-title-wrapper {
+    height: 22px;
+    display: table;
+}
+
+.nav-title {
+    color: $body-copy;
+    font-size: 10px;
+    line-height: 1;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+// Setting the width for the search selections
+::ng-deep .cdk-overlay-pane {
+    /* TODO: ng-deep is deprecated, but there's no replacement as of yet */
+    .mat-mdc-autocomplete-panel {
+        min-width: 245px;
+    }
+}

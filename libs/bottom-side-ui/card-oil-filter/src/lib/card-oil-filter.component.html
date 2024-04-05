@@ -1,0 +1,18 @@
+<vioc-card
+    [title]="titleConfiguration.label"
+    [titleAlign]="titleConfiguration.align"
+    [titleColor]="titleConfiguration.color"
+    [titleSize]="titleConfiguration.size"
+    class="oil_filter_card"
+>
+    <div class="oil_filter_card--client">
+        <vioc-card-content
+            *ngFor="let item of partsContent; index as i"
+            [title]="item.title"
+            [titleColor]="contentTitleColor"
+            [description]="item.notes"
+            [size]="contentSize"
+        ></vioc-card-content>
+        <vioc-content-error *ngIf="apiError" [description]="apiErrorMessage" [size]="contentSize"></vioc-content-error>
+    </div>
+</vioc-card>

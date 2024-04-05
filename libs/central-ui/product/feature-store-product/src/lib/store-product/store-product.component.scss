@@ -1,0 +1,13 @@
+@import 'variables';
+
+.ordering.section {
+    margin-bottom: 8px;
+}
+.hint-error {
+    color: $red;
+}
+
+::ng-deep .mat-form-field-datepicker .mat-mdc-form-field-infix {
+    // reduce minimum input size to display datepicker
+    min-width: 80px !important;
+}

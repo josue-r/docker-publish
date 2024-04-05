@@ -1,0 +1,159 @@
+<vioc-angular-loading-overlay [loading]="isLoading">
+    <form *viocAngularLoading="form" [formGroup]="form">
+        <div class="page">
+            <div class="actions" *ngIf="!accessMode.isAdd">
+                <vioc-angular-action-bar>
+                    <button
+                        mat-stroked-button
+                        id="apply-action"
+                        *ngIf="form.enabled"
+                        [disabled]="!form.valid"
+                        color="primary"
+                        disableButtonClick
+                        (disableClick)="apply()"
+                        >APPLY</button
+                    >
+                    <button
+                        mat-raised-button
+                        id="save-action"
+                        *ngIf="form.enabled"
+                        [disabled]="!form.valid"
+                        color="primary"
+                        disableButtonClick
+                        (disableClick)="save()"
+                        >SAVE</button
+                    >
+                </vioc-angular-action-bar>
+            </div>
+            <div class="section">
+                <span class="header">Company Product Information</span>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item">
+                        <mat-label>Company</mat-label>
+                        <input
+                            matInput
+                            placeholder="Company"
+                            type="text"
+                            [value]="companyCodeAndDescription"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item">
+                        <mat-label>Product{{ accessMode.isAdd ? 's' : '' }}</mat-label>
+                        <textarea
+                            matInput
+                            id="product"
+                            cdkTextareaAutosize
+                            placeholder="Product{{ accessMode.isAdd ? 's' : '' }}"
+                            [value]="form.get('product').value.code"
+                            [disabled]="true"
+                        ></textarea>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item large" *ngIf="!accessMode.isAdd">
+                        <mat-label>Product Category</mat-label>
+                        <input
+                            matInput
+                            id="product-category"
+                            placeholder="Product Category"
+                            type="text"
+                            [value]="form.getControl('product').value.productCategory.code"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-checkbox matInput class="flex-item small" formControlName="active"> Active </mat-checkbox>
+                </div>
+                <div class="flex-container">
+                    <mat-form-field class="flex-item large" *ngIf="!accessMode.isAdd">
+                        <mat-label>Invoice Description</mat-label>
+                        <input
+                            matInput
+                            id="invoice-description"
+                            placeholder="Invoice Description"
+                            type="text"
+                            [value]="form.get('product').value.description"
+                            [disabled]="true"
+                        />
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>UOM</mat-label>
+                        <mat-select
+                            matInput
+                            formControlName="uom"
+                            placeholder="UOM"
+                            [compareWith]="describedEquals"
+                            required
+                            id="UOM"
+                        >
+                            <mat-option></mat-option>
+                            <mat-option *ngFor="let uom of unitOfMeasures$ | async" [value]="uom">
+                                {{ uom.code }} - {{ uom.description }}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *viocAngularFormError="form.get('uom').errors; let error">{{ error }}</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="flex-item small">
+                        <mat-label>Report Order</mat-label>
+                        <input
+                            matInput
+                            placeholder="Report Order"
+                            type="text"
+                            formControlName="reportOrder"
+                            required
+                            id="reportOrder"
+                        />
+                        <mat-error *viocAngularFormError="form.get('reportOrder').errors; let error">
+                            {{ error }}
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <ng-container *viocAngularLoading="(costAccounts$ | async) && (salesAccounts$ | async)">
+                <div
+                    class="section"
+                    *ngIf="(costAccounts$ | async)?.length > 0 && (salesAccounts$ | async)?.length > 0"
+                >
+                    <div>
+                        <span class="header">Accounting</span>
+                        <div class="flex-container">
+                            <mat-form-field class="flex-item">
+                                <mat-label>Cost Account</mat-label>
+                                <mat-select
+                                    matInput
+                                    formControlName="costAccount"
+                                    placeholder="Cost Account"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let account of costAccounts$ | async" [value]="account">
+                                        {{ account.description }} - {{ account.code }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="form.get('costAccount').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                            <mat-form-field class="flex-item">
+                                <mat-label>Sales Account</mat-label>
+                                <mat-select
+                                    matInput
+                                    formControlName="salesAccount"
+                                    placeholder="Sales Account"
+                                    [compareWith]="describedEquals"
+                                >
+                                    <mat-option></mat-option>
+                                    <mat-option *ngFor="let account of salesAccounts$ | async" [value]="account">
+                                        {{ account.description }} - {{ account.code }}
+                                    </mat-option>
+                                </mat-select>
+                                <mat-error *viocAngularFormError="form.get('salesAccount').errors; let error">
+                                    {{ error }}
+                                </mat-error>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+        <vioc-angular-audit-trail [audited]="model"></vioc-angular-audit-trail>
+    </form>
+</vioc-angular-loading-overlay>

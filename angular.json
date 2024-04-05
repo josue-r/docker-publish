@@ -1,0 +1,2841 @@
+{
+    "cli": {
+        "analytics": false
+    },
+    "projects": {
+        "bottom-side-ui": {
+            "projectType": "application",
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "style": "scss"
+                }
+            },
+            "root": "apps/bottom-side-ui",
+            "sourceRoot": "apps/bottom-side-ui/src",
+            "prefix": "vioc-angular",
+            "i18n": {
+                "sourceLocale": "en-US"
+            },
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "allowedCommonJsDependencies": ["lodash", "http-status-codes"],
+                        "outputPath": "dist/apps/bottom-side-ui",
+                        "index": "apps/bottom-side-ui/src/index.html",
+                        "main": "apps/bottom-side-ui/src/main.ts",
+                        "polyfills": "apps/bottom-side-ui/src/polyfills.ts",
+                        "tsConfig": "apps/bottom-side-ui/tsconfig.app.json",
+                        "aot": true,
+                        "buildOptimizer": true,
+                        "assets": [
+                            "apps/bottom-side-ui/src/favicon.ico",
+                            {
+                                "input": "libs/shared/util-assets/src/assets",
+                                "glob": "**/*",
+                                "output": "assets"
+                            }
+                        ],
+                        "styles": ["apps/bottom-side-ui/src/styles.scss"],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["libs/styles/shared-theme/src/lib", "libs/ui-kit/styles"]
+                        }
+                    },
+                    "configurations": {
+                        "deploy": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/bottom-side-ui/src/environments/environment.ts",
+                                    "with": "apps/bottom-side-ui/src/environments/environment.deploy.ts"
+                                }
+                            ],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb",
+                                    "maximumError": "10kb"
+                                }
+                            ],
+                            "deployUrl": "<%=deployUrl%>",
+                            "baseHref": "<%=baseHref%>",
+                            "index": "apps/bottom-side-ui/src/index.ejs"
+                        },
+                        "store": {
+                            "budgets": [
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb"
+                                }
+                            ],
+                            "optimization": false,
+                            "outputHashing": "all",
+                            "sourceMap": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/bottom-side-ui/src/environments/environment.ts",
+                                    "with": "apps/bottom-side-ui/src/environments/environment.store.ts"
+                                }
+                            ],
+                            "index": "apps/bottom-side-ui/.immutable/index.html"
+                        },
+                        "local": {
+                            "budgets": [
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb"
+                                }
+                            ],
+                            "optimization": false,
+                            "outputHashing": "all",
+                            "sourceMap": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/bottom-side-ui/src/environments/environment.ts",
+                                    "with": "apps/bottom-side-ui/src/environments/environment.local.ts"
+                                }
+                            ],
+                            "index": "apps/bottom-side-ui/.immutable/index.html"
+                        },
+                        "es5": {
+                            "budgets": [
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb"
+                                }
+                            ],
+                            "tsConfig": "apps/bottom-side-ui/tsconfig-es5.app.json",
+                            "optimization": false,
+                            "outputHashing": "all",
+                            "sourceMap": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/bottom-side-ui/src/environments/environment.ts",
+                                    "with": "apps/bottom-side-ui/src/environments/environment.local.ts"
+                                }
+                            ],
+                            "index": "apps/bottom-side-ui/.immutable/index.html"
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "bottom-side-ui:build"
+                    },
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "bottom-side-ui:build:production"
+                        },
+                        "local": {
+                            "browserTarget": "bottom-side-ui:build:local",
+                            "port": 4202,
+                            "ssl": true
+                        },
+                        "es5": {
+                            "browserTarget": "bottom-side-ui:build:es5",
+                            "port": 4202,
+                            "ssl": true
+                        }
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "bottom-side-ui:build"
+                    }
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "apps/bottom-side-ui/jest.config.ts"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": ["apps/bottom-side-ui/**/*.ts", "apps/bottom-side-ui/**/*.html"]
+                    }
+                }
+            },
+            "tags": ["scope:bottom-side-ui", "type:app"],
+            "implicitDependencies": ["styles-shared-theme"]
+        },
+        "central-ui": {
+            "projectType": "application",
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "style": "scss"
+                }
+            },
+            "root": "apps/central-ui",
+            "sourceRoot": "apps/central-ui/src",
+            "prefix": "vioc-angular",
+            "i18n": {
+                "sourceLocale": "en-US"
+            },
+            "architect": {
+                "build": {
+                    "builder": "@angular-devkit/build-angular:browser",
+                    "options": {
+                        "allowedCommonJsDependencies": ["oidc-client", "lodash", "http-status-codes"],
+                        "outputPath": "dist/apps/central-ui",
+                        "index": "apps/central-ui/src/index.html",
+                        "main": "apps/central-ui/src/main.ts",
+                        "polyfills": "apps/central-ui/src/polyfills.ts",
+                        "tsConfig": "apps/central-ui/tsconfig.app.json",
+                        "aot": true,
+                        "buildOptimizer": true,
+                        "assets": [
+                            "apps/central-ui/src/favicon.ico",
+                            {
+                                "input": "libs/shared/util-assets/src/assets",
+                                "glob": "**/*",
+                                "output": "assets"
+                            }
+                        ],
+                        "styles": ["apps/central-ui/src/styles.scss"],
+                        "stylePreprocessorOptions": {
+                            "includePaths": ["libs/styles/shared-theme/src/lib"]
+                        }
+                    },
+                    "configurations": {
+                        "deploy": {
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/central-ui/src/environments/environment.ts",
+                                    "with": "apps/central-ui/src/environments/environment.deploy.ts"
+                                }
+                            ],
+                            "optimization": true,
+                            "outputHashing": "all",
+                            "sourceMap": false,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "budgets": [
+                                {
+                                    "type": "initial",
+                                    "maximumWarning": "2mb",
+                                    "maximumError": "5mb"
+                                },
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb",
+                                    "maximumError": "10kb"
+                                }
+                            ],
+                            "deployUrl": "<%=deployUrl%>",
+                            "baseHref": "<%=baseHref%>",
+                            "index": "apps/central-ui/src/index.ejs"
+                        },
+                        "local": {
+                            "budgets": [
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb"
+                                }
+                            ],
+                            "optimization": false,
+                            "outputHashing": "all",
+                            "sourceMap": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/central-ui/src/environments/environment.ts",
+                                    "with": "apps/central-ui/src/environments/environment.local.ts"
+                                }
+                            ],
+                            "index": "apps/central-ui/.immutable/index.html"
+                        },
+                        "es5": {
+                            "budgets": [
+                                {
+                                    "type": "anyComponentStyle",
+                                    "maximumWarning": "6kb"
+                                }
+                            ],
+                            "tsConfig": "apps/central-ui/tsconfig-es5.app.json",
+                            "optimization": false,
+                            "outputHashing": "all",
+                            "sourceMap": true,
+                            "namedChunks": false,
+                            "aot": true,
+                            "extractLicenses": true,
+                            "vendorChunk": false,
+                            "buildOptimizer": true,
+                            "fileReplacements": [
+                                {
+                                    "replace": "apps/central-ui/src/environments/environment.ts",
+                                    "with": "apps/central-ui/src/environments/environment.local.ts"
+                                }
+                            ],
+                            "index": "apps/central-ui/.immutable/index.html"
+                        }
+                    }
+                },
+                "serve": {
+                    "builder": "@angular-devkit/build-angular:dev-server",
+                    "options": {
+                        "browserTarget": "central-ui:build"
+                    },
+                    "configurations": {
+                        "production": {
+                            "browserTarget": "central-ui:build:production"
+                        },
+                        "local": {
+                            "browserTarget": "central-ui:build:local",
+                            "port": 4202,
+                            "ssl": true
+                        },
+                        "es5": {
+                            "browserTarget": "central-ui:build:es5",
+                            "port": 4202,
+                            "ssl": true
+                        }
+                    }
+                },
+                "extract-i18n": {
+                    "builder": "@angular-devkit/build-angular:extract-i18n",
+                    "options": {
+                        "browserTarget": "central-ui:build"
+                    }
+                },
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "apps/central-ui/jest.config.ts"
+                    }
+                },
+                "lint": {
+                    "builder": "@angular-eslint/builder:lint",
+                    "options": {
+                        "lintFilePatterns": ["apps/central-ui/**/*.ts", "apps/central-ui/**/*.html"]
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:app"],
+            "implicitDependencies": ["styles-shared-theme"]
+        },
+        "central-ui-config-data-access-common-code": {
+            "projectType": "library",
+            "root": "libs/central-ui/config/data-access-common-code",
+            "sourceRoot": "libs/central-ui/config/data-access-common-code/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/config/data-access-common-code/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-config-data-access-parameter": {
+            "projectType": "library",
+            "root": "libs/central-ui/config/data-access-parameter",
+            "sourceRoot": "libs/central-ui/config/data-access-parameter/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/config/data-access-parameter/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-config-feature-common-code": {
+            "projectType": "library",
+            "root": "libs/central-ui/config/feature-common-code",
+            "sourceRoot": "libs/central-ui/config/feature-common-code/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/config/feature-common-code/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-customer-data-access-invoice": {
+            "root": "libs/central-ui/customer/data-access-invoice",
+            "sourceRoot": "libs/central-ui/customer/data-access-invoice/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["libs/central-ui/customer/data-access-invoice"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/customer/data-access-invoice/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-customer-feature-invoice": {
+            "root": "libs/central-ui/customer/feature-invoice",
+            "sourceRoot": "libs/central-ui/customer/feature-invoice/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/customer/feature-invoice"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/customer/feature-invoice/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-dashboard-feature-dashboard": {
+            "projectType": "library",
+            "root": "libs/central-ui/dashboard/feature-dashboard",
+            "sourceRoot": "libs/central-ui/dashboard/feature-dashboard/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/dashboard/feature-dashboard/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-data-access-menu": {
+            "projectType": "library",
+            "root": "libs/central-ui/data-access-menu",
+            "sourceRoot": "libs/central-ui/data-access-menu/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/data-access-menu/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-discount-data-access-discount": {
+            "root": "libs/central-ui/discount/data-access-discount",
+            "sourceRoot": "libs/central-ui/discount/data-access-discount/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/discount/data-access-discount"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/discount/data-access-discount/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-discount-data-access-offer-content": {
+            "root": "libs/central-ui/discount/data-access-offer-content",
+            "sourceRoot": "libs/central-ui/discount/data-access-offer-content/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/discount/data-access-offer-content"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/discount/data-access-offer-content/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-discount-data-access-offers": {
+            "root": "libs/central-ui/discount/data-access-offers",
+            "sourceRoot": "libs/central-ui/discount/data-access-offers/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/discount/data-access-offers"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/discount/data-access-offers/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-discount-feature-discounts": {
+            "root": "libs/central-ui/discount/feature-discounts",
+            "sourceRoot": "libs/central-ui/discount/feature-discounts/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/discount/feature-discounts"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/discount/feature-discounts/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-discount-feature-offer-content": {
+            "root": "libs/central-ui/discount/feature-offer-content",
+            "sourceRoot": "libs/central-ui/discount/feature-offer-content/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/discount/feature-offer-content"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/discount/feature-offer-content/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-discount-feature-offers": {
+            "root": "libs/central-ui/discount/feature-offers",
+            "sourceRoot": "libs/central-ui/discount/feature-offers/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/discount/feature-offers"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/discount/feature-offers/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-feature-about": {
+            "projectType": "library",
+            "root": "libs/central-ui/feature-about",
+            "sourceRoot": "libs/central-ui/feature-about/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/feature-about/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-feature-global-error-handler": {
+            "projectType": "library",
+            "root": "libs/central-ui/feature-global-error-handler",
+            "sourceRoot": "libs/central-ui/feature-global-error-handler/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/feature-global-error-handler/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-feature-search-page": {
+            "projectType": "library",
+            "root": "libs/central-ui/feature-search-page",
+            "sourceRoot": "libs/central-ui/feature-search-page/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/feature-search-page/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-inventory-data-access-defective-product": {
+            "root": "libs/central-ui/inventory/data-access-defective-product",
+            "sourceRoot": "libs/central-ui/inventory/data-access-defective-product/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/inventory/data-access-defective-product"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/data-access-defective-product/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-inventory-data-access-inventory-order": {
+            "projectType": "library",
+            "root": "libs/central-ui/inventory/data-access-inventory-order",
+            "sourceRoot": "libs/central-ui/inventory/data-access-inventory-order/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/data-access-inventory-order/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-inventory-data-access-inventory-transfer": {
+            "projectType": "library",
+            "root": "libs/central-ui/inventory/data-access-inventory-transfer",
+            "sourceRoot": "libs/central-ui/inventory/data-access-inventory-transfer/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/data-access-inventory-transfer/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-inventory-data-access-non-inventory-item": {
+            "root": "libs/central-ui/inventory/data-access-non-inventory-item",
+            "sourceRoot": "libs/central-ui/inventory/data-access-non-inventory-item/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/inventory/data-access-non-inventory-item"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/data-access-non-inventory-item/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            }
+        },
+        "central-ui-inventory-data-access-non-inventory-order": {
+            "root": "libs/central-ui/inventory/data-access-non-inventory-order",
+            "sourceRoot": "libs/central-ui/inventory/data-access-non-inventory-order/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/inventory/data-access-non-inventory-order"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/data-access-non-inventory-order/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-inventory-data-access-physical-inventory": {
+            "projectType": "library",
+            "root": "libs/central-ui/inventory/data-access-physical-inventory",
+            "sourceRoot": "libs/central-ui/inventory/data-access-physical-inventory/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/data-access-physical-inventory/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-inventory-data-access-product-adjustment": {
+            "root": "libs/central-ui/inventory/data-access-product-adjustment",
+            "sourceRoot": "libs/central-ui/inventory/data-access-product-adjustment/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/inventory/data-access-product-adjustment"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/data-access-product-adjustment/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-inventory-data-access-receipt-of-material": {
+            "projectType": "library",
+            "root": "libs/central-ui/inventory/data-access-receipt-of-material",
+            "sourceRoot": "libs/central-ui/inventory/data-access-receipt-of-material/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/data-access-receipt-of-material/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {},
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-inventory-data-access-vendor": {
+            "projectType": "library",
+            "root": "libs/central-ui/inventory/data-access-vendor",
+            "sourceRoot": "libs/central-ui/inventory/data-access-vendor/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/data-access-vendor/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-inventory-feature-defective-product": {
+            "root": "libs/central-ui/inventory/feature-defective-product",
+            "sourceRoot": "libs/central-ui/inventory/feature-defective-product/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/inventory/feature-defective-product"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/feature-defective-product/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-inventory-feature-inventory-order": {
+            "projectType": "library",
+            "root": "libs/central-ui/inventory/feature-inventory-order",
+            "sourceRoot": "libs/central-ui/inventory/feature-inventory-order/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/feature-inventory-order/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-inventory-feature-inventory-status": {
+            "projectType": "library",
+            "root": "libs/central-ui/inventory/feature-inventory-status",
+            "sourceRoot": "libs/central-ui/inventory/feature-inventory-status/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/feature-inventory-status/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-inventory-feature-inventory-transfer": {
+            "projectType": "library",
+            "root": "libs/central-ui/inventory/feature-inventory-transfer",
+            "sourceRoot": "libs/central-ui/inventory/feature-inventory-transfer/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/feature-inventory-transfer/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-inventory-feature-non-inventory-order": {
+            "root": "libs/central-ui/inventory/feature-non-inventory-order",
+            "sourceRoot": "libs/central-ui/inventory/feature-non-inventory-order/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/inventory/feature-non-inventory-order"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/feature-non-inventory-order/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-inventory-feature-physical-inventory": {
+            "projectType": "library",
+            "root": "libs/central-ui/inventory/feature-physical-inventory",
+            "sourceRoot": "libs/central-ui/inventory/feature-physical-inventory/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/feature-physical-inventory/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-inventory-feature-product-adjustment": {
+            "root": "libs/central-ui/inventory/feature-product-adjustment",
+            "sourceRoot": "libs/central-ui/inventory/feature-product-adjustment/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/inventory/feature-product-adjustment"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/feature-product-adjustment/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-inventory-feature-receipt-of-material": {
+            "projectType": "library",
+            "root": "libs/central-ui/inventory/feature-receipt-of-material",
+            "sourceRoot": "libs/central-ui/inventory/feature-receipt-of-material/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/inventory/feature-receipt-of-material/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-organization-company-data-access-company-export": {
+            "projectType": "library",
+            "root": "libs/central-ui/organization/company/data-access-company-export",
+            "sourceRoot": "libs/central-ui/organization/company/data-access-company-export/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/organization/company/data-access-company-export/jest.config.ts"
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-organization-data-access-company-holiday": {
+            "root": "libs/central-ui/organization/data-access-company-holiday",
+            "sourceRoot": "libs/central-ui/organization/data-access-company-holiday/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/organization/data-access-company-holiday"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/organization/data-access-company-holiday/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-organization-data-access-resources": {
+            "projectType": "library",
+            "root": "libs/central-ui/organization/data-access-resources",
+            "sourceRoot": "libs/central-ui/organization/data-access-resources/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/organization/data-access-resources/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-organization-data-access-store": {
+            "root": "libs/central-ui/organization/data-access-store",
+            "sourceRoot": "libs/central-ui/organization/data-access-store/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/organization/data-access-store"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/organization/data-access-store/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-organization-feature-company-holiday": {
+            "root": "libs/central-ui/organization/feature-company-holiday",
+            "sourceRoot": "libs/central-ui/organization/feature-company-holiday/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/organization/feature-company-holiday"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/organization/feature-company-holiday/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-organization-feature-shared-store-selection": {
+            "projectType": "library",
+            "root": "libs/central-ui/organization/feature-shared-store-selection",
+            "sourceRoot": "libs/central-ui/organization/feature-shared-store-selection/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/organization/feature-shared-store-selection/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature-shared"]
+        },
+        "central-ui-organization-feature-store": {
+            "root": "libs/central-ui/organization/feature-store",
+            "sourceRoot": "libs/central-ui/organization/feature-store/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/central-ui/organization/feature-store"],
+                    "options": {
+                        "jestConfig": "libs/central-ui/organization/feature-store/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-product-data-access-company-product": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/data-access-company-product",
+            "sourceRoot": "libs/central-ui/product/data-access-company-product/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/data-access-company-product/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-product-data-access-product": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/data-access-product",
+            "sourceRoot": "libs/central-ui/product/data-access-product/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/data-access-product/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-product-data-access-product-category": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/data-access-product-category",
+            "sourceRoot": "libs/central-ui/product/data-access-product-category/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/data-access-product-category/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-product-data-access-store-product": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/data-access-store-product",
+            "sourceRoot": "libs/central-ui/product/data-access-store-product/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/data-access-store-product/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-product-feature-company-product": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/feature-company-product",
+            "sourceRoot": "libs/central-ui/product/feature-company-product/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/feature-company-product/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-product-feature-product-catalog": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/feature-product-catalog",
+            "sourceRoot": "libs/central-ui/product/feature-product-catalog/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/feature-product-catalog/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-product-feature-product-category": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/feature-product-category",
+            "sourceRoot": "libs/central-ui/product/feature-product-category/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/feature-product-category/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {},
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-product-feature-shared-product-add-input": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/feature-shared-product-add-input",
+            "sourceRoot": "libs/central-ui/product/feature-shared-product-add-input/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/feature-shared-product-add-input/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature-shared"]
+        },
+        "central-ui-product-feature-shared-product-selection": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/feature-shared-product-selection",
+            "sourceRoot": "libs/central-ui/product/feature-shared-product-selection/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/feature-shared-product-selection/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature-shared"]
+        },
+
+        "central-ui-product-feature-shared-product-category-selection": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/feature-shared-product-category-selection",
+            "sourceRoot": "libs/central-ui/product/feature-shared-product-category-selection/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/feature-shared-product-category-selection/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature-shared"]
+        },
+
+        "central-ui-product-feature-shared-store-product-selection": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/feature-shared-store-product-selection",
+            "sourceRoot": "libs/central-ui/product/feature-shared-store-product-selection/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/feature-shared-store-product-selection/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature-shared"]
+        },
+        "central-ui-product-feature-store-product": {
+            "projectType": "library",
+            "root": "libs/central-ui/product/feature-store-product",
+            "sourceRoot": "libs/central-ui/product/feature-store-product/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/product/feature-store-product/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-service-data-access-car-fax-mapping": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/data-access-car-fax-mapping",
+            "sourceRoot": "libs/central-ui/service/data-access-car-fax-mapping/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/data-access-car-fax-mapping/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-service-data-access-car-system": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/data-access-car-system",
+            "sourceRoot": "libs/central-ui/service/data-access-car-system/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/data-access-car-system/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-service-data-access-company-service": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/data-access-company-service",
+            "sourceRoot": "libs/central-ui/service/data-access-company-service/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/data-access-company-service/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-service-data-access-service": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/data-access-service",
+            "sourceRoot": "libs/central-ui/service/data-access-service/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/data-access-service/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-service-data-access-service-category": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/data-access-service-category",
+            "sourceRoot": "libs/central-ui/service/data-access-service-category/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/data-access-service-category/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-service-data-access-store-service": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/data-access-store-service",
+            "sourceRoot": "libs/central-ui/service/data-access-store-service/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/data-access-store-service/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-service-feature-company-service": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/feature-company-service",
+            "sourceRoot": "libs/central-ui/service/feature-company-service/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/feature-company-service/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-service-feature-service-catalog": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/feature-service-catalog",
+            "sourceRoot": "libs/central-ui/service/feature-service-catalog/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/feature-service-catalog/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-service-feature-service-category": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/feature-service-category",
+            "sourceRoot": "libs/central-ui/service/feature-service-category/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/feature-service-category/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-service-feature-shared-service-selection": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/feature-shared-service-selection",
+            "sourceRoot": "libs/central-ui/service/feature-shared-service-selection/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/feature-shared-service-selection/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature-shared"]
+        },
+
+        "central-ui-service-feature-shared-service-category-selection": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/feature-shared-service-category-selection",
+            "sourceRoot": "libs/central-ui/service/feature-shared-service-category-selection/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/feature-shared-service-category-selection/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature-shared"]
+        },
+        "central-ui-service-feature-store-service": {
+            "projectType": "library",
+            "root": "libs/central-ui/service/feature-store-service",
+            "sourceRoot": "libs/central-ui/service/feature-store-service/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/service/feature-store-service/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-technical-common-technical": {
+            "projectType": "library",
+            "root": "libs/central-ui/technical/common-technical",
+            "sourceRoot": "libs/central-ui/technical/common-technical/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/technical/common-technical/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature-shared"]
+        },
+        "central-ui-technical-data-access-aces": {
+            "projectType": "library",
+            "root": "libs/central-ui/technical/data-access-aces",
+            "sourceRoot": "libs/central-ui/technical/data-access-aces/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/technical/data-access-aces/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-technical-data-access-technical-alert": {
+            "projectType": "library",
+            "root": "libs/central-ui/technical/data-access-technical-alert",
+            "sourceRoot": "libs/central-ui/technical/data-access-technical-alert/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/technical/data-access-technical-alert/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-technical-data-access-tsb": {
+            "projectType": "library",
+            "root": "libs/central-ui/technical/data-access-tsb",
+            "sourceRoot": "libs/central-ui/technical/data-access-tsb/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/technical/data-access-tsb/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:data-access"]
+        },
+        "central-ui-technical-feature-shared-document-selection": {
+            "projectType": "library",
+            "root": "libs/central-ui/technical/feature-shared-document-selection",
+            "sourceRoot": "libs/central-ui/technical/feature-shared-document-selection/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/technical/feature-shared-document-selection/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature-shared"]
+        },
+        "central-ui-technical-feature-technical-alert": {
+            "projectType": "library",
+            "root": "libs/central-ui/technical/feature-technical-alert",
+            "sourceRoot": "libs/central-ui/technical/feature-technical-alert/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/technical/feature-technical-alert/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-technical-feature-tsb": {
+            "projectType": "library",
+            "root": "libs/central-ui/technical/feature-tsb",
+            "sourceRoot": "libs/central-ui/technical/feature-tsb/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/technical/feature-tsb/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:feature"]
+        },
+        "central-ui-ui-mass-deactivate-dialog": {
+            "projectType": "library",
+            "root": "libs/central-ui/ui-mass-deactivate-dialog",
+            "sourceRoot": "libs/central-ui/ui-mass-deactivate-dialog/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/ui-mass-deactivate-dialog/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:ui"]
+        },
+        "central-ui-ui-modules": {
+            "projectType": "library",
+            "root": "libs/central-ui/ui-modules",
+            "sourceRoot": "libs/central-ui/ui-modules/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/ui-modules/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:central-ui", "type:ui"]
+        },
+        "central-ui-util-component": {
+            "projectType": "library",
+            "root": "libs/central-ui/util-component",
+            "sourceRoot": "libs/central-ui/util-component/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/util-component/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:util"]
+        },
+        "central-ui-util-message": {
+            "projectType": "library",
+            "root": "libs/central-ui/util-message",
+            "sourceRoot": "libs/central-ui/util-message/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/util-message/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:util"]
+        },
+        "central-ui-util-router": {
+            "projectType": "library",
+            "root": "libs/central-ui/util-router",
+            "sourceRoot": "libs/central-ui/util-router/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/central-ui/util-router/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:central-ui", "type:util"]
+        },
+        "data-access-security": {
+            "projectType": "library",
+            "root": "libs/security/data-access-security",
+            "sourceRoot": "libs/security/data-access-security/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/security/data-access-security/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:data-access"]
+        },
+        "security-feature-forbidden": {
+            "projectType": "library",
+            "root": "libs/security/feature-forbidden",
+            "sourceRoot": "libs/security/feature-forbidden/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/security/feature-forbidden/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:feature"]
+        },
+        "security-feature-login": {
+            "projectType": "library",
+            "root": "libs/security/feature-login",
+            "sourceRoot": "libs/security/feature-login/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/security/feature-login/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:feature"]
+        },
+        "security-feature-logout-when-idle": {
+            "projectType": "library",
+            "root": "libs/security/feature-logout-when-idle",
+            "sourceRoot": "libs/security/feature-logout-when-idle/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/security/feature-logout-when-idle/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:feature"]
+        },
+        "security-util-authentication": {
+            "projectType": "library",
+            "root": "libs/security/util-authentication",
+            "sourceRoot": "libs/security/util-authentication/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/security/util-authentication/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:util"]
+        },
+        "security-util-authorization": {
+            "projectType": "library",
+            "root": "libs/security/util-authorization",
+            "sourceRoot": "libs/security/util-authorization/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/security/util-authorization/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:util"]
+        },
+        "shared-common-api-models": {
+            "projectType": "library",
+            "root": "libs/shared/common-api-models",
+            "sourceRoot": "libs/shared/common-api-models/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/common-api-models/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:common"]
+        },
+        "shared-common-feature-flag": {
+            "projectType": "library",
+            "root": "libs/shared/common-feature-flag",
+            "sourceRoot": "libs/shared/common-feature-flag/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/common-feature-flag/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:common"]
+        },
+        "shared-common-functionality": {
+            "projectType": "library",
+            "root": "libs/shared/common-functionality",
+            "sourceRoot": "libs/shared/common-functionality/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/common-functionality/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:common"]
+        },
+        "shared-common-logging": {
+            "projectType": "library",
+            "root": "libs/shared/common-logging",
+            "sourceRoot": "libs/shared/common-logging/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/common-logging/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:common"]
+        },
+        "shared-data-access-dropdown-column": {
+            "projectType": "library",
+            "root": "libs/shared/data-access-dropdown-column",
+            "sourceRoot": "libs/shared/data-access-dropdown-column/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/data-access-dropdown-column/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:data-access"]
+        },
+        "shared-data-access-feature-flag": {
+            "projectType": "library",
+            "root": "libs/shared/data-access-feature-flag",
+            "sourceRoot": "libs/shared/data-access-feature-flag/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/data-access-feature-flag/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:data-access"]
+        },
+        "shared-data-access-message": {
+            "projectType": "library",
+            "root": "libs/shared/data-access-message",
+            "sourceRoot": "libs/shared/data-access-message/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/data-access-message/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:data-access"]
+        },
+        "shared-data-access-router-history": {
+            "projectType": "library",
+            "root": "libs/shared/data-access-router-history",
+            "sourceRoot": "libs/shared/data-access-router-history/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/data-access-router-history/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:data-access"]
+        },
+        "shared-data-access-search": {
+            "projectType": "library",
+            "root": "libs/shared/data-access-search",
+            "sourceRoot": "libs/shared/data-access-search/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/data-access-search/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:data-access"]
+        },
+        "shared-feature-dropdown-column": {
+            "projectType": "library",
+            "root": "libs/shared/feature-dropdown-column",
+            "sourceRoot": "libs/shared/feature-dropdown-column/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/feature-dropdown-column/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:feature"]
+        },
+        "shared-feature-error": {
+            "projectType": "library",
+            "root": "libs/shared/feature-error",
+            "sourceRoot": "libs/shared/feature-error/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/feature-error/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:feature"]
+        },
+        "shared-feature-feature-flag": {
+            "projectType": "library",
+            "root": "libs/shared/feature-feature-flag",
+            "sourceRoot": "libs/shared/feature-feature-flag/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/feature-feature-flag/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:feature-shared"]
+        },
+        "shared-feature-mass-update": {
+            "projectType": "library",
+            "root": "libs/shared/feature-mass-update",
+            "sourceRoot": "libs/shared/feature-mass-update/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/feature-mass-update/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:feature-shared"]
+        },
+        "shared-feature-search": {
+            "projectType": "library",
+            "root": "libs/shared/feature-search",
+            "sourceRoot": "libs/shared/feature-search/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/feature-search/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:feature-shared"]
+        },
+        "shared-ui-button": {
+            "projectType": "library",
+            "root": "libs/shared/ui-button",
+            "sourceRoot": "libs/shared/ui-button/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-button/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "shared-ui-date-range-input": {
+            "projectType": "library",
+            "root": "libs/shared/ui-date-range-input",
+            "sourceRoot": "libs/shared/ui-date-range-input/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-date-range-input/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "shared-ui-drop-list": {
+            "projectType": "library",
+            "root": "libs/shared/ui-drop-list",
+            "sourceRoot": "libs/shared/ui-drop-list/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-drop-list/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "shared-ui-file-upload": {
+            "projectType": "library",
+            "root": "libs/shared/ui-file-upload",
+            "sourceRoot": "libs/shared/ui-file-upload/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-file-upload/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "shared-ui-filtered-input": {
+            "projectType": "library",
+            "root": "libs/shared/ui-filtered-input",
+            "sourceRoot": "libs/shared/ui-filtered-input/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-filtered-input/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "shared-ui-info-button": {
+            "projectType": "library",
+            "root": "libs/shared/ui-info-button",
+            "sourceRoot": "libs/shared/ui-info-button/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-info-button/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "shared-ui-manage-column": {
+            "projectType": "library",
+            "root": "libs/shared/ui-manage-column",
+            "sourceRoot": "libs/shared/ui-manage-column/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-manage-column/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "shared-ui-message": {
+            "projectType": "library",
+            "root": "libs/shared/ui-message",
+            "sourceRoot": "libs/shared/ui-message/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-message/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "shared-ui-select-and-go": {
+            "projectType": "library",
+            "root": "libs/shared/ui-select-and-go",
+            "sourceRoot": "libs/shared/ui-select-and-go/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-select-and-go/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            },
+            "schematics": {
+                "@schematics/angular:component": {
+                    "style": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "shared-ui-slide-toggle": {
+            "root": "libs/shared/ui-slide-toggle",
+            "sourceRoot": "libs/shared/ui-slide-toggle/src",
+            "projectType": "library",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "outputs": ["coverage/libs/shared/ui-slide-toggle"],
+                    "options": {
+                        "jestConfig": "libs/shared/ui-slide-toggle/jest.config.ts",
+                        "passWithNoTests": true
+                    }
+                }
+            }
+        },
+        "shared-ui-stepper-navigation": {
+            "projectType": "library",
+            "root": "libs/shared/ui-stepper-navigation",
+            "sourceRoot": "libs/shared/ui-stepper-navigation/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-stepper-navigation/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "sass"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "shared-util-assets": {
+            "projectType": "library",
+            "root": "libs/shared/util-assets",
+            "sourceRoot": "libs/shared/util-assets/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/util-assets/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:util"]
+        },
+        "shared-util-google-analytics": {
+            "projectType": "library",
+            "root": "libs/shared/util-google-analytics",
+            "sourceRoot": "libs/shared/util-google-analytics/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/util-google-analytics/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:util"]
+        },
+        "shared-util-state": {
+            "projectType": "library",
+            "root": "libs/shared/util-state",
+            "sourceRoot": "libs/shared/util-state/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/util-state/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:util"]
+        },
+        "styles-shared-theme": {
+            "projectType": "library",
+            "root": "libs/styles/shared-theme",
+            "sourceRoot": "libs/styles/shared-theme/src",
+            "prefix": "vioc-angular",
+            "architect": {},
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:styles"]
+        },
+        "test-util-test": {
+            "projectType": "library",
+            "root": "libs/test/util-test",
+            "sourceRoot": "libs/test/util-test/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/test/util-test/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:test", "type:test-util"]
+        },
+        "ui-action-bar": {
+            "projectType": "library",
+            "root": "libs/shared/ui-action-bar",
+            "sourceRoot": "libs/shared/ui-action-bar/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-action-bar/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-add-remove-button": {
+            "projectType": "library",
+            "root": "libs/shared/ui-add-remove-button",
+            "sourceRoot": "libs/shared/ui-add-remove-button/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-add-remove-button/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-audit": {
+            "projectType": "library",
+            "root": "libs/shared/ui-audit",
+            "sourceRoot": "libs/shared/ui-audit/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-audit/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-currency-prefix": {
+            "projectType": "library",
+            "root": "libs/shared/ui-currency-prefix",
+            "sourceRoot": "libs/shared/ui-currency-prefix/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-currency-prefix/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-dialog": {
+            "projectType": "library",
+            "root": "libs/shared/ui-dialog",
+            "sourceRoot": "libs/shared/ui-dialog/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-dialog/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-footer": {
+            "projectType": "library",
+            "root": "libs/layout/ui-footer",
+            "sourceRoot": "libs/layout/ui-footer/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/layout/ui-footer/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-grid": {
+            "projectType": "library",
+            "root": "libs/shared/ui-grid",
+            "sourceRoot": "libs/shared/ui-grid/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-grid/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-header": {
+            "projectType": "library",
+            "root": "libs/layout/ui-header",
+            "sourceRoot": "libs/layout/ui-header/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/layout/ui-header/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-loading": {
+            "projectType": "library",
+            "root": "libs/shared/ui-loading",
+            "sourceRoot": "libs/shared/ui-loading/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-loading/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-paginator": {
+            "projectType": "library",
+            "root": "libs/shared/ui-paginator",
+            "sourceRoot": "libs/shared/ui-paginator/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-paginator/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-sidenav": {
+            "projectType": "library",
+            "root": "libs/layout/ui-sidenav",
+            "sourceRoot": "libs/layout/ui-sidenav/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/layout/ui-sidenav/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "ui-table": {
+            "projectType": "library",
+            "root": "libs/shared/ui-table",
+            "sourceRoot": "libs/shared/ui-table/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/ui-table/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:ui"]
+        },
+        "util-api": {
+            "projectType": "library",
+            "root": "libs/shared/util-api",
+            "sourceRoot": "libs/shared/util-api/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/util-api/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:util"]
+        },
+        "util-column": {
+            "projectType": "library",
+            "root": "libs/shared/util-column",
+            "sourceRoot": "libs/shared/util-column/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/util-column/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:util"]
+        },
+        "util-data-modifying": {
+            "projectType": "library",
+            "root": "libs/shared/util-data-modifying",
+            "sourceRoot": "libs/shared/util-data-modifying/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/util-data-modifying/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:util"]
+        },
+        "util-form": {
+            "projectType": "library",
+            "root": "libs/shared/util-form",
+            "sourceRoot": "libs/shared/util-form/src",
+            "prefix": "vioc-angular",
+            "architect": {
+                "test": {
+                    "builder": "@nrwl/jest:jest",
+                    "options": {
+                        "jestConfig": "libs/shared/util-form/jest.config.ts"
+                    }
+                }
+            },
+            "schematics": {
+                "@nrwl/angular:component": {
+                    "styleext": "scss"
+                }
+            },
+            "tags": ["scope:shared", "type:util"]
+        }
+    },
+    "version": 1
+}

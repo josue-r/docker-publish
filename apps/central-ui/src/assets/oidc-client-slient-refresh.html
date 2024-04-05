@@ -1,0 +1,19 @@
+<head>
+    <title></title>
+</head>
+
+<body>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/oidc-client-ts/2.2.3/browser/oidc-client-ts.min.js"
+        integrity="sha512-8fFhdQufQSHdXj6QqJT3cWUM4N9DKNWDYsUcLpq69vzsiJEZLaRsNtFSL10OAkqyjidGxqeCukjMh/GGbH1zEg=="
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+    ></script>
+    <script>
+        // This code needs to be es5 compliant because it is not compiled by angular
+        new oidc.UserManager({}).signinSilentCallback().catch(function (err) {
+            console.log('silent renew iframe:', err);
+            throw err;
+        });
+    </script>
+</body>
