@@ -75,10 +75,20 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: contains(needs.build.outputs.affected-apps, 'bottom-side-ui')
-    environment: deploy
+    environment: store
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: list files and check for specific files
+        run: |
+          echo "Current Directory:"
+          pwd
+          echo "Listing Files:"
+          ls -la
+          echo "Checking for specific files:"
+          ls -la bottom-side-nginx.conf default.conf || echo "Files not found"
+
 
       - name: Prepare deploy values
         id: prep
