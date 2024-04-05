@@ -42,7 +42,16 @@ jobs:
       - name: Run tests
         run: npm run affected:test -- --ci --runInBand --base=$BEFORE_SHA --reporters=jest-junit --reporters=default --code-coverage
 
-
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
+      
+      - id: apps
+        run: |
+          AFFECTED_APPS=$(npm run --silent affected:apps -- --base=$BEFORE_SHA --plain)
+          echo "apps=${AFFECTED_APPS}" >> $GITHUB_OUTPUT
       # - uses: actions/checkout@v3
       # - name: Build and push the image
       #   run: |
