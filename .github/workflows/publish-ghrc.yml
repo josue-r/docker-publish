@@ -51,6 +51,7 @@ jobs:
       - id: apps
         run: |
           AFFECTED_APPS=$(npm run --silent affected:apps -- --base=$BEFORE_SHA --plain)
+          echo "apps=${AFFECTED_APPS}"
           echo "apps=${AFFECTED_APPS}" >> $GITHUB_OUTPUT
       # - uses: actions/checkout@v3
       # - name: Build and push the image
