@@ -107,7 +107,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: apps/bottom-side-ui
-          file : {context}/wizeline-side.dockerfile
+          file: {context}/wizeline-side.dockerfile
           push: true
           tags: ${{ steps.prep.outputs.tags }}
           build-args: |
