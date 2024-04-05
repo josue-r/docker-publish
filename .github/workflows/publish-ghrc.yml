@@ -116,7 +116,7 @@ jobs:
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v3
         with:
-          context: apps/bottom-side-ui
+          context: .
           file: ./wizeline-side.dockerfile
           push: true
           tags: ${{ steps.prep.outputs.tags }}
