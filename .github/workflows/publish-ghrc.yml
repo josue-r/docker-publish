@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Print BEFORE_SHA Environment Variable
         run: echo "BEFORE_SHA=$BEFORE_SHA"
+      - name: Print Environment Variable
+        run: echo "$ENV"
 
       - uses: actions/checkout@v2
         with:
