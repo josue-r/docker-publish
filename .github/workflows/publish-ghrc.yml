@@ -11,6 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions: read-all
     steps:
+      - name: Print BEFORE_SHA Environment Variable
+        run: echo "BEFORE_SHA=$BEFORE_SHA"
+
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
@@ -30,8 +33,12 @@ jobs:
           restore-keys: |
             self-hosted-${{ runner.os }}-node-
 
-      - name: Download dependencies
-        run: npm ci
+      # - name: Download dependencies
+      #   run: npm ci
+
+      # - name: Run tests
+      #   run: npm run affected:test -- --ci --runInBand --base=$BEFORE_SHA --reporters=jest-junit --reporters=default --code-coverage
+
 
       # - uses: actions/checkout@v3
       # - name: Build and push the image
