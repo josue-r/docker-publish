@@ -7,9 +7,13 @@ on:
   push
 
 jobs:
-  build_and_publish:
+  build:
     runs-on: ubuntu-latest
     permissions: read-all
+
+    outputs:
+      affected-apps: ${{ steps.apps.outputs.apps }}
+
     steps:
       - name: Print BEFORE_SHA Environment Variable
         run: echo "BEFORE_SHA=$BEFORE_SHA"
@@ -66,6 +70,49 @@ jobs:
           AFFECTED_APPS=$(npm run --silent affected:apps -- --base=$BEFORE_SHA --plain)
           echo "apps=${AFFECTED_APPS}"
           echo "apps=${AFFECTED_APPS}" >> $GITHUB_OUTPUT
+
+  bottom-side-ui-deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: contains(needs.build.outputs.affected-apps, 'bottom-side-ui')
+    environment: deploy
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Prepare deploy values
+        id: prep
+        run: |
+          DOCKER_IMAGE=ghcr.io/valvoline-llc/vioc-central-ui
+          VERSION_DATE=$(TZ=America/New_York date +"%Y%m%dT%H%M%S")
+          APP_VERSION=${VERSION_DATE}-${GITHUB_SHA::5}
+          TAGS="${DOCKER_IMAGE}:${APP_VERSION}"
+          echo "appVersion=${APP_VERSION}" >> $GITHUB_OUTPUT
+          echo "tags=${TAGS}" >> $GITHUB_OUTPUT
+      
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
+      
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v3
+        with:
+          context: apps/bottom-side-ui
+          file : {context}/wizeline-side.dockerfile
+          push: true
+          tags: ${{ steps.prep.outputs.tags }}
+          build-args: |
+            APP_VERSION=${{ steps.prep.outputs.appVersion }}
+
       # - uses: actions/checkout@v3
       # - name: Build and push the image
       #   run: |
