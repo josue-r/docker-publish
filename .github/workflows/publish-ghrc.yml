@@ -42,6 +42,19 @@ jobs:
       - name: Run tests
         run: npm run affected:test -- --ci --runInBand --base=$BEFORE_SHA --reporters=jest-junit --reporters=default --code-coverage
 
+      - name: Merge coverage reports
+        continue-on-error: true
+        run: npm run merge-coverage
+      
+      - name: Upload lcov report
+        uses: actions/upload-artifact@v3
+        with:
+          name: merged-lcov.info
+          path: coverage/merged-lcov.info
+
+      - name: Run build
+        run: npm run affected:build -- --base=$BEFORE_SHA --configuration=deploy --subresource-integrity
+        
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
