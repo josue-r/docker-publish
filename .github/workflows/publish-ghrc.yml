@@ -76,6 +76,9 @@ jobs:
     needs: build
     if: contains(needs.build.outputs.affected-apps, 'bottom-side-ui')
     environment: store
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - uses: actions/checkout@v3
