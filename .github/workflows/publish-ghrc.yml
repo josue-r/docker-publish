@@ -93,7 +93,7 @@ jobs:
       - name: Prepare deploy values
         id: prep
         run: |
-          DOCKER_IMAGE=ghcr.io/valvoline-llc/vioc-central-ui
+          DOCKER_IMAGE=ghcr.io/josue-r/vioc-bottom-side-ui
           VERSION_DATE=$(TZ=America/New_York date +"%Y%m%dT%H%M%S")
           APP_VERSION=${VERSION_DATE}-${GITHUB_SHA::5}
           TAGS="${DOCKER_IMAGE}:${APP_VERSION}"
