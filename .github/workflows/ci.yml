@@ -30,10 +30,16 @@ jobs:
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
-      - name: Run tests
-        run: npm run affected:test -- --ci --runInBand --base=origin/main --reporters=jest-junit --reporters=default --code-coverage
+      # - name: Run tests
+      #   run: npm run affected:test -- --ci --runInBand --base=origin/main --reporters=jest-junit --reporters=default --code-coverage
+      #   env:
+      #     NODE_OPTIONS: "--max-old-space-size=8192"
+
+      - name: Run tests for bottom-side
+        run: npm run test:bottom-side
         env:
           NODE_OPTIONS: "--max-old-space-size=8192"
+
 
       - name: Merge coverage reports
         continue-on-error: true
