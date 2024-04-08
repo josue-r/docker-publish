@@ -31,7 +31,7 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
 
       - name: Run tests
-        run: npm run affected:test -- --ci --runInBand --base=origin/master --reporters=jest-junit --reporters=default --code-coverage
+        run: npm run affected:test -- --ci --runInBand --base=origin/main --reporters=jest-junit --reporters=default --code-coverage
         env:
           NODE_OPTIONS: "--max-old-space-size=8192"
 
