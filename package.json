@@ -18,7 +18,7 @@
         "affected:build": "nx affected:build",
         "affected:e2e": "nx affected:e2e",
         "affected:test": "nx affected:test --update-snapshot",
-        "test:bottom-side": "nx test central-ui --ci --runInBand --code-coverage --reporters=jest-junit --reporters=default",
+        "test:bottom-side": "nx test bottom-side-ui --ci --runInBand --code-coverage --reporters=jest-junit --reporters=default",
         "affected:lint": "nx affected:lint",
         "affected:dep-graph": "nx affected:dep-graph",
         "format": "nx format:write",
