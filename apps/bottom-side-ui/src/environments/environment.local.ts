@@ -8,5 +8,5 @@ export const environment = {
     gateway: 'http://localhost:9023',
     deployUrl: '',
     version: 'LOCAL',
-    websocketUrl: 'wss://localhost:443/pos/store-websocket/websocket',
+    websocketUrl: 'wss://localhost:8443/pos/store-websocket/websocket',
 };
