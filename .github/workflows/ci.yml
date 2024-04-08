@@ -1,0 +1,180 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      
+      - uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Download dependencies
+        run: npm ci
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+      - name: Run tests
+        run: npm run affected:test -- --ci --runInBand --base=origin/master --reporters=jest-junit --reporters=default --code-coverage
+        env:
+          NODE_OPTIONS: "--max-old-space-size=8192"
+
+      - name: Merge coverage reports
+        continue-on-error: true
+        run: npm run merge-coverage
+      
+      - name: Upload lcov report
+        uses: actions/upload-artifact@v3
+        with:
+          name: merged-lcov.info
+          path: coverage/merged-lcov.info
+  
+  # sonar:
+  #   runs-on: self-hosted
+
+  #   needs: [ test ]
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Setup Node 16
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '16'
+
+  #     - uses: actions/cache@v3
+  #       with:
+  #         path: ~/.npm
+  #         key: self-hosted-${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+  #         restore-keys: |
+  #           self-hosted-${{ runner.os }}-node-
+
+  #     - name: Cache SonarQube packages
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: ~/.sonar/cache
+  #         key: ${{ runner.os }}-sonarqube
+  #         restore-keys: |
+  #           ${{ runner.os }}-sonarqube
+
+  #     - name: Download lcov coverage
+  #       uses: actions/download-artifact@v3
+  #       continue-on-error: true
+  #       with:
+  #         path: coverage
+  #         name: merged-lcov.info
+
+  #     - name: Download dependencies
+  #       run: npm ci
+  #       env:
+  #         NODE_OPTIONS: "--max-old-space-size=4096"
+
+  #     - name: Scan with SonarQube
+  #       run: npm run sonar-scanner -- -Dsonar.pullrequest.key=${{ github.event.number }} -Dsonar.pullrequest.branch=${GITHUB_HEAD_REF} -Dsonar.pullrequest.base=${GITHUB_BASE_REF} -Dsonar.scm.revision=${{ github.event.pull_request.head.sha }}
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  #         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+  
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      
+      - uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Download dependencies
+        run: npm ci
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+      - name: Run linting
+        run: npm run affected:lint -- --base=origin/master
+        
+  format:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      
+      - uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      
+      - name: Download dependencies
+        run: npm ci
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+      - name: Run linting
+        run: npm run format:check -- --base=origin/master
+
+  # build:
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #       with:
+  #         fetch-depth: 0
+
+  #     - name: Setup Node 16
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         node-version: '16'
+      
+  #     - uses: actions/cache@v3
+  #       with:
+  #         path: ~/.npm
+  #         key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+  #         restore-keys: |
+  #           ${{ runner.os }}-node-
+      
+  #     - name: Download dependencies
+  #       run: npm ci
+  #       env:
+  #         NODE_OPTIONS: "--max-old-space-size=4096"
+
+  #     - name: Run build
+  #       run: npm run affected:build -- --base=origin/master --configuration=deploy --subresource-integrity
+      
